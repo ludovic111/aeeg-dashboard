@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Plus, Search } from "lucide-react";
 import { useMeetings } from "@/hooks/use-meetings";
@@ -11,24 +11,22 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MeetingsPage() {
   const { meetings, loading } = useMeetings();
-  const [tab, setTab] = useState<"upcoming" | "past">("upcoming");
   const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {
-    const now = new Date();
     return meetings
       .filter((m) => {
-        const meetingDate = new Date(m.date);
-        if (tab === "upcoming") return meetingDate >= now;
-        return meetingDate < now;
-      })
-      .filter(
-        (m) =>
+        return (
           !search ||
           m.title.toLowerCase().includes(search.toLowerCase()) ||
           m.location?.toLowerCase().includes(search.toLowerCase())
+        );
+      })
+      .sort(
+        (a, b) =>
+          new Date(b.date).getTime() - new Date(a.date).getTime()
       );
-  }, [meetings, tab, search]);
+  }, [meetings, search]);
 
   return (
     <div className="space-y-6">
@@ -45,24 +43,6 @@ export default function MeetingsPage() {
             Nouvelle réunion
           </Button>
         </Link>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-2">
-        <Button
-          variant={tab === "upcoming" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setTab("upcoming")}
-        >
-          À venir
-        </Button>
-        <Button
-          variant={tab === "past" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setTab("past")}
-        >
-          Passées
-        </Button>
       </div>
 
       {/* Search */}
@@ -88,9 +68,7 @@ export default function MeetingsPage() {
           <p className="text-5xl mb-4">📭</p>
           <p className="font-black text-lg">Aucune réunion trouvée</p>
           <p className="text-sm text-[var(--foreground)]/60 font-bold mt-1">
-            {tab === "upcoming"
-              ? "Aucune réunion à venir"
-              : "Aucune réunion passée"}
+            Essayez un autre terme de recherche.
           </p>
         </div>
       ) : (
