@@ -83,7 +83,6 @@ export interface SalesEntry {
   revenue: number;
   date: string;
   source: string;
-  shopify_order_id: string | null;
   created_by: string | null;
   created_at: string;
   // Joined

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, RefreshCw } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useSales, useSalesMutations } from "@/hooks/use-sales";
 import { SalesStatsCards } from "@/components/sales/sales-stats";
@@ -16,10 +16,9 @@ import type { SalesEntryFormData } from "@/lib/validations";
 export default function SalesPage() {
   const { isAdmin, isCommitteeMember } = useAuth();
   const { entries, stats, loading, refetch } = useSales();
-  const { createSale, deleteSale, syncShopify } = useSalesMutations();
+  const { createSale, deleteSale } = useSalesMutations();
   const [formOpen, setFormOpen] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
-  const [syncing, setSyncing] = useState(false);
 
   if (!isCommitteeMember) {
     return (
@@ -62,23 +61,6 @@ export default function SalesPage() {
     }
   };
 
-  const handleSync = async () => {
-    setSyncing(true);
-    toast.info("Synchronisation Shopify en cours...");
-    try {
-      const result = await syncShopify();
-      toast.success(
-        `${result.synced} vente(s) synchronisée(s) depuis Shopify`
-      );
-      refetch();
-    } catch {
-      toast.error(
-        "Échec de la synchronisation Shopify. Vérifiez vos identifiants."
-      );
-    }
-    setSyncing(false);
-  };
-
   if (loading) {
     return (
       <div className="space-y-6">
@@ -100,26 +82,13 @@ export default function SalesPage() {
         <div>
           <h1 className="text-3xl font-black">🛍️ Suivi des ventes</h1>
           <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
-            Ventes de merch et synchronisation Shopify
+            Ventes de merch
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button onClick={() => setFormOpen(true)}>
-            <Plus className="h-4 w-4" strokeWidth={3} />
-            Ajouter une vente
-          </Button>
-          <Button
-            variant="purple"
-            onClick={handleSync}
-            disabled={syncing}
-          >
-            <RefreshCw
-              className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`}
-              strokeWidth={3}
-            />
-            Sync Shopify
-          </Button>
-        </div>
+        <Button onClick={() => setFormOpen(true)}>
+          <Plus className="h-4 w-4" strokeWidth={3} />
+          Ajouter une vente
+        </Button>
       </div>
 
       <SalesStatsCards stats={stats} />

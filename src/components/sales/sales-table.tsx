@@ -75,26 +75,20 @@ export function SalesTable({ entries, canDelete, onDelete }: SalesTableProps) {
                       {formatCurrency(Number(entry.revenue))}
                     </td>
                     <td className="p-3 text-center">
-                      <Badge
-                        variant={
-                          entry.source === "shopify" ? "info" : "purple"
-                        }
-                      >
-                        {entry.source === "shopify" ? "Shopify" : "Manuel"}
+                      <Badge variant="purple">
+                        {entry.source === "manual" ? "Manuel" : "Importé"}
                       </Badge>
                     </td>
                     {canDelete && (
                       <td className="p-3">
-                        {entry.source === "manual" && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => onDelete(entry.id)}
-                            className="h-7 w-7 p-0"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" strokeWidth={3} />
-                          </Button>
-                        )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onDelete(entry.id)}
+                          className="h-7 w-7 p-0"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" strokeWidth={3} />
+                        </Button>
                       </td>
                     )}
                   </tr>

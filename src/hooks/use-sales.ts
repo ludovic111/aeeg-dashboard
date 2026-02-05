@@ -74,20 +74,5 @@ export function useSalesMutations() {
     return { error };
   };
 
-  const syncShopify = async (startDate?: string, endDate?: string) => {
-    const params = new URLSearchParams();
-    if (startDate) params.set("start_date", startDate);
-    if (endDate) params.set("end_date", endDate);
-
-    const res = await fetch(`/api/shopify/orders?${params.toString()}`);
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.error || "Erreur de synchronisation");
-    }
-
-    return data;
-  };
-
-  return { createSale, deleteSale, syncShopify };
+  return { createSale, deleteSale };
 }

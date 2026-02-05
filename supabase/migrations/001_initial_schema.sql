@@ -85,7 +85,6 @@ CREATE TABLE sales_entries (
   revenue NUMERIC(10, 2) NOT NULL,
   date TIMESTAMPTZ NOT NULL,
   source TEXT DEFAULT 'manual' NOT NULL,
-  shopify_order_id TEXT UNIQUE,
   created_by UUID REFERENCES profiles(id) ON DELETE SET NULL,
   created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
