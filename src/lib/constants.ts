@@ -18,13 +18,6 @@ export const TASK_PRIORITIES = {
   urgent: { label: "Urgente", color: "bg-brutal-red", textColor: "text-white" },
 } as const;
 
-export const EVENT_TYPES = {
-  meeting: { label: "Réunion", color: "#4ECDC4", icon: "📋" },
-  event: { label: "Événement", color: "#AA96DA", icon: "🎉" },
-  deadline: { label: "Échéance", color: "#FF6B6B", icon: "⏰" },
-  sale_campaign: { label: "Campagne de vente", color: "#FFE66D", icon: "🛍️" },
-} as const;
-
 export const BRUTAL_COLORS = {
   red: "#FF6B6B",
   teal: "#4ECDC4",
@@ -33,28 +26,3 @@ export const BRUTAL_COLORS = {
   coral: "#F38181",
   purple: "#AA96DA",
 } as const;
-
-export const COLOR_OPTIONS = [
-  { value: "#FF6B6B", label: "Rouge" },
-  { value: "#4ECDC4", label: "Turquoise" },
-  { value: "#FFE66D", label: "Jaune" },
-  { value: "#95E1D3", label: "Menthe" },
-  { value: "#F38181", label: "Corail" },
-  { value: "#AA96DA", label: "Violet" },
-] as const;
-
-export const CALENDAR_MESSAGES = {
-  allDay: "Toute la journée",
-  previous: "Précédent",
-  next: "Suivant",
-  today: "Aujourd'hui",
-  month: "Mois",
-  week: "Semaine",
-  day: "Jour",
-  agenda: "Agenda",
-  date: "Date",
-  time: "Heure",
-  event: "Événement",
-  noEventsInRange: "Aucun événement dans cette période.",
-  showMore: (total: number) => `+ ${total} de plus`,
-};

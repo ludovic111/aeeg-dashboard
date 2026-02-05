@@ -1,7 +1,6 @@
 export type UserRole = "superadmin" | "admin" | "committee_member" | "pending";
 export type TaskStatus = "todo" | "in_progress" | "done";
 export type TaskPriority = "low" | "medium" | "high" | "urgent";
-export type EventType = "meeting" | "event" | "deadline" | "sale_campaign";
 
 export interface Profile {
   id: string;
@@ -58,22 +57,6 @@ export interface Task {
   updated_at: string;
   // Joined
   assignee?: Profile;
-  creator?: Profile;
-}
-
-export interface CalendarEvent {
-  id: string;
-  title: string;
-  type: EventType;
-  start_date: string;
-  end_date: string;
-  description: string | null;
-  color: string;
-  location: string | null;
-  created_by: string | null;
-  created_at: string;
-  updated_at: string;
-  // Joined
   creator?: Profile;
 }
 
