@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { CustomerOrder } from "@/types";
+import {
+  formatOrderItems,
+  parseLegacyOrderDetails,
+} from "@/lib/orders";
 
 export function useOrders() {
   const [orders, setOrders] = useState<CustomerOrder[]>([]);
@@ -21,7 +25,14 @@ export function useOrders() {
         .order("order_number", { ascending: false });
 
       if (!mounted) return;
-      setOrders((data as CustomerOrder[]) || []);
+      const normalized = ((data as CustomerOrder[]) || []).map((order) => ({
+        ...order,
+        order_items:
+          Array.isArray(order.order_items) && order.order_items.length > 0
+            ? order.order_items
+            : parseLegacyOrderDetails(order.order_details),
+      }));
+      setOrders(normalized);
       setLoading(false);
     }
 
@@ -34,12 +45,13 @@ export function useOrders() {
   const upsertOrder = async (data: {
     order_number: string;
     full_name: string;
-    order_details: string;
+    order_items: CustomerOrder["order_items"];
     email?: string;
   }) => {
     const payload = {
       ...data,
       email: data.email || null,
+      order_details: formatOrderItems(data.order_items),
       imported_at: new Date().toISOString(),
     };
 

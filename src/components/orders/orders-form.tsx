@@ -1,11 +1,18 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Plus, Trash2 } from "lucide-react";
 import {
   customerOrderSchema,
   type CustomerOrderFormData,
 } from "@/lib/validations";
+import {
+  ORDER_PRODUCT_LABELS,
+  SWEAT_COLOR_LABELS,
+  SWEAT_SIZE_LABELS,
+} from "@/lib/orders";
+import type { OrderProduct, SweatColor, SweatSize } from "@/types";
 import {
   Dialog,
   DialogContent,
@@ -16,7 +23,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface OrdersFormProps {
   open: boolean;
@@ -33,6 +46,8 @@ export function OrdersForm({
 }: OrdersFormProps) {
   const {
     register,
+    control,
+    setValue,
     handleSubmit,
     reset,
     formState: { errors },
@@ -42,9 +57,21 @@ export function OrdersForm({
       order_number: "",
       full_name: "",
       email: "",
-      order_details: "",
+      order_items: [
+        {
+          product: "emilie_gourde",
+          quantity: 1,
+        },
+      ],
     },
   });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "order_items",
+  });
+
+  const orderItems = useWatch({ control, name: "order_items" });
 
   const handleFormSubmit = async (data: CustomerOrderFormData) => {
     await onSubmit(data);
@@ -104,17 +131,175 @@ export function OrdersForm({
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="order_details">Commande *</Label>
-            <Textarea
-              id="order_details"
-              rows={3}
-              placeholder="1x Sweat Emilie Gourd - Bleu Marine - M"
-              {...register("order_details")}
-            />
-            {errors.order_details && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label>Articles *</Label>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() =>
+                  append({
+                    product: "emilie_gourde",
+                    quantity: 1,
+                  })
+                }
+              >
+                <Plus className="h-4 w-4" strokeWidth={3} />
+                Ajouter un article
+              </Button>
+            </div>
+
+            {fields.map((field, index) => {
+              const currentProduct =
+                orderItems?.[index]?.product || "emilie_gourde";
+
+              return (
+                <div
+                  key={field.id}
+                  className="rounded-lg border-2 border-[var(--border-color)] p-3 space-y-3"
+                >
+                  <div className="grid grid-cols-1 sm:grid-cols-[1.2fr_0.8fr_auto] gap-3 items-end">
+                    <div className="space-y-2">
+                      <Label>Produit</Label>
+                      <Select
+                        value={currentProduct}
+                        onValueChange={(value) => {
+                          const product = value as OrderProduct;
+                          setValue(`order_items.${index}.product`, product, {
+                            shouldValidate: true,
+                          });
+
+                          if (product === "sweat_emilie_gourd") {
+                            setValue(
+                              `order_items.${index}.color`,
+                              (orderItems?.[index]?.color || "gris") as SweatColor,
+                              { shouldValidate: true }
+                            );
+                            setValue(
+                              `order_items.${index}.size`,
+                              (orderItems?.[index]?.size || "m") as SweatSize,
+                              { shouldValidate: true }
+                            );
+                          } else {
+                            setValue(`order_items.${index}.color`, undefined, {
+                              shouldValidate: true,
+                            });
+                            setValue(`order_items.${index}.size`, undefined, {
+                              shouldValidate: true,
+                            });
+                          }
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(ORDER_PRODUCT_LABELS).map(([key, label]) => (
+                            <SelectItem key={key} value={key}>
+                              {label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor={`quantity-${field.id}`}>Quantité</Label>
+                      <Input
+                        id={`quantity-${field.id}`}
+                        type="number"
+                        min={1}
+                        {...register(`order_items.${index}.quantity`, {
+                          valueAsNumber: true,
+                        })}
+                      />
+                    </div>
+
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      onClick={() => remove(index)}
+                      disabled={fields.length === 1}
+                      aria-label="Supprimer l'article"
+                    >
+                      <Trash2 className="h-4 w-4" strokeWidth={3} />
+                    </Button>
+                  </div>
+
+                  {currentProduct === "sweat_emilie_gourd" && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="space-y-2">
+                        <Label>Couleur</Label>
+                        <Select
+                          value={orderItems?.[index]?.color || "gris"}
+                          onValueChange={(value) =>
+                            setValue(
+                              `order_items.${index}.color`,
+                              value as SweatColor,
+                              { shouldValidate: true }
+                            )
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Object.entries(SWEAT_COLOR_LABELS).map(
+                              ([key, label]) => (
+                                <SelectItem key={key} value={key}>
+                                  {label}
+                                </SelectItem>
+                              )
+                            )}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Taille</Label>
+                        <Select
+                          value={orderItems?.[index]?.size || "m"}
+                          onValueChange={(value) =>
+                            setValue(`order_items.${index}.size`, value as SweatSize, {
+                              shouldValidate: true,
+                            })
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Object.entries(SWEAT_SIZE_LABELS).map(
+                              ([key, label]) => (
+                                <SelectItem key={key} value={key}>
+                                  {label}
+                                </SelectItem>
+                              )
+                            )}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  )}
+
+                  {(errors.order_items?.[index]?.quantity ||
+                    errors.order_items?.[index]?.color ||
+                    errors.order_items?.[index]?.size) && (
+                    <p className="text-sm font-bold text-brutal-red">
+                      {errors.order_items?.[index]?.quantity?.message ||
+                        errors.order_items?.[index]?.color?.message ||
+                        errors.order_items?.[index]?.size?.message}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+
+            {errors.order_items && !Array.isArray(errors.order_items) && (
               <p className="text-sm font-bold text-brutal-red">
-                {errors.order_details.message}
+                {errors.order_items.message}
               </p>
             )}
           </div>

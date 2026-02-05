@@ -3,6 +3,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatRelative } from "@/lib/utils";
+import {
+  formatOrderItem,
+  parseLegacyOrderDetails,
+} from "@/lib/orders";
 import type { CustomerOrder } from "@/types";
 
 interface OrdersTableProps {
@@ -49,28 +53,47 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                   </td>
                 </tr>
               ) : (
-                orders.map((order, index) => (
-                  <tr
-                    key={order.id}
-                    className={`border-b border-[var(--border-color)]/20 ${
-                      index % 2 === 0 ? "" : "bg-[var(--background)]"
-                    }`}
-                  >
-                    <td className="p-3 text-sm font-mono font-bold">
-                      {order.order_number}
-                    </td>
-                    <td className="p-3 text-sm font-bold">{order.full_name}</td>
-                    <td className="p-3 text-sm font-mono">
-                      {order.email || (
-                        <span className="text-[var(--foreground)]/50">-</span>
-                      )}
-                    </td>
-                    <td className="p-3 text-sm">{order.order_details}</td>
-                    <td className="p-3 text-sm">
-                      <Badge variant="info">{formatRelative(order.imported_at)}</Badge>
-                    </td>
-                  </tr>
-                ))
+                orders.map((order, index) => {
+                  const items =
+                    order.order_items?.length > 0
+                      ? order.order_items
+                      : parseLegacyOrderDetails(order.order_details);
+
+                  return (
+                    <tr
+                      key={order.id}
+                      className={`border-b border-[var(--border-color)]/20 ${
+                        index % 2 === 0 ? "" : "bg-[var(--background)]"
+                      }`}
+                    >
+                      <td className="p-3 text-sm font-mono font-bold">
+                        {order.order_number}
+                      </td>
+                      <td className="p-3 text-sm font-bold">{order.full_name}</td>
+                      <td className="p-3 text-sm font-mono">
+                        {order.email || (
+                          <span className="text-[var(--foreground)]/50">-</span>
+                        )}
+                      </td>
+                      <td className="p-3 text-sm">
+                        <div className="space-y-1">
+                          {items.length > 0 ? (
+                            items.map((item, itemIndex) => (
+                              <p key={`${order.id}-${itemIndex}`}>
+                                {formatOrderItem(item)}
+                              </p>
+                            ))
+                          ) : (
+                            <p>{order.order_details}</p>
+                          )}
+                        </div>
+                      </td>
+                      <td className="p-3 text-sm">
+                        <Badge variant="info">{formatRelative(order.imported_at)}</Badge>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

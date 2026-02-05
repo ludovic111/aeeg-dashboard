@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ORDER_PRODUCTS, SWEAT_COLORS, SWEAT_SIZES } from "@/lib/orders";
 
 export const loginSchema = z.object({
   email: z.string().email("Adresse e-mail invalide"),
@@ -40,6 +41,38 @@ export const taskSchema = z.object({
   deadline: z.string().optional(),
 });
 
+const customerOrderItemSchema = z
+  .object({
+    product: z.enum(ORDER_PRODUCTS),
+    quantity: z.coerce
+      .number()
+      .int("La quantité doit être un nombre entier")
+      .min(1, "La quantité doit être au minimum de 1"),
+    color: z.enum(SWEAT_COLORS).optional(),
+    size: z.enum(SWEAT_SIZES).optional(),
+  })
+  .superRefine((item, ctx) => {
+    if (item.product !== "sweat_emilie_gourd") {
+      return;
+    }
+
+    if (!item.color) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["color"],
+        message: "La couleur est requise pour un sweat",
+      });
+    }
+
+    if (!item.size) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["size"],
+        message: "La taille est requise pour un sweat",
+      });
+    }
+  });
+
 export const customerOrderSchema = z.object({
   order_number: z
     .string()
@@ -53,7 +86,9 @@ export const customerOrderSchema = z.object({
     .refine((value) => !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), {
       message: "Adresse e-mail invalide",
     }),
-  order_details: z.string().min(1, "Le détail de la commande est requis"),
+  order_items: z
+    .array(customerOrderItemSchema)
+    .min(1, "Ajoutez au moins un article à la commande"),
 });
 
 export const profileSchema = z.object({

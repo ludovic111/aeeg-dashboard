@@ -3,6 +3,9 @@ export type TaskStatus = "todo" | "in_progress" | "done";
 export type TaskPriority = "low" | "medium" | "high" | "urgent";
 export type FeedbackKind = "issue" | "recommendation";
 export type FeedbackStatus = "open" | "resolved";
+export type OrderProduct = "emilie_gourde" | "sweat_emilie_gourd";
+export type SweatColor = "gris" | "bleu_marine" | "vert" | "noir" | "rose";
+export type SweatSize = "s" | "m" | "l" | "xl";
 
 export interface Profile {
   id: string;
@@ -67,10 +70,18 @@ export interface CustomerOrder {
   order_number: string;
   full_name: string;
   order_details: string;
+  order_items: CustomerOrderItem[];
   email: string | null;
   imported_at: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface CustomerOrderItem {
+  product: OrderProduct;
+  quantity: number;
+  color?: SweatColor;
+  size?: SweatSize;
 }
 
 export interface UserFeedback {
