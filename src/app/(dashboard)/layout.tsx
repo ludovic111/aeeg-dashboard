@@ -6,7 +6,6 @@ import { createClient } from "@/lib/supabase/client";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { MobileNav } from "@/components/layout/mobile-nav";
-import { BottomNav } from "@/components/layout/bottom-nav";
 import { SiteCredit } from "@/components/layout/site-credit";
 import type { Profile } from "@/types";
 
@@ -80,14 +79,13 @@ export default function DashboardLayout({
       />
       <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
         <Header onMenuClick={() => setMobileNavOpen(true)} />
-        <main className="flex-1 overflow-y-auto p-4 pb-24 sm:p-6 sm:pb-28 lg:p-8 lg:pb-8">
+        <main className="flex-1 overflow-y-auto p-4 pb-8 sm:p-6 sm:pb-8 lg:p-8 lg:pb-8">
           {children}
           <div className="mt-8 text-center">
             <SiteCredit />
           </div>
         </main>
       </div>
-      <BottomNav onMenuClick={() => setMobileNavOpen(true)} />
     </div>
   );
 }
