@@ -87,7 +87,7 @@ export default function DashboardLayout({
           </div>
         </main>
       </div>
-      <BottomNav />
+      <BottomNav onMenuClick={() => setMobileNavOpen(true)} />
     </div>
   );
 }

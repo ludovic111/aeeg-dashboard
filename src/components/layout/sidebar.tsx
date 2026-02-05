@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { APP_NAV_ITEMS, isNavItemActive } from "@/lib/navigation";
+import { useNavPrefetch } from "@/hooks/use-nav-prefetch";
 import { Avatar } from "@/components/ui/avatar";
 import { ThemeToggle } from "./theme-toggle";
 import type { Profile } from "@/types";
@@ -16,6 +17,7 @@ interface SidebarProps {
 
 export function Sidebar({ profile, onSignOut }: SidebarProps) {
   const pathname = usePathname();
+  const prefetchRoute = useNavPrefetch();
 
   return (
     <aside className="hidden lg:flex flex-col w-64 h-screen sticky top-0 bg-[var(--sidebar-bg)] border-r-4 border-[var(--border-color)]">
@@ -33,7 +35,7 @@ export function Sidebar({ profile, onSignOut }: SidebarProps) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-1">
+      <nav className="flex-1 p-4 space-y-1 overflow-y-auto scroll-smooth">
         {APP_NAV_ITEMS.map((item) => {
           const isActive = isNavItemActive(pathname, item.href);
           const Icon = item.icon;
@@ -42,9 +44,11 @@ export function Sidebar({ profile, onSignOut }: SidebarProps) {
             <Link
               key={item.href}
               href={item.href}
+              onMouseEnter={() => prefetchRoute(item.href)}
+              onFocus={() => prefetchRoute(item.href)}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold transition-all",
+                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 ease-out active:scale-[0.99]",
                 isActive
                   ? "bg-brutal-yellow text-black border-2 border-[var(--border-color)] shadow-[2px_2px_0px_0px_var(--shadow-color)]"
                   : "hover:bg-[var(--border-color)]/10"

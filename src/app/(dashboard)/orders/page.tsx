@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Plus } from "lucide-react";
+import { Download, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { useOrders } from "@/hooks/use-orders";
@@ -10,7 +10,12 @@ import { OrdersForm } from "@/components/orders/orders-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { summarizeOrdersSales } from "@/lib/orders";
+import {
+  formatOrderItem,
+  parseLegacyOrderDetails,
+  summarizeOrderSales,
+  summarizeOrdersSales,
+} from "@/lib/orders";
 import { formatCurrency } from "@/lib/utils";
 import type { CustomerOrderFormData } from "@/lib/validations";
 import type { CustomerOrder } from "@/types";
@@ -20,6 +25,7 @@ export default function OrdersPage() {
   const { orders, loading, saveOrder } = useOrders();
   const [formOpen, setFormOpen] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const [editingOrder, setEditingOrder] = useState<CustomerOrder | null>(null);
 
   const emailCoverage = useMemo(() => {
@@ -75,6 +81,83 @@ export default function OrdersPage() {
     setFormOpen(true);
   };
 
+  const handleExportCsv = () => {
+    if (orders.length === 0) {
+      toast.error("Aucune commande à exporter");
+      return;
+    }
+
+    setExporting(true);
+
+    try {
+      const separator = ";";
+      const escapeCell = (value: string) => {
+        const normalized = value.replace(/\r?\n/g, " ").trim();
+        if (
+          normalized.includes('"') ||
+          normalized.includes(separator) ||
+          normalized.includes("|")
+        ) {
+          return `"${normalized.replace(/"/g, '""')}"`;
+        }
+        return normalized;
+      };
+
+      const header = [
+        "Numero",
+        "Nom complet",
+        "Email",
+        "Commande",
+        "Sweats",
+        "Gourdes",
+        "Ventes CHF",
+        "Importe le",
+      ];
+
+      const rows = orders.map((order) => {
+        const items =
+          order.order_items?.length > 0
+            ? order.order_items
+            : parseLegacyOrderDetails(order.order_details);
+        const itemsLabel =
+          items.length > 0
+            ? items.map((item) => formatOrderItem(item)).join(" | ")
+            : order.order_details;
+        const orderSummary = summarizeOrderSales(order);
+        return [
+          order.order_number,
+          order.full_name,
+          order.email || "",
+          itemsLabel,
+          String(orderSummary.sweatCount),
+          String(orderSummary.gourdeCount),
+          orderSummary.totalRevenueChf.toFixed(2),
+          new Date(order.imported_at).toISOString(),
+        ]
+          .map((cell) => escapeCell(cell))
+          .join(separator);
+      });
+
+      const csvContent = `\uFEFF${[header.join(separator), ...rows].join("\n")}`;
+      const blob = new Blob([csvContent], {
+        type: "text/csv;charset=utf-8;",
+      });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `commandes_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      URL.revokeObjectURL(url);
+      toast.success("Export CSV prêt");
+    } catch {
+      toast.error("Impossible d'exporter les commandes");
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const handleFormOpenChange = (open: boolean) => {
     setFormOpen(open);
     if (!open) {
@@ -105,10 +188,16 @@ export default function OrdersPage() {
             Les nouvelles commandes apparaissent en haut automatiquement
           </p>
         </div>
-        <Button onClick={handleOpenCreate}>
-          <Plus className="h-4 w-4" strokeWidth={3} />
-          Ajouter une commande
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" onClick={handleExportCsv} disabled={exporting}>
+            <Download className="h-4 w-4" strokeWidth={3} />
+            {exporting ? "Export..." : "Exporter CSV"}
+          </Button>
+          <Button onClick={handleOpenCreate}>
+            <Plus className="h-4 w-4" strokeWidth={3} />
+            Ajouter une commande
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">

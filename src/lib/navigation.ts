@@ -29,6 +29,14 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
   { href: "/members", label: "Membres", icon: Users },
 ];
 
+export const MOBILE_PRIMARY_NAV_ITEMS: AppNavItem[] = APP_NAV_ITEMS.filter(
+  (item) =>
+    item.href === "/" ||
+    item.href === "/meetings" ||
+    item.href === "/tasks" ||
+    item.href === "/orders"
+);
+
 export function isNavItemActive(pathname: string, href: string) {
   return pathname === href || (href !== "/" && pathname.startsWith(href));
 }
