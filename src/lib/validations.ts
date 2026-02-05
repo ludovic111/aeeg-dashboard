@@ -44,7 +44,7 @@ export const taskSchema = z.object({
 const customerOrderItemSchema = z
   .object({
     product: z.enum(ORDER_PRODUCTS),
-    quantity: z.coerce
+    quantity: z
       .number()
       .int("La quantité doit être un nombre entier")
       .min(1, "La quantité doit être au minimum de 1"),

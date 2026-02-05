@@ -136,7 +136,7 @@ export function OrdersForm({
               <Label>Articles *</Label>
               <Button
                 type="button"
-                variant="secondary"
+                variant="outline"
                 size="sm"
                 onClick={() =>
                   append({
