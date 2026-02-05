@@ -1,9 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
-import { ArrowLeft, MapPin, Clock, ExternalLink, Trash2 } from "lucide-react";
+import {
+  ArrowLeft,
+  MapPin,
+  Clock,
+  ExternalLink,
+  Trash2,
+  Sparkles,
+} from "lucide-react";
 import dynamic from "next/dynamic";
 import { useMeeting, useMeetingMutations } from "@/hooks/use-meetings";
 import { useAuth } from "@/hooks/use-auth";
@@ -28,6 +36,7 @@ export default function MeetingDetailPage() {
   const { isAdmin, isCommitteeMember, profile } = useAuth();
   const { deleteMeeting } = useMeetingMutations();
   const supabase = createClient();
+  const [summaryLoading, setSummaryLoading] = useState(false);
 
   const canEdit =
     isAdmin ||
@@ -41,6 +50,40 @@ export default function MeetingDetailPage() {
     } else {
       toast.success("Réunion supprimée");
       router.push("/meetings");
+    }
+  };
+
+  const handleGenerateSummary = async () => {
+    if (!meeting?.id) return;
+
+    setSummaryLoading(true);
+    try {
+      const response = await fetch("/api/meetings/grok-summary", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          meetingId: meeting.id,
+        }),
+      });
+
+      if (!response.ok) {
+        const payload = (await response.json()) as { error?: string };
+        toast.error(
+          payload.error
+            ? `Impossible de générer le résumé: ${payload.error}`
+            : "Impossible de générer le résumé"
+        );
+        return;
+      }
+
+      toast.success("Résumé généré depuis l'ODJ.");
+      await refetch();
+    } catch {
+      toast.error("Impossible de générer le résumé");
+    } finally {
+      setSummaryLoading(false);
     }
   };
 
@@ -150,14 +193,26 @@ export default function MeetingDetailPage() {
           <CardHeader>
             <CardTitle className="text-base">🧠 Résumé ODJ (Grok)</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-3">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleGenerateSummary}
+              disabled={!agendaPdfUrl || summaryLoading}
+            >
+              <Sparkles className="h-4 w-4" strokeWidth={3} />
+              {summaryLoading
+                ? "Génération en cours..."
+                : "Générer le résumé à partir du PDF"}
+            </Button>
             {meeting.agenda_ai_summary ? (
               <div data-color-mode="light" className="text-sm">
                 <MarkdownPreview source={meeting.agenda_ai_summary} />
               </div>
             ) : (
               <p className="text-sm font-bold text-[var(--foreground)]/60">
-                Aucun résumé disponible pour le moment.
+                Cliquez sur le bouton pour générer le résumé à partir du PDF.
               </p>
             )}
           </CardContent>

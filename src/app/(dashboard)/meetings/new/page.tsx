@@ -69,34 +69,7 @@ export default function NewMeetingPage() {
       return;
     }
 
-    const agendaPdfUrl = supabase.storage
-      .from("meeting-agendas")
-      .getPublicUrl(filePath).data.publicUrl;
-
-    const summaryResponse = await fetch("/api/meetings/grok-summary", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        meetingId: meeting.id,
-        meetingTitle: title,
-        meetingDate: meetingDate.toISOString(),
-        agendaPdfUrl,
-      }),
-    });
-
-    if (!summaryResponse.ok) {
-      const payload = (await summaryResponse.json()) as { error?: string };
-      toast.error(
-        payload.error
-          ? `Réunion créée, mais analyse ODJ échouée: ${payload.error}`
-          : "Réunion créée, mais analyse ODJ échouée"
-      );
-    } else {
-      toast.success("Réunion créée, ODJ importé et résumé généré.");
-    }
-
+    toast.success("Réunion créée et ODJ importé. Générez le résumé depuis la page réunion.");
     router.push(`/meetings/${meeting?.id || ""}`);
   };
 
