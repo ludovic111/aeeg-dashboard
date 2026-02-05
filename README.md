@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AEEG Dashboard
 
-## Getting Started
+Dashboard interne pour l'association AEEG, construit avec Next.js + Supabase.
 
-First, run the development server:
+## Fonctionnalités principales
+
+- Authentification et gestion des rôles (`superadmin`, `admin`, `committee_member`, `pending`)
+- Tableau de bord opérationnel (tâches, ventes, réunions, sondages, soirées, activité)
+- Réunions avec upload ODJ en `.docx` + génération de résumé IA (Grok)
+- Tâches (kanban)
+- Commandes clients avec articles structurés + export CSV
+- Soirées: création, manager, membres, tâches assignées, liste de courses
+- Sondages multi-choix avec détail des votes (qui a voté quoi et quand)
+- Espace fichiers partagé (dossiers + fichiers)
+- Gestion des membres et modération admin
+
+## Stack technique
+
+- Next.js 16 (App Router), React 19, TypeScript
+- Supabase (Postgres, Auth, Storage, RLS)
+- Tailwind CSS, Radix UI, Sonner
+
+## Démarrage local
+
+1. Installer les dépendances:
+
+```bash
+npm install
+```
+
+2. Créer le fichier d'environnement:
+
+```bash
+cp .env.example .env.local
+```
+
+3. Renseigner les variables:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `XAI_API_KEY`
+- `XAI_MODEL` (par défaut `grok-4-1-fast-reasoning`)
+
+4. Lancer l'application:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Ouvrir `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev
+npm run build
+npm run start
+npm run lint
+```
 
-## Learn More
+## Base de données
 
-To learn more about Next.js, take a look at the following resources:
+Les migrations SQL sont dans:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `/Users/ludovicmarie/Desktop/FOLDERS/EG/DASHBOARD/aeeg-dashboard/supabase/migrations`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Incluent notamment:
 
-## Deploy on Vercel
+- `011_order_items_system.sql`
+- `013_meeting_agenda_docx_upload.sql`
+- `014_polls_drive_and_permission_hardening.sql`
+- `016_parties_module.sql`
+- `017_polls_multiple_choice_support.sql`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Déploiement
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Prévu pour Vercel.  
+Assurez-vous de configurer les variables d'environnement Supabase + xAI sur l'environnement de déploiement.
