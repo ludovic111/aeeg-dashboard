@@ -3,6 +3,8 @@ import {
   ClipboardList,
   CheckSquare,
   PackageSearch,
+  MessageSquareWarning,
+  CircleUserRound,
   Users,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -18,6 +20,8 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
   { href: "/meetings", label: "Réunions", icon: ClipboardList },
   { href: "/tasks", label: "Tâches", icon: CheckSquare },
   { href: "/orders", label: "Commandes", icon: PackageSearch },
+  { href: "/feedback", label: "Retours", icon: MessageSquareWarning },
+  { href: "/profile", label: "Profil", icon: CircleUserRound },
   { href: "/members", label: "Membres", icon: Users },
 ];
 

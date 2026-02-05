@@ -1,3 +1,5 @@
+import { SiteCredit } from "@/components/layout/site-credit";
+
 export default function AuthLayout({
   children,
 }: {
@@ -14,6 +16,9 @@ export default function AuthLayout({
           </p>
         </div>
         {children}
+        <div className="mt-8 text-center">
+          <SiteCredit />
+        </div>
       </div>
     </div>
   );

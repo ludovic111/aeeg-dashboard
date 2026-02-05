@@ -62,6 +62,40 @@ export const profileSchema = z.object({
   bio: z.string().optional(),
 });
 
+export const profileSettingsSchema = z
+  .object({
+    full_name: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
+    email: z.string().email("Adresse e-mail invalide"),
+    password: z.string().optional(),
+    confirmPassword: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (!data.password && !data.confirmPassword) return true;
+      return data.password === data.confirmPassword;
+    },
+    {
+      message: "Les mots de passe ne correspondent pas",
+      path: ["confirmPassword"],
+    }
+  )
+  .refine(
+    (data) => {
+      if (!data.password) return true;
+      return data.password.length >= 6;
+    },
+    {
+      message: "Le mot de passe doit contenir au moins 6 caractères",
+      path: ["password"],
+    }
+  );
+
+export const feedbackSchema = z.object({
+  kind: z.enum(["issue", "recommendation"]),
+  title: z.string().min(3, "Le titre doit contenir au moins 3 caractères"),
+  description: z.string().min(5, "La description doit contenir au moins 5 caractères"),
+});
+
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type MeetingFormData = z.infer<typeof meetingSchema>;
@@ -69,3 +103,5 @@ export type ActionItemFormData = z.infer<typeof actionItemSchema>;
 export type TaskFormData = z.infer<typeof taskSchema>;
 export type CustomerOrderFormData = z.infer<typeof customerOrderSchema>;
 export type ProfileFormData = z.infer<typeof profileSchema>;
+export type ProfileSettingsFormData = z.infer<typeof profileSettingsSchema>;
+export type FeedbackFormData = z.infer<typeof feedbackSchema>;

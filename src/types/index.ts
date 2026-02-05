@@ -1,6 +1,8 @@
 export type UserRole = "superadmin" | "admin" | "committee_member" | "pending";
 export type TaskStatus = "todo" | "in_progress" | "done";
 export type TaskPriority = "low" | "medium" | "high" | "urgent";
+export type FeedbackKind = "issue" | "recommendation";
+export type FeedbackStatus = "open" | "resolved";
 
 export interface Profile {
   id: string;
@@ -69,4 +71,16 @@ export interface CustomerOrder {
   imported_at: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface UserFeedback {
+  id: string;
+  kind: FeedbackKind;
+  title: string;
+  description: string;
+  status: FeedbackStatus;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+  creator?: Pick<Profile, "id" | "full_name" | "email" | "avatar_url">;
 }

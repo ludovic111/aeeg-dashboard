@@ -20,6 +20,11 @@ export const metadata: Metadata = {
   title: "AEEG Dashboard",
   description:
     "Dashboard interne de l'Association d'élèves d'Émilie Gourd",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
