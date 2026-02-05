@@ -60,25 +60,6 @@ export interface Task {
   creator?: Profile;
 }
 
-export interface SalesEntry {
-  id: string;
-  product_name: string;
-  quantity: number;
-  revenue: number;
-  date: string;
-  source: string;
-  created_by: string | null;
-  created_at: string;
-  // Joined
-  creator?: Profile;
-}
-
-export interface SalesStats {
-  totalRevenue: number;
-  orderCount: number;
-  averageOrder: number;
-}
-
 export interface CustomerOrder {
   id: string;
   order_number: string;

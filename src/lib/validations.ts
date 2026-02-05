@@ -40,13 +40,6 @@ export const taskSchema = z.object({
   deadline: z.string().optional(),
 });
 
-export const salesEntrySchema = z.object({
-  product_name: z.string().min(1, "Le nom du produit est requis"),
-  quantity: z.number().min(1, "La quantité doit être au moins 1"),
-  revenue: z.number().min(0, "Le revenu doit être positif"),
-  date: z.string().min(1, "La date est requise"),
-});
-
 export const customerOrderSchema = z.object({
   order_number: z
     .string()
@@ -74,6 +67,5 @@ export type RegisterFormData = z.infer<typeof registerSchema>;
 export type MeetingFormData = z.infer<typeof meetingSchema>;
 export type ActionItemFormData = z.infer<typeof actionItemSchema>;
 export type TaskFormData = z.infer<typeof taskSchema>;
-export type SalesEntryFormData = z.infer<typeof salesEntrySchema>;
 export type CustomerOrderFormData = z.infer<typeof customerOrderSchema>;
 export type ProfileFormData = z.infer<typeof profileSchema>;

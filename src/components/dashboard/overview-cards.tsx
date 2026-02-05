@@ -1,20 +1,20 @@
 "use client";
 
-import { CalendarDays, CheckSquare, ShoppingBag, Users } from "lucide-react";
+import { CalendarDays, CheckSquare, PackageSearch, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatDate, formatCurrency } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 
 interface OverviewCardsProps {
   nextMeeting: { title: string; date: string } | null;
   taskCount: number;
-  monthlyRevenue: number;
+  ordersCount: number;
   memberCount: number;
 }
 
 export function OverviewCards({
   nextMeeting,
   taskCount,
-  monthlyRevenue,
+  ordersCount,
   memberCount,
 }: OverviewCardsProps) {
   const cards = [
@@ -33,10 +33,10 @@ export function OverviewCards({
       color: "#FFE66D",
     },
     {
-      title: "Ventes du mois",
-      value: formatCurrency(monthlyRevenue),
-      subtitle: "ce mois-ci",
-      icon: ShoppingBag,
+      title: "Commandes clients",
+      value: String(ordersCount),
+      subtitle: "dans le carnet",
+      icon: PackageSearch,
       color: "#F38181",
     },
     {

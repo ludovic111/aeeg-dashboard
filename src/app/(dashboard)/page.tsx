@@ -13,11 +13,11 @@ import { Separator } from "@/components/ui/separator";
 interface DashboardData {
   nextMeeting: { title: string; date: string } | null;
   taskCount: number;
-  monthlyRevenue: number;
+  ordersCount: number;
   memberCount: number;
   activities: Array<{
     id: string;
-    type: "meeting" | "task" | "sale" | "member";
+    type: "meeting" | "task" | "member";
     description: string;
     user_name: string;
     user_avatar?: string | null;
@@ -34,13 +34,7 @@ export default function DashboardPage() {
   useEffect(() => {
     async function fetchDashboardData() {
       const now = new Date().toISOString();
-      const startOfMonth = new Date(
-        new Date().getFullYear(),
-        new Date().getMonth(),
-        1
-      ).toISOString();
-
-      const [meetingsRes, tasksRes, salesRes, membersRes] = await Promise.all([
+      const [meetingsRes, tasksRes, ordersRes, membersRes] = await Promise.all([
         supabase
           .from("meetings")
           .select("title, date")
@@ -52,19 +46,14 @@ export default function DashboardPage() {
           .select("id")
           .in("status", ["todo", "in_progress"]),
         supabase
-          .from("sales_entries")
-          .select("revenue")
-          .gte("date", startOfMonth),
+          .from("customer_orders")
+          .select("id"),
         supabase.from("profiles").select("id"),
       ]);
 
       const nextMeeting = meetingsRes.data?.[0] || null;
       const taskCount = tasksRes.data?.length || 0;
-      const monthlyRevenue =
-        salesRes.data?.reduce(
-          (sum, entry) => sum + Number(entry.revenue),
-          0
-        ) || 0;
+      const ordersCount = ordersRes.data?.length || 0;
       const memberCount = membersRes.data?.length || 0;
 
       // Build activity feed from recent changes
@@ -117,7 +106,7 @@ export default function DashboardPage() {
       setData({
         nextMeeting,
         taskCount,
-        monthlyRevenue,
+        ordersCount,
         memberCount,
         activities,
       });
@@ -161,7 +150,7 @@ export default function DashboardPage() {
       <OverviewCards
         nextMeeting={data?.nextMeeting || null}
         taskCount={data?.taskCount || 0}
-        monthlyRevenue={data?.monthlyRevenue || 0}
+        ordersCount={data?.ordersCount || 0}
         memberCount={data?.memberCount || 0}
       />
 
