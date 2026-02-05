@@ -67,7 +67,6 @@ export const customerOrderSchema = z.object({
     .string()
     .trim()
     .optional()
-    .transform((value) => value || undefined)
     .refine((value) => !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), {
       message: "Adresse e-mail invalide",
     }),
