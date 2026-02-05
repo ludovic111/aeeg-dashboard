@@ -3,36 +3,72 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Upload } from "lucide-react";
 import Link from "next/link";
-import { MeetingForm } from "@/components/meetings/meeting-form";
 import { useMeetingMutations } from "@/hooks/use-meetings";
+import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { MeetingFormData } from "@/lib/validations";
 
 export default function NewMeetingPage() {
   const [loading, setLoading] = useState(false);
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [agendaFile, setAgendaFile] = useState<File | null>(null);
   const router = useRouter();
+  const supabase = createClient();
   const { createMeeting } = useMeetingMutations();
 
-  const handleSubmit = async (data: MeetingFormData) => {
-    setLoading(true);
-    const { meeting, error } = await createMeeting({
-      title: data.title,
-      date: new Date(data.date).toISOString(),
-      location: data.location || null,
-      agenda: data.agenda || null,
-      minutes: data.minutes || null,
-    });
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
-    if (error) {
-      toast.error("Erreur lors de la création de la réunion");
+    if (!agendaFile) {
+      toast.error("Merci de sélectionner un PDF d'ordre du jour");
+      return;
+    }
+
+    if (agendaFile.type !== "application/pdf") {
+      toast.error("Le fichier doit être au format PDF");
+      return;
+    }
+
+    setLoading(true);
+    const meetingDate = new Date(`${date}T12:00:00`);
+    const safeFileName = agendaFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const filePath = `${date}/${Date.now()}-${safeFileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("meeting-agendas")
+      .upload(filePath, agendaFile, {
+        contentType: "application/pdf",
+        upsert: false,
+      });
+
+    if (uploadError) {
+      toast.error(uploadError.message || "Impossible d'envoyer le PDF");
       setLoading(false);
       return;
     }
 
-    toast.success("Réunion créée avec succès !");
+    const title = `Réunion du ${meetingDate.toLocaleDateString("fr-CH")}`;
+    const { meeting, error } = await createMeeting({
+      title,
+      date: meetingDate.toISOString(),
+      location: null,
+      agenda: null,
+      agenda_pdf_path: filePath,
+      minutes: null,
+    });
+
+    if (error) {
+      await supabase.storage.from("meeting-agendas").remove([filePath]);
+      toast.error(error.message || "Erreur lors de la création de la réunion");
+      setLoading(false);
+      return;
+    }
+
+    toast.success("Réunion créée et ordre du jour importé !");
     router.push(`/meetings/${meeting?.id || ""}`);
   };
 
@@ -47,14 +83,51 @@ export default function NewMeetingPage() {
         <div>
           <h1 className="text-3xl font-black">📝 Nouvelle réunion</h1>
           <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
-            Créer une nouvelle réunion du comité
+            Choisir une date et ajouter le PDF de l&apos;ordre du jour
           </p>
         </div>
       </div>
 
       <Card>
-        <CardContent className="pt-6">
-          <MeetingForm onSubmit={handleSubmit} loading={loading} />
+        <CardHeader>
+          <CardTitle className="text-base">
+            📄 Ordre du jour (PDF)
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="meeting-date">Date de réunion *</Label>
+              <Input
+                id="meeting-date"
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="agenda-file">PDF de l&apos;ordre du jour *</Label>
+              <Input
+                id="agenda-file"
+                type="file"
+                accept="application/pdf"
+                onChange={(e) => setAgendaFile(e.target.files?.[0] || null)}
+                required
+              />
+              {agendaFile && (
+                <p className="text-xs font-bold text-[var(--foreground)]/60">
+                  Fichier: {agendaFile.name}
+                </p>
+              )}
+            </div>
+
+            <Button type="submit" disabled={loading}>
+              <Upload className="h-4 w-4" strokeWidth={3} />
+              {loading ? "Import en cours..." : "Créer la réunion"}
+            </Button>
+          </form>
         </CardContent>
       </Card>
     </div>

@@ -14,9 +14,8 @@ export default function MeetingsPage() {
   const [tab, setTab] = useState<"upcoming" | "past">("upcoming");
   const [search, setSearch] = useState("");
 
-  const now = new Date();
-
   const filtered = useMemo(() => {
+    const now = new Date();
     return meetings
       .filter((m) => {
         const meetingDate = new Date(m.date);
@@ -29,7 +28,7 @@ export default function MeetingsPage() {
           m.title.toLowerCase().includes(search.toLowerCase()) ||
           m.location?.toLowerCase().includes(search.toLowerCase())
       );
-  }, [meetings, tab, search, now]);
+  }, [meetings, tab, search]);
 
   return (
     <div className="space-y-6">
@@ -37,7 +36,7 @@ export default function MeetingsPage() {
         <div>
           <h1 className="text-3xl font-black">📋 Réunions</h1>
           <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
-            Gérer les réunions du comité
+            Planifier une date et consulter l&apos;ordre du jour (PDF)
           </p>
         </div>
         <Link href="/meetings/new">

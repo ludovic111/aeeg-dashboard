@@ -21,6 +21,7 @@ export interface Meeting {
   date: string;
   location: string | null;
   agenda: string | null;
+  agenda_pdf_path: string | null;
   minutes: string | null;
   created_by: string | null;
   created_at: string;

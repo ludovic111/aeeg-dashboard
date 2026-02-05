@@ -4,32 +4,18 @@ import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
-import dynamic from "next/dynamic";
-import { ArrowLeft, MapPin, Clock, Edit2, Trash2 } from "lucide-react";
+import { ArrowLeft, MapPin, Clock, ExternalLink, Trash2 } from "lucide-react";
 import { useMeeting, useMeetingMutations } from "@/hooks/use-meetings";
 import { useAuth } from "@/hooks/use-auth";
 import { ActionItemsList } from "@/components/meetings/action-items-list";
-import { MeetingForm } from "@/components/meetings/meeting-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { formatDateTime } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile } from "@/types";
-import type { MeetingFormData } from "@/lib/validations";
-
-const MDPreview = dynamic(
-  () => import("@uiw/react-md-editor").then((mod) => mod.default.Markdown),
-  { ssr: false, loading: () => <div className="brutal-skeleton h-32" /> }
-);
 
 export default function MeetingDetailPage() {
   const params = useParams();
@@ -37,9 +23,7 @@ export default function MeetingDetailPage() {
   const id = params.id as string;
   const { meeting, actionItems, loading, refetch } = useMeeting(id);
   const { isAdmin, isCommitteeMember, profile } = useAuth();
-  const { updateMeeting, deleteMeeting } = useMeetingMutations();
-  const [editing, setEditing] = useState(false);
-  const [editLoading, setEditLoading] = useState(false);
+  const { deleteMeeting } = useMeetingMutations();
   const [members, setMembers] = useState<Profile[]>([]);
   const supabase = createClient();
 
@@ -53,25 +37,6 @@ export default function MeetingDetailPage() {
   const canEdit =
     isAdmin ||
     (isCommitteeMember && meeting?.created_by === profile?.id);
-
-  const handleUpdate = async (data: MeetingFormData) => {
-    setEditLoading(true);
-    const { error } = await updateMeeting(id, {
-      title: data.title,
-      date: new Date(data.date).toISOString(),
-      location: data.location || null,
-      agenda: data.agenda || null,
-      minutes: data.minutes || null,
-    });
-    if (error) {
-      toast.error("Erreur lors de la mise à jour");
-    } else {
-      toast.success("Réunion mise à jour !");
-      setEditing(false);
-      refetch();
-    }
-    setEditLoading(false);
-  };
 
   const handleDelete = async () => {
     if (!confirm("Supprimer cette réunion ?")) return;
@@ -107,6 +72,11 @@ export default function MeetingDetailPage() {
   }
 
   const isPast = new Date(meeting.date) < new Date();
+  const agendaPdfUrl = meeting.agenda_pdf_path
+    ? supabase.storage
+        .from("meeting-agendas")
+        .getPublicUrl(meeting.agenda_pdf_path).data.publicUrl
+    : null;
 
   return (
     <div className="space-y-6 max-w-3xl">
@@ -135,42 +105,48 @@ export default function MeetingDetailPage() {
           </div>
         </div>
         {canEdit && (
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
-              <Edit2 className="h-4 w-4" strokeWidth={3} />
-              Modifier
+          isAdmin && (
+            <Button variant="destructive" size="sm" onClick={handleDelete}>
+              <Trash2 className="h-4 w-4" strokeWidth={3} />
             </Button>
-            {isAdmin && (
-              <Button variant="destructive" size="sm" onClick={handleDelete}>
-                <Trash2 className="h-4 w-4" strokeWidth={3} />
-              </Button>
-            )}
-          </div>
+          )
         )}
       </div>
 
-      {/* Agenda */}
-      {meeting.agenda && (
+      {/* Agenda PDF */}
+      {agendaPdfUrl ? (
         <Card accentColor="#FFE66D">
           <CardHeader>
-            <CardTitle className="text-base">📑 Ordre du jour</CardTitle>
+            <CardTitle className="text-base">📑 Ordre du jour (PDF)</CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-sm whitespace-pre-wrap">{meeting.agenda}</p>
+          <CardContent className="space-y-3">
+            <div className="h-[70vh] w-full border-2 border-[var(--border-color)] rounded-lg overflow-hidden bg-white">
+              <iframe
+                title="Ordre du jour"
+                src={agendaPdfUrl}
+                className="h-full w-full"
+              />
+            </div>
+            <a
+              href={agendaPdfUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-black underline"
+            >
+              Ouvrir le PDF dans un nouvel onglet
+              <ExternalLink className="h-4 w-4" strokeWidth={3} />
+            </a>
           </CardContent>
         </Card>
-      )}
-
-      {/* Minutes */}
-      {meeting.minutes && (
-        <Card accentColor="#4ECDC4">
+      ) : (
+        <Card accentColor="#FFE66D">
           <CardHeader>
-            <CardTitle className="text-base">📝 Procès-verbal</CardTitle>
+            <CardTitle className="text-base">📑 Ordre du jour (PDF)</CardTitle>
           </CardHeader>
           <CardContent>
-            <div data-color-mode="light" className="prose prose-sm max-w-none">
-              <MDPreview source={meeting.minutes} />
-            </div>
+            <p className="text-sm font-bold text-[var(--foreground)]/60">
+              Aucun PDF importé pour cette réunion.
+            </p>
           </CardContent>
         </Card>
       )}
@@ -185,20 +161,6 @@ export default function MeetingDetailPage() {
         canEdit={canEdit}
         onRefresh={refetch}
       />
-
-      {/* Edit Dialog */}
-      <Dialog open={editing} onOpenChange={setEditing}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Modifier la réunion</DialogTitle>
-          </DialogHeader>
-          <MeetingForm
-            meeting={meeting}
-            onSubmit={handleUpdate}
-            loading={editLoading}
-          />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
