@@ -1,0 +1,147 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { Shield } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
+import { registerSchema, type RegisterFormData } from "@/lib/validations";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+export default function RegisterPage() {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const supabase = createClient();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+  });
+
+  const onSubmit = async (data: RegisterFormData) => {
+    setLoading(true);
+    const { error } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        data: {
+          full_name: data.full_name,
+        },
+      },
+    });
+
+    if (error) {
+      toast.error(error.message || "Erreur lors de l'envoi de la demande.");
+      setLoading(false);
+      return;
+    }
+
+    toast.success(
+      "Demande envoyee ! Un administrateur examinera votre demande."
+    );
+    router.push("/login");
+  };
+
+  return (
+    <Card accentColor="#AA96DA">
+      <CardHeader>
+        <CardTitle className="text-2xl flex items-center gap-2">
+          <Shield className="h-6 w-6" strokeWidth={3} />
+          Demander l&apos;acces
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm font-bold text-[var(--foreground)]/60 mb-4">
+          Ce site est reserve aux membres du comite de l&apos;AEEG.
+          Remplissez ce formulaire pour demander l&apos;acces.
+        </p>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="full_name">Nom complet</Label>
+            <Input
+              id="full_name"
+              placeholder="Marie Dupont"
+              {...register("full_name")}
+            />
+            {errors.full_name && (
+              <p className="text-sm font-bold text-brutal-red">
+                {errors.full_name.message}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="email">Adresse e-mail</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="prenom.nom@edu.ge.ch"
+              {...register("email")}
+            />
+            {errors.email && (
+              <p className="text-sm font-bold text-brutal-red">
+                {errors.email.message}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="password">Mot de passe</Label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="••••••"
+              {...register("password")}
+            />
+            {errors.password && (
+              <p className="text-sm font-bold text-brutal-red">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
+            <Input
+              id="confirmPassword"
+              type="password"
+              placeholder="••••••"
+              {...register("confirmPassword")}
+            />
+            {errors.confirmPassword && (
+              <p className="text-sm font-bold text-brutal-red">
+                {errors.confirmPassword.message}
+              </p>
+            )}
+          </div>
+
+          <Button type="submit" variant="purple" className="w-full" disabled={loading}>
+            {loading ? "Envoi en cours..." : "Envoyer la demande"}
+          </Button>
+        </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-sm font-bold">
+            Deja un compte ?{" "}
+            <Link
+              href="/login"
+              className="text-brutal-teal underline underline-offset-4 hover:text-brutal-coral transition-colors"
+            >
+              Se connecter
+            </Link>
+          </p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
