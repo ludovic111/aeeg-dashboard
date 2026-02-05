@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Plus, ClipboardList, CheckSquare, PackageSearch } from "lucide-react";
+import { Plus, ClipboardList, CheckSquare, PackageSearch, PartyPopper, Vote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function QuickActions() {
@@ -32,10 +32,22 @@ export function QuickActions() {
       href: "/tasks",
       variant: "coral" as const,
     },
+    {
+      label: "Soirées",
+      icon: PartyPopper,
+      href: "/parties",
+      variant: "mint" as const,
+    },
+    {
+      label: "Sondages",
+      icon: Vote,
+      href: "/polls",
+      variant: "outline" as const,
+    },
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">
       {actions.map((action) => {
         const Icon = action.icon;
         return (

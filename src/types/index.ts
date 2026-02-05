@@ -64,6 +64,7 @@ export interface PollVote {
   option_id: string;
   voter_id: string;
   created_at: string;
+  voter?: Pick<Profile, "id" | "full_name" | "email" | "avatar_url">;
 }
 
 export interface MeetingActionItem {

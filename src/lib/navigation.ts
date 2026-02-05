@@ -23,7 +23,7 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
   { href: "/meetings", label: "Réunions", icon: ClipboardList },
   { href: "/tasks", label: "Tâches", icon: CheckSquare },
   { href: "/orders", label: "Commandes", icon: PackageSearch },
-  { href: "/parties", label: "Parties", icon: PartyPopper },
+  { href: "/parties", label: "Soirées", icon: PartyPopper },
   { href: "/polls", label: "Sondages", icon: Vote },
   { href: "/files", label: "Fichiers", icon: FolderOpen },
   { href: "/feedback", label: "Retours", icon: MessageSquareWarning },

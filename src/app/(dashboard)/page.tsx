@@ -1,29 +1,46 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { AlertTriangle, Banknote, CalendarClock, ClipboardCheck, ListTodo, PackageSearch, Vote, Users } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { OverviewCards } from "@/components/dashboard/overview-cards";
 import { QuickActions } from "@/components/dashboard/quick-actions";
 import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { AdminPanel } from "@/components/dashboard/admin-panel";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { summarizeOrdersSales } from "@/lib/orders";
+import { formatCurrency, formatDateTime } from "@/lib/utils";
 import type { CustomerOrder } from "@/types";
 
 interface DashboardData {
-  taskCount: number;
+  openTaskCount: number;
+  overdueTaskCount: number;
+  tasksDueSoonCount: number;
   ordersCount: number;
+  ordersThisWeekCount: number;
   salesTotalChf: number;
+  openPollCount: number;
+  upcomingSoireeCount: number;
+  meetingsCount: number;
+  meetingsWithSummaryCount: number;
   memberCount: number;
   activities: Array<{
     id: string;
-    type: "meeting" | "task" | "member";
+    type: "meeting" | "task" | "sale" | "member";
     description: string;
     user_name: string;
     user_avatar?: string | null;
     created_at: string;
+  }>;
+  upcoming: Array<{
+    id: string;
+    type: "task" | "meeting" | "soiree";
+    title: string;
+    date: string;
+    subtitle: string;
   }>;
 }
 
@@ -35,42 +52,129 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function fetchDashboardData() {
-      const [tasksRes, ordersRes, membersRes] = await Promise.all([
+      const now = new Date();
+      const inSevenDays = new Date(now);
+      inSevenDays.setDate(inSevenDays.getDate() + 7);
+      const sevenDaysAgo = new Date(now);
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+      const [
+        tasksMetricsRes,
+        tasksActivityRes,
+        ordersRes,
+        membersRes,
+        meetingsRes,
+        pollsRes,
+        soireesRes,
+      ] = await Promise.all([
         supabase
           .from("tasks")
-          .select("id")
-          .in("status", ["todo", "in_progress"]),
-        supabase
-          .from("customer_orders")
-          .select("id, order_items, order_details"),
-        supabase.from("profiles").select("id"),
-      ]);
-
-      const taskCount = tasksRes.data?.length || 0;
-      const ordersCount = ordersRes.data?.length || 0;
-      const salesTotalChf = summarizeOrdersSales(
-        (ordersRes.data as Pick<CustomerOrder, "order_items" | "order_details">[]) || []
-      ).totalRevenueChf;
-      const memberCount = membersRes.data?.length || 0;
-
-      // Build activity feed from recent changes
-      const [recentMeetings, recentTasks] = await Promise.all([
-        supabase
-          .from("meetings")
-          .select("id, title, created_at, created_by, profiles!meetings_created_by_fkey(full_name, avatar_url)")
-          .order("created_at", { ascending: false })
-          .limit(5),
+          .select("id, title, status, deadline, created_at"),
         supabase
           .from("tasks")
           .select("id, title, status, created_at, created_by, profiles!tasks_created_by_fkey(full_name, avatar_url)")
           .order("created_at", { ascending: false })
           .limit(5),
+        supabase
+          .from("customer_orders")
+          .select("id, order_number, full_name, imported_at, order_items, order_details"),
+        supabase.from("profiles").select("id"),
+        supabase
+          .from("meetings")
+          .select("id, title, date, created_at, agenda_ai_summary, created_by, profiles!meetings_created_by_fkey(full_name, avatar_url)")
+          .order("created_at", { ascending: false })
+          .limit(10),
+        supabase
+          .from("polls")
+          .select("id, closes_at"),
+        supabase
+          .from("parties")
+          .select("id, name, event_date, event_time, place"),
       ]);
 
+      type TaskMetricRow = {
+        id: string;
+        title: string;
+        status: "todo" | "in_progress" | "done";
+        deadline: string | null;
+        created_at: string;
+      };
+      type OrderRow = Pick<CustomerOrder, "order_items" | "order_details"> & {
+        id: string;
+        order_number: string;
+        full_name: string;
+        imported_at: string;
+      };
+      type MeetingRow = {
+        id: string;
+        title: string;
+        date: string;
+        created_at: string;
+        agenda_ai_summary: string | null;
+        profiles:
+          | { full_name: string; avatar_url: string | null }
+          | Array<{ full_name: string; avatar_url: string | null }>
+          | null;
+      };
+      type PollRow = { id: string; closes_at: string | null };
+      type SoireeRow = {
+        id: string;
+        name: string;
+        event_date: string;
+        event_time: string;
+        place: string;
+      };
       type ProfileJoin = { full_name: string; avatar_url: string | null };
 
+      const tasks = (tasksMetricsRes.data as TaskMetricRow[]) || [];
+      const orders = (ordersRes.data as OrderRow[]) || [];
+      const meetings = ((meetingsRes.data as unknown as MeetingRow[]) || []).map(
+        (meeting) => ({
+          ...meeting,
+          profiles: Array.isArray(meeting.profiles)
+            ? (meeting.profiles[0] ?? null)
+            : meeting.profiles,
+        })
+      );
+      const polls = (pollsRes.data as PollRow[]) || [];
+      const soirees = (soireesRes.data as SoireeRow[]) || [];
+
+      const openTaskCount = tasks.filter((task) => task.status !== "done").length;
+      const overdueTaskCount = tasks.filter(
+        (task) =>
+          task.status !== "done" &&
+          task.deadline &&
+          new Date(task.deadline).getTime() < now.getTime()
+      ).length;
+      const tasksDueSoonCount = tasks.filter(
+        (task) =>
+          task.status !== "done" &&
+          task.deadline &&
+          new Date(task.deadline).getTime() >= now.getTime() &&
+          new Date(task.deadline).getTime() <= inSevenDays.getTime()
+      ).length;
+      const ordersCount = orders.length;
+      const ordersThisWeekCount = orders.filter(
+        (order) => new Date(order.imported_at).getTime() >= sevenDaysAgo.getTime()
+      ).length;
+      const salesTotalChf = summarizeOrdersSales(
+        orders || []
+      ).totalRevenueChf;
+      const memberCount = membersRes.data?.length || 0;
+      const meetingsCount = meetings.length;
+      const meetingsWithSummaryCount = meetings.filter(
+        (meeting) => Boolean(meeting.agenda_ai_summary?.trim())
+      ).length;
+      const openPollCount = polls.filter(
+        (poll) => !poll.closes_at || new Date(poll.closes_at).getTime() > now.getTime()
+      ).length;
+      const upcomingSoireeCount = soirees.filter((soiree) => {
+        const dateValue = new Date(`${soiree.event_date}T${(soiree.event_time || "00:00").slice(0, 5)}`);
+        return !Number.isNaN(dateValue.getTime()) && dateValue.getTime() >= now.getTime();
+      }).length;
+
       const activities = [
-        ...(recentMeetings.data || []).map((m) => {
+        ...meetings.slice(0, 5).map((m) => {
           const profile = m.profiles as unknown as ProfileJoin | null;
           return {
             id: m.id,
@@ -81,8 +185,14 @@ export default function DashboardPage() {
             created_at: m.created_at,
           };
         }),
-        ...(recentTasks.data || []).map((t) => {
-          const profile = t.profiles as unknown as ProfileJoin | null;
+        ...((tasksActivityRes.data || []) as Array<{
+          id: string;
+          title: string;
+          created_at: string;
+          profiles: ProfileJoin | ProfileJoin[] | null;
+        }>).map((t) => {
+          const rawProfile = t.profiles;
+          const profile = Array.isArray(rawProfile) ? rawProfile[0] : rawProfile;
           return {
             id: t.id,
             type: "task" as const,
@@ -92,6 +202,21 @@ export default function DashboardPage() {
             created_at: t.created_at,
           };
         }),
+        ...orders
+          .slice()
+          .sort(
+            (a, b) =>
+              new Date(b.imported_at).getTime() - new Date(a.imported_at).getTime()
+          )
+          .slice(0, 4)
+          .map((order) => ({
+            id: order.id,
+            type: "sale" as const,
+            description: `Commande #${order.order_number} ajoutée`,
+            user_name: order.full_name || "Client",
+            user_avatar: null,
+            created_at: order.imported_at,
+          })),
       ]
         .sort(
           (a, b) =>
@@ -100,12 +225,62 @@ export default function DashboardPage() {
         )
         .slice(0, 10);
 
+      const upcomingTasks = tasks
+        .filter(
+          (task) =>
+            task.status !== "done" &&
+            task.deadline &&
+            new Date(task.deadline).getTime() >= now.getTime()
+        )
+        .map((task) => ({
+          id: `task-${task.id}`,
+          type: "task" as const,
+          title: task.title,
+          date: task.deadline as string,
+          subtitle: "Échéance de tâche",
+        }));
+
+      const upcomingMeetings = meetings
+        .filter((meeting) => new Date(meeting.date).getTime() >= now.getTime())
+        .map((meeting) => ({
+          id: `meeting-${meeting.id}`,
+          type: "meeting" as const,
+          title: meeting.title,
+          date: meeting.date,
+          subtitle: "Réunion",
+        }));
+
+      const upcomingSoirees = soirees
+        .map((soiree) => {
+          const iso = `${soiree.event_date}T${(soiree.event_time || "00:00").slice(0, 5)}`;
+          return {
+            id: `soiree-${soiree.id}`,
+            type: "soiree" as const,
+            title: soiree.name,
+            date: iso,
+            subtitle: `Soirée · ${soiree.place}`,
+          };
+        })
+        .filter((entry) => new Date(entry.date).getTime() >= now.getTime());
+
+      const upcoming = [...upcomingTasks, ...upcomingMeetings, ...upcomingSoirees]
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        .slice(0, 10);
+
       setData({
-        taskCount,
+        openTaskCount,
+        overdueTaskCount,
+        tasksDueSoonCount,
         ordersCount,
+        ordersThisWeekCount,
         salesTotalChf,
+        openPollCount,
+        upcomingSoireeCount,
+        meetingsCount,
+        meetingsWithSummaryCount,
         memberCount,
         activities,
+        upcoming,
       });
       setLoading(false);
     }
@@ -117,23 +292,85 @@ export default function DashboardPage() {
     return (
       <div className="space-y-6">
         <Skeleton className="h-8 w-64" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4">
-          {[...Array(4)].map((_, i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+          {[...Array(8)].map((_, i) => (
             <Skeleton key={i} className="h-28" />
           ))}
         </div>
-        <Skeleton className="h-16" />
-        <Skeleton className="h-64" />
+        <Skeleton className="h-24" />
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <Skeleton className="h-80" />
+          <Skeleton className="h-80" />
+        </div>
       </div>
     );
   }
+
+  const cards = [
+    {
+      title: "Tâches ouvertes",
+      value: String(data?.openTaskCount || 0),
+      subtitle: `${data?.tasksDueSoonCount || 0} à traiter cette semaine`,
+      icon: ListTodo,
+      color: "#FFE66D",
+    },
+    {
+      title: "Tâches en retard",
+      value: String(data?.overdueTaskCount || 0),
+      subtitle: "à replanifier rapidement",
+      icon: AlertTriangle,
+      color: "#F38181",
+    },
+    {
+      title: "Ventes totales",
+      value: formatCurrency(data?.salesTotalChf || 0),
+      subtitle: `${data?.ordersCount || 0} commandes`,
+      icon: Banknote,
+      color: "#95E1D3",
+    },
+    {
+      title: "Commandes (7 jours)",
+      value: String(data?.ordersThisWeekCount || 0),
+      subtitle: "nouveaux ajouts",
+      icon: PackageSearch,
+      color: "#AA96DA",
+    },
+    {
+      title: "Réunions",
+      value: String(data?.meetingsCount || 0),
+      subtitle: `${data?.meetingsWithSummaryCount || 0} avec résumé IA`,
+      icon: ClipboardCheck,
+      color: "#FFE66D",
+    },
+    {
+      title: "Sondages ouverts",
+      value: String(data?.openPollCount || 0),
+      subtitle: "votes en cours",
+      icon: Vote,
+      color: "#95E1D3",
+    },
+    {
+      title: "Soirées à venir",
+      value: String(data?.upcomingSoireeCount || 0),
+      subtitle: "événements planifiés",
+      icon: CalendarClock,
+      color: "#F38181",
+    },
+    {
+      title: "Membres actifs",
+      value: String(data?.memberCount || 0),
+      subtitle: "sur la plateforme",
+      icon: Users,
+      color: "#AA96DA",
+    },
+  ];
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-black">🏠 Tableau de bord</h1>
         <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
-          Bienvenue sur le dashboard de l&apos;AEEG
+          Vue d&apos;ensemble opérationnelle de l&apos;AEEG
         </p>
       </div>
 
@@ -144,16 +381,87 @@ export default function DashboardPage() {
         </>
       )}
 
-      <OverviewCards
-        taskCount={data?.taskCount || 0}
-        ordersCount={data?.ordersCount || 0}
-        salesTotalChf={data?.salesTotalChf || 0}
-        memberCount={data?.memberCount || 0}
-      />
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        {cards.map((card) => {
+          const Icon = card.icon;
+          return (
+            <Card key={card.title} accentColor={card.color}>
+              <CardContent className="p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-bold text-[var(--foreground)]/60 uppercase tracking-wide">
+                      {card.title}
+                    </p>
+                    <p className="text-2xl font-black mt-1 font-mono">{card.value}</p>
+                    <p className="text-xs font-bold text-[var(--foreground)]/55 mt-1">
+                      {card.subtitle}
+                    </p>
+                  </div>
+                  <div
+                    className="p-2 rounded-lg border-2 border-[var(--border-color)]"
+                    style={{ backgroundColor: card.color }}
+                  >
+                    <Icon className="h-5 w-5 text-black" strokeWidth={3} />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
 
       <QuickActions />
 
-      <ActivityFeed activities={data?.activities || []} />
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
+        <Card accentColor="#4ECDC4">
+          <CardHeader>
+            <CardTitle className="text-base">⏱️ Prochaines échéances</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {(data?.upcoming || []).length === 0 ? (
+              <p className="text-sm font-bold text-[var(--foreground)]/60">
+                Aucune échéance à venir.
+              </p>
+            ) : (
+              <div className="space-y-2 max-h-80 overflow-y-auto">
+                {(data?.upcoming || []).map((item) => (
+                  <div
+                    key={item.id}
+                    className="rounded-lg border-2 border-[var(--border-color)] p-2"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-sm font-black truncate">{item.title}</p>
+                      <Badge
+                        variant={
+                          item.type === "task"
+                            ? "warning"
+                            : item.type === "meeting"
+                            ? "info"
+                            : "purple"
+                        }
+                      >
+                        {item.type === "task"
+                          ? "Tâche"
+                          : item.type === "meeting"
+                          ? "Réunion"
+                          : "Soirée"}
+                      </Badge>
+                    </div>
+                    <p className="text-xs font-bold text-[var(--foreground)]/65 mt-1">
+                      {item.subtitle}
+                    </p>
+                    <p className="text-xs font-bold text-[var(--foreground)]/50 mt-1">
+                      {formatDateTime(item.date)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <ActivityFeed activities={data?.activities || []} />
+      </div>
     </div>
   );
 }

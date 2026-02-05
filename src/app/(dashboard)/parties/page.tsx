@@ -137,7 +137,7 @@ export default function PartiesPage() {
       !newPartyPlace.trim() ||
       !newPartyManagerId
     ) {
-      toast.error("Complétez tous les champs de la party");
+      toast.error("Complétez tous les champs de la soirée");
       return;
     }
 
@@ -152,9 +152,9 @@ export default function PartiesPage() {
     });
 
     if (error) {
-      toast.error(error.message || "Impossible de créer la party");
+      toast.error(error.message || "Impossible de créer la soirée");
     } else {
-      toast.success("Party créée");
+      toast.success("Soirée créée");
       setNewPartyName("");
       setNewPartyDate("");
       setNewPartyTime("");
@@ -181,7 +181,7 @@ export default function PartiesPage() {
     if (error) {
       toast.error(error.message || "Impossible d'ajouter le membre");
     } else {
-      toast.success("Membre ajouté à la party");
+      toast.success("Membre ajouté à la soirée");
       setMemberToAddId("");
     }
 
@@ -283,7 +283,7 @@ export default function PartiesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-black">🎉 Parties</h1>
+        <h1 className="text-3xl font-black">🎉 Soirées</h1>
         <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
           Planifiez les soirées, assignez les tâches et pilotez la liste de courses
         </p>
@@ -292,7 +292,7 @@ export default function PartiesPage() {
       {isAdmin && (
         <Card accentColor="#F38181">
           <CardHeader>
-            <CardTitle className="text-base">Créer une party</CardTitle>
+            <CardTitle className="text-base">Créer une soirée</CardTitle>
           </CardHeader>
           <CardContent>
             <form
@@ -303,7 +303,7 @@ export default function PartiesPage() {
                 <Label htmlFor="party-name">Nom *</Label>
                 <Input
                   id="party-name"
-                  placeholder="After exam party"
+                  placeholder="Soirée post-examens"
                   value={newPartyName}
                   onChange={(event) => setNewPartyName(event.target.value)}
                 />
@@ -358,7 +358,7 @@ export default function PartiesPage() {
               <div className="xl:col-span-6">
                 <Button type="submit" disabled={creatingParty}>
                   <Plus className="h-4 w-4" strokeWidth={3} />
-                  {creatingParty ? "Création..." : "Créer la party"}
+                  {creatingParty ? "Création..." : "Créer la soirée"}
                 </Button>
               </div>
             </form>
@@ -369,12 +369,12 @@ export default function PartiesPage() {
       <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr] gap-6 items-start">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Parties actives</CardTitle>
+            <CardTitle className="text-base">Soirées actives</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             {parties.length === 0 ? (
               <p className="text-sm font-bold text-[var(--foreground)]/60">
-                Aucune party disponible.
+                Aucune soirée disponible.
               </p>
             ) : (
               parties.map((party) => (
@@ -401,9 +401,9 @@ export default function PartiesPage() {
           <Card>
             <CardContent className="p-8 text-center">
               <p className="text-4xl mb-2">🎈</p>
-              <p className="font-black">Sélectionnez une party</p>
+              <p className="font-black">Sélectionnez une soirée</p>
               <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
-                Choisissez une party pour gérer les membres, tâches et courses.
+                Choisissez une soirée pour gérer les membres, tâches et courses.
               </p>
             </CardContent>
           </Card>
@@ -462,11 +462,11 @@ export default function PartiesPage() {
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
               <Card accentColor="#AA96DA">
                 <CardHeader>
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <Users className="h-4 w-4" strokeWidth={3} />
-                    Membres de la party
-                  </CardTitle>
-                </CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Users className="h-4 w-4" strokeWidth={3} />
+                    Membres de la soirée
+                </CardTitle>
+              </CardHeader>
                 <CardContent className="space-y-3">
                   {canManageSelectedParty && (
                     <div className="flex flex-col sm:flex-row gap-2">
@@ -495,7 +495,7 @@ export default function PartiesPage() {
 
                   {selectedParty.members.length === 0 ? (
                     <p className="text-sm font-bold text-[var(--foreground)]/60">
-                      Aucun membre dans cette party.
+                      Aucun membre dans cette soirée.
                     </p>
                   ) : (
                     selectedParty.members.map((member) => (
@@ -540,7 +540,7 @@ export default function PartiesPage() {
                 <CardHeader>
                   <CardTitle className="text-base flex items-center gap-2">
                     <ListChecks className="h-4 w-4" strokeWidth={3} />
-                    Tâches de la party
+                    Tâches de la soirée
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
@@ -590,7 +590,7 @@ export default function PartiesPage() {
 
                   {selectedParty.tasks.length === 0 ? (
                     <p className="text-sm font-bold text-[var(--foreground)]/60">
-                      Aucune tâche pour cette party.
+                      Aucune tâche pour cette soirée.
                     </p>
                   ) : (
                     selectedParty.tasks.map((task) => {

@@ -15,7 +15,7 @@ import { formatDateTime } from "@/lib/utils";
 
 export default function PollsPage() {
   const { isCommitteeMember } = useAuth();
-  const { polls, loading, createPoll, votePoll } = usePolls();
+  const { polls, loading, createPoll, togglePollVote } = usePolls();
 
   const [question, setQuestion] = useState("");
   const [description, setDescription] = useState("");
@@ -78,7 +78,7 @@ export default function PollsPage() {
 
   const handleVote = async (pollId: string, optionId: string) => {
     setVotingPollId(pollId);
-    const { error } = await votePoll(pollId, optionId);
+    const { error } = await togglePollVote(pollId, optionId);
 
     if (error) {
       toast.error(error.message || "Impossible d'enregistrer votre vote");
@@ -92,7 +92,7 @@ export default function PollsPage() {
       <div>
         <h1 className="text-3xl font-black">🗳️ Sondages</h1>
         <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
-          Créez des votes et suivez les résultats en temps réel
+          Créez des votes multi-choix et consultez le détail des votants
         </p>
       </div>
 
@@ -216,8 +216,8 @@ export default function PollsPage() {
                 <CardHeader>
                   <CardTitle className="text-base">{poll.question}</CardTitle>
                   <p className="text-xs font-bold text-[var(--foreground)]/60">
-                    {poll.creator?.full_name || "Membre du comité"} · {poll.total_votes} vote
-                    {poll.total_votes > 1 ? "s" : ""}
+                    {poll.creator?.full_name || "Membre du comité"} · {poll.total_voters} votant
+                    {poll.total_voters > 1 ? "s" : ""} · {poll.total_votes} choix
                     {poll.closes_at
                       ? ` · Clôture: ${formatDateTime(poll.closes_at)}`
                       : ""}
@@ -231,22 +231,44 @@ export default function PollsPage() {
                 </CardHeader>
                 <CardContent className="space-y-2">
                   {poll.options.map((option) => {
-                    const voted = poll.user_vote_option_id === option.id;
+                    const voted = poll.user_vote_option_ids.includes(option.id);
 
                     return (
-                      <Button
+                      <div
                         key={option.id}
-                        type="button"
-                        variant={voted ? "default" : "outline"}
-                        className="w-full justify-between"
-                        disabled={isClosed || votingPollId === poll.id}
-                        onClick={() => handleVote(poll.id, option.id)}
+                        className="rounded-lg border-2 border-[var(--border-color)] p-2 space-y-2"
                       >
-                        <span>{option.label}</span>
-                        <span className="text-xs font-black">
-                          {option.vote_count} ({option.vote_percentage}%)
-                        </span>
-                      </Button>
+                        <Button
+                          type="button"
+                          variant={voted ? "default" : "outline"}
+                          className="w-full justify-between"
+                          disabled={isClosed || votingPollId === poll.id}
+                          onClick={() => handleVote(poll.id, option.id)}
+                        >
+                          <span>{option.label}</span>
+                          <span className="text-xs font-black">
+                            {option.vote_count} ({option.vote_percentage}%)
+                          </span>
+                        </Button>
+
+                        <div className="space-y-1">
+                          {option.votes.length === 0 ? (
+                            <p className="text-xs font-bold text-[var(--foreground)]/55">
+                              Aucun vote sur cette option.
+                            </p>
+                          ) : (
+                            option.votes.map((vote) => (
+                              <p
+                                key={vote.id}
+                                className="text-xs font-bold text-[var(--foreground)]/70"
+                              >
+                                {vote.voter?.full_name || vote.voter?.email || "Membre"} ·{" "}
+                                {formatDateTime(vote.created_at)}
+                              </p>
+                            ))
+                          )}
+                        </div>
+                      </div>
                     );
                   })}
                 </CardContent>

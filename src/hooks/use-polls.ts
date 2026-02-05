@@ -7,12 +7,14 @@ import type { Poll, PollOption, PollVote } from "@/types";
 export interface PollOptionWithStats extends PollOption {
   vote_count: number;
   vote_percentage: number;
+  votes: PollVote[];
 }
 
 export interface PollWithStats extends Poll {
   options: PollOptionWithStats[];
   total_votes: number;
-  user_vote_option_id: string | null;
+  total_voters: number;
+  user_vote_option_ids: string[];
 }
 
 interface CreatePollInput {
@@ -55,11 +57,20 @@ export function usePolls() {
         .select("*")
         .in("poll_id", pollIds)
         .order("position", { ascending: true }),
-      supabase.from("poll_votes").select("*").in("poll_id", pollIds),
+      supabase
+        .from("poll_votes")
+        .select(
+          "*, voter:profiles!poll_votes_voter_id_fkey(id, full_name, email, avatar_url)"
+        )
+        .in("poll_id", pollIds)
+        .order("created_at", { ascending: false }),
     ]);
 
     const options = (optionsRes.data as PollOption[]) || [];
-    const votes = (votesRes.data as PollVote[]) || [];
+    const votes = ((votesRes.data as PollVote[]) || []).map((vote) => ({
+      ...vote,
+      voter: Array.isArray(vote.voter) ? vote.voter[0] : vote.voter,
+    }));
 
     const byPollOptions = new Map<string, PollOption[]>();
     for (const option of options) {
@@ -79,11 +90,11 @@ export function usePolls() {
       const pollOptions = byPollOptions.get(poll.id) || [];
       const pollVotes = byPollVotes.get(poll.id) || [];
       const totalVotes = pollVotes.length;
+      const totalVoters = new Set(pollVotes.map((vote) => vote.voter_id)).size;
 
       const optionsWithStats: PollOptionWithStats[] = pollOptions.map((option) => {
-        const voteCount = pollVotes.filter(
-          (vote) => vote.option_id === option.id
-        ).length;
+        const optionVotes = pollVotes.filter((vote) => vote.option_id === option.id);
+        const voteCount = optionVotes.length;
         const votePercentage =
           totalVotes > 0 ? Math.round((voteCount / totalVotes) * 100) : 0;
 
@@ -91,16 +102,20 @@ export function usePolls() {
           ...option,
           vote_count: voteCount,
           vote_percentage: votePercentage,
+          votes: optionVotes,
         };
       });
 
-      const userVote = pollVotes.find((vote) => vote.voter_id === user?.id);
+      const userVoteOptionIds = pollVotes
+        .filter((vote) => vote.voter_id === user?.id)
+        .map((vote) => vote.option_id);
 
       return {
         ...poll,
         options: optionsWithStats,
         total_votes: totalVotes,
-        user_vote_option_id: userVote?.option_id || null,
+        total_voters: totalVoters,
+        user_vote_option_ids: userVoteOptionIds,
       } as PollWithStats;
     });
 
@@ -175,7 +190,7 @@ export function usePolls() {
     return { error: null };
   };
 
-  const votePoll = async (pollId: string, optionId: string) => {
+  const togglePollVote = async (pollId: string, optionId: string) => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -184,16 +199,25 @@ export function usePolls() {
       return { error: { message: "Utilisateur non authentifié" } };
     }
 
-    const { error } = await supabase
+    const { data: existingVote, error: existingVoteError } = await supabase
       .from("poll_votes")
-      .upsert(
-        {
+      .select("id")
+      .eq("poll_id", pollId)
+      .eq("option_id", optionId)
+      .eq("voter_id", user.id)
+      .maybeSingle();
+
+    if (existingVoteError) {
+      return { error: existingVoteError };
+    }
+
+    const { error } = existingVote
+      ? await supabase.from("poll_votes").delete().eq("id", existingVote.id)
+      : await supabase.from("poll_votes").insert({
           poll_id: pollId,
           option_id: optionId,
           voter_id: user.id,
-        },
-        { onConflict: "poll_id,voter_id" }
-      );
+        });
 
     if (!error) {
       await fetchPolls();
@@ -206,7 +230,7 @@ export function usePolls() {
     polls,
     loading,
     createPoll,
-    votePoll,
+    togglePollVote,
     refetch: fetchPolls,
   };
 }
