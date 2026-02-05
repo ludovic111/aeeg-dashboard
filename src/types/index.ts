@@ -3,6 +3,8 @@ export type TaskStatus = "todo" | "in_progress" | "done";
 export type TaskPriority = "low" | "medium" | "high" | "urgent";
 export type FeedbackKind = "issue" | "recommendation";
 export type FeedbackStatus = "open" | "resolved";
+export type PartyMemberRole = "manager" | "member";
+export type PartyTaskStatus = "todo" | "done";
 export type OrderProduct = "emilie_gourde" | "sweat_emilie_gourd";
 export type SweatColor = "gris" | "bleu_marine" | "vert" | "noir" | "rose";
 export type SweatSize = "s" | "m" | "l" | "xl";
@@ -131,6 +133,54 @@ export interface SharedFile {
   size_bytes: number;
   created_by: string | null;
   created_at: string;
+}
+
+export interface Party {
+  id: string;
+  name: string;
+  event_date: string;
+  event_time: string;
+  place: string;
+  manager_id: string;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+  manager?: Pick<Profile, "id" | "full_name" | "email" | "avatar_url">;
+}
+
+export interface PartyMember {
+  id: string;
+  party_id: string;
+  profile_id: string;
+  role: PartyMemberRole;
+  created_at: string;
+  profile?: Pick<Profile, "id" | "full_name" | "email" | "avatar_url">;
+}
+
+export interface PartyTask {
+  id: string;
+  party_id: string;
+  title: string;
+  description: string | null;
+  assigned_to: string;
+  status: PartyTaskStatus;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+  assignee?: Pick<Profile, "id" | "full_name" | "avatar_url">;
+  creator?: Pick<Profile, "id" | "full_name" | "avatar_url">;
+}
+
+export interface PartyGroceryItem {
+  id: string;
+  party_id: string;
+  label: string;
+  quantity: string | null;
+  checked: boolean;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+  creator?: Pick<Profile, "id" | "full_name" | "avatar_url">;
 }
 
 export interface UserFeedback {
