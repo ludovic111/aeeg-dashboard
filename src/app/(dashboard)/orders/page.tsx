@@ -10,6 +10,8 @@ import { OrdersForm } from "@/components/orders/orders-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { summarizeOrdersSales } from "@/lib/orders";
+import { formatCurrency } from "@/lib/utils";
 import type { CustomerOrderFormData } from "@/lib/validations";
 
 export default function OrdersPage() {
@@ -23,6 +25,8 @@ export default function OrdersPage() {
     const withEmail = orders.filter((order) => Boolean(order.email)).length;
     return Math.round((withEmail / orders.length) * 100);
   }, [orders]);
+
+  const salesSummary = useMemo(() => summarizeOrdersSales(orders), [orders]);
 
   if (!isCommitteeMember) {
     return (
@@ -52,8 +56,8 @@ export default function OrdersPage() {
     return (
       <div className="space-y-6">
         <Skeleton className="h-8 w-52" />
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {[...Array(3)].map((_, i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
+          {[...Array(5)].map((_, i) => (
             <Skeleton key={i} className="h-24" />
           ))}
         </div>
@@ -77,7 +81,7 @@ export default function OrdersPage() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
         <Card>
           <CardContent className="p-4">
             <p className="text-xs font-black uppercase tracking-wide text-[var(--foreground)]/60">
@@ -90,11 +94,27 @@ export default function OrdersPage() {
         <Card>
           <CardContent className="p-4">
             <p className="text-xs font-black uppercase tracking-wide text-[var(--foreground)]/60">
-              Avec email
+              Ventes totales
             </p>
-            <p className="text-3xl font-black mt-1">
-              {orders.filter((order) => Boolean(order.email)).length}
+            <p className="text-3xl font-black mt-1">{formatCurrency(salesSummary.totalRevenueChf)}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <p className="text-xs font-black uppercase tracking-wide text-[var(--foreground)]/60">
+              Sweats vendus
             </p>
+            <p className="text-3xl font-black mt-1">{salesSummary.sweatCount}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <p className="text-xs font-black uppercase tracking-wide text-[var(--foreground)]/60">
+              Gourdes vendues
+            </p>
+            <p className="text-3xl font-black mt-1">{salesSummary.gourdeCount}</p>
           </CardContent>
         </Card>
 

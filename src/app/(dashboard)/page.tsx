@@ -9,11 +9,14 @@ import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { AdminPanel } from "@/components/dashboard/admin-panel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
+import { summarizeOrdersSales } from "@/lib/orders";
+import type { CustomerOrder } from "@/types";
 
 interface DashboardData {
   nextMeeting: { title: string; date: string } | null;
   taskCount: number;
   ordersCount: number;
+  salesTotalChf: number;
   memberCount: number;
   activities: Array<{
     id: string;
@@ -47,13 +50,16 @@ export default function DashboardPage() {
           .in("status", ["todo", "in_progress"]),
         supabase
           .from("customer_orders")
-          .select("id"),
+          .select("id, order_items, order_details"),
         supabase.from("profiles").select("id"),
       ]);
 
       const nextMeeting = meetingsRes.data?.[0] || null;
       const taskCount = tasksRes.data?.length || 0;
       const ordersCount = ordersRes.data?.length || 0;
+      const salesTotalChf = summarizeOrdersSales(
+        (ordersRes.data as Pick<CustomerOrder, "order_items" | "order_details">[]) || []
+      ).totalRevenueChf;
       const memberCount = membersRes.data?.length || 0;
 
       // Build activity feed from recent changes
@@ -107,6 +113,7 @@ export default function DashboardPage() {
         nextMeeting,
         taskCount,
         ordersCount,
+        salesTotalChf,
         memberCount,
         activities,
       });
@@ -120,8 +127,8 @@ export default function DashboardPage() {
     return (
       <div className="space-y-6">
         <Skeleton className="h-8 w-64" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[...Array(4)].map((_, i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          {[...Array(5)].map((_, i) => (
             <Skeleton key={i} className="h-28" />
           ))}
         </div>
@@ -151,6 +158,7 @@ export default function DashboardPage() {
         nextMeeting={data?.nextMeeting || null}
         taskCount={data?.taskCount || 0}
         ordersCount={data?.ordersCount || 0}
+        salesTotalChf={data?.salesTotalChf || 0}
         memberCount={data?.memberCount || 0}
       />
 

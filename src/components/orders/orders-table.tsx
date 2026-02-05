@@ -2,10 +2,11 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { formatRelative } from "@/lib/utils";
+import { formatCurrency, formatRelative } from "@/lib/utils";
 import {
   formatOrderItem,
   parseLegacyOrderDetails,
+  summarizeOrderSales,
 } from "@/lib/orders";
 import type { CustomerOrder } from "@/types";
 
@@ -37,6 +38,9 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                   Commande
                 </th>
                 <th className="text-left p-3 text-xs font-black uppercase tracking-wide">
+                  Vente
+                </th>
+                <th className="text-left p-3 text-xs font-black uppercase tracking-wide">
                   Ajout
                 </th>
               </tr>
@@ -46,7 +50,7 @@ export function OrdersTable({ orders }: OrdersTableProps) {
               {orders.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={5}
+                    colSpan={6}
                     className="p-8 text-center text-sm font-bold text-[var(--foreground)]/40"
                   >
                     Aucune commande
@@ -58,6 +62,7 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                     order.order_items?.length > 0
                       ? order.order_items
                       : parseLegacyOrderDetails(order.order_details);
+                  const orderRevenue = summarizeOrderSales(order).totalRevenueChf;
 
                   return (
                     <tr
@@ -87,6 +92,9 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                             <p>{order.order_details}</p>
                           )}
                         </div>
+                      </td>
+                      <td className="p-3 text-sm font-bold">
+                        {formatCurrency(orderRevenue)}
                       </td>
                       <td className="p-3 text-sm">
                         <Badge variant="info">{formatRelative(order.imported_at)}</Badge>

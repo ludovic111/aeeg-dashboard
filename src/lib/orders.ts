@@ -1,4 +1,10 @@
-import type { CustomerOrderItem, OrderProduct, SweatColor, SweatSize } from "@/types";
+import type {
+  CustomerOrder,
+  CustomerOrderItem,
+  OrderProduct,
+  SweatColor,
+  SweatSize,
+} from "@/types";
 
 export const ORDER_PRODUCTS = ["emilie_gourde", "sweat_emilie_gourd"] as const;
 export const SWEAT_COLORS = [
@@ -29,6 +35,17 @@ export const SWEAT_SIZE_LABELS: Record<SweatSize, string> = {
   l: "L",
   xl: "XL",
 };
+
+export const ORDER_PRICES_CHF: Record<OrderProduct, number> = {
+  emilie_gourde: 15,
+  sweat_emilie_gourd: 35,
+};
+
+export interface OrderSalesSummary {
+  sweatCount: number;
+  gourdeCount: number;
+  totalRevenueChf: number;
+}
 
 const COLOR_ALIASES: Record<string, SweatColor> = {
   gris: "gris",
@@ -125,4 +142,51 @@ export function formatOrderItem(item: CustomerOrderItem): string {
 
 export function formatOrderItems(items: CustomerOrderItem[]): string {
   return items.map((item) => formatOrderItem(item)).join(" + ");
+}
+
+function summarizeItems(items: CustomerOrderItem[]): OrderSalesSummary {
+  return items.reduce<OrderSalesSummary>(
+    (acc, item) => {
+      const quantity = Number.isFinite(item.quantity) ? item.quantity : 0;
+      if (item.product === "sweat_emilie_gourd") {
+        acc.sweatCount += quantity;
+      }
+      if (item.product === "emilie_gourde") {
+        acc.gourdeCount += quantity;
+      }
+      acc.totalRevenueChf += ORDER_PRICES_CHF[item.product] * quantity;
+      return acc;
+    },
+    { sweatCount: 0, gourdeCount: 0, totalRevenueChf: 0 }
+  );
+}
+
+function getOrderItems(
+  order: Pick<CustomerOrder, "order_items" | "order_details">
+): CustomerOrderItem[] {
+  if (Array.isArray(order.order_items) && order.order_items.length > 0) {
+    return order.order_items;
+  }
+  return parseLegacyOrderDetails(order.order_details || "");
+}
+
+export function summarizeOrderSales(
+  order: Pick<CustomerOrder, "order_items" | "order_details">
+): OrderSalesSummary {
+  return summarizeItems(getOrderItems(order));
+}
+
+export function summarizeOrdersSales(
+  orders: Array<Pick<CustomerOrder, "order_items" | "order_details">>
+): OrderSalesSummary {
+  return orders.reduce<OrderSalesSummary>(
+    (acc, order) => {
+      const summary = summarizeOrderSales(order);
+      acc.sweatCount += summary.sweatCount;
+      acc.gourdeCount += summary.gourdeCount;
+      acc.totalRevenueChf += summary.totalRevenueChf;
+      return acc;
+    },
+    { sweatCount: 0, gourdeCount: 0, totalRevenueChf: 0 }
+  );
 }
