@@ -42,34 +42,45 @@ export function useOrders() {
     };
   }, [supabase]);
 
-  const upsertOrder = async (data: {
+  const saveOrder = async (data: {
+    id?: string;
     order_number: string;
     full_name: string;
     order_items: CustomerOrder["order_items"];
     email?: string;
   }) => {
+    const { id, ...orderData } = data;
     const payload = {
-      ...data,
-      email: data.email || null,
-      order_details: formatOrderItems(data.order_items),
+      ...orderData,
+      email: orderData.email || null,
+      order_details: formatOrderItems(orderData.order_items),
       imported_at: new Date().toISOString(),
     };
 
-    const { data: savedOrder, error } = await supabase
-      .from("customer_orders")
-      .upsert(payload, { onConflict: "order_number" })
-      .select("*")
-      .single();
+    const query = id
+      ? supabase
+          .from("customer_orders")
+          .update(payload)
+          .eq("id", id)
+          .select("*")
+          .single()
+      : supabase
+          .from("customer_orders")
+          .upsert(payload, { onConflict: "order_number" })
+          .select("*")
+          .single();
+
+    const { data: savedOrder, error } = await query;
 
     if (!error && savedOrder) {
       setOrders((prev) => [
         savedOrder as CustomerOrder,
-        ...prev.filter((order) => order.order_number !== savedOrder.order_number),
+        ...prev.filter((order) => order.id !== savedOrder.id),
       ]);
     }
 
     return { error };
   };
 
-  return { orders, loading, upsertOrder };
+  return { orders, loading, saveOrder };
 }

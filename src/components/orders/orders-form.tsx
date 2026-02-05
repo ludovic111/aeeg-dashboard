@@ -3,16 +3,18 @@
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
+import { useEffect } from "react";
 import {
   customerOrderSchema,
   type CustomerOrderFormData,
 } from "@/lib/validations";
 import {
   ORDER_PRODUCT_LABELS,
+  parseLegacyOrderDetails,
   SWEAT_COLOR_LABELS,
   SWEAT_SIZE_LABELS,
 } from "@/lib/orders";
-import type { OrderProduct, SweatColor, SweatSize } from "@/types";
+import type { CustomerOrder, OrderProduct, SweatColor, SweatSize } from "@/types";
 import {
   Dialog,
   DialogContent,
@@ -34,7 +36,8 @@ import {
 interface OrdersFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: CustomerOrderFormData) => Promise<void>;
+  onSubmit: (data: CustomerOrderFormData) => Promise<boolean>;
+  initialOrder?: CustomerOrder | null;
   loading?: boolean;
 }
 
@@ -42,6 +45,7 @@ export function OrdersForm({
   open,
   onOpenChange,
   onSubmit,
+  initialOrder,
   loading,
 }: OrdersFormProps) {
   const {
@@ -73,16 +77,45 @@ export function OrdersForm({
 
   const orderItems = useWatch({ control, name: "order_items" });
 
+  useEffect(() => {
+    if (!open) return;
+
+    const initialItems =
+      initialOrder &&
+      (initialOrder.order_items?.length > 0
+        ? initialOrder.order_items
+        : parseLegacyOrderDetails(initialOrder.order_details));
+
+    reset({
+      order_number: initialOrder?.order_number || "",
+      full_name: initialOrder?.full_name || "",
+      email: initialOrder?.email || "",
+      order_items:
+        initialItems && initialItems.length > 0
+          ? initialItems
+          : [
+              {
+                product: "emilie_gourde",
+                quantity: 1,
+              },
+            ],
+    });
+  }, [open, initialOrder, reset]);
+
   const handleFormSubmit = async (data: CustomerOrderFormData) => {
-    await onSubmit(data);
-    reset();
+    const success = await onSubmit(data);
+    if (success) {
+      reset();
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>🧾 Ajouter une commande</DialogTitle>
+          <DialogTitle>
+            {initialOrder ? "✏️ Modifier la commande" : "🧾 Ajouter une commande"}
+          </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
@@ -306,7 +339,11 @@ export function OrdersForm({
 
           <DialogFooter>
             <Button type="submit" disabled={loading}>
-              {loading ? "Enregistrement..." : "Ajouter la commande"}
+              {loading
+                ? "Enregistrement..."
+                : initialOrder
+                ? "Enregistrer les modifications"
+                : "Ajouter la commande"}
             </Button>
           </DialogFooter>
         </form>

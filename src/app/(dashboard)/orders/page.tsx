@@ -13,12 +13,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { summarizeOrdersSales } from "@/lib/orders";
 import { formatCurrency } from "@/lib/utils";
 import type { CustomerOrderFormData } from "@/lib/validations";
+import type { CustomerOrder } from "@/types";
 
 export default function OrdersPage() {
   const { isCommitteeMember } = useAuth();
-  const { orders, loading, upsertOrder } = useOrders();
+  const { orders, loading, saveOrder } = useOrders();
   const [formOpen, setFormOpen] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
+  const [editingOrder, setEditingOrder] = useState<CustomerOrder | null>(null);
 
   const emailCoverage = useMemo(() => {
     if (orders.length === 0) return 0;
@@ -40,16 +42,44 @@ export default function OrdersPage() {
     );
   }
 
-  const handleCreateOrder = async (data: CustomerOrderFormData) => {
+  const handleSaveOrder = async (data: CustomerOrderFormData) => {
     setFormLoading(true);
-    const { error } = await upsertOrder(data);
+    const { error } = await saveOrder({
+      ...data,
+      id: editingOrder?.id,
+    });
     if (error) {
       toast.error("Impossible d'enregistrer la commande");
+      setFormLoading(false);
+      return false;
     } else {
-      toast.success("Commande enregistrée. Ajoutée en haut de la liste.");
+      toast.success(
+        editingOrder
+          ? "Commande modifiée."
+          : "Commande enregistrée. Ajoutée en haut de la liste."
+      );
       setFormOpen(false);
+      setEditingOrder(null);
     }
     setFormLoading(false);
+    return true;
+  };
+
+  const handleOpenCreate = () => {
+    setEditingOrder(null);
+    setFormOpen(true);
+  };
+
+  const handleOpenEdit = (order: CustomerOrder) => {
+    setEditingOrder(order);
+    setFormOpen(true);
+  };
+
+  const handleFormOpenChange = (open: boolean) => {
+    setFormOpen(open);
+    if (!open) {
+      setEditingOrder(null);
+    }
   };
 
   if (loading) {
@@ -75,7 +105,7 @@ export default function OrdersPage() {
             Les nouvelles commandes apparaissent en haut automatiquement
           </p>
         </div>
-        <Button onClick={() => setFormOpen(true)}>
+        <Button onClick={handleOpenCreate}>
           <Plus className="h-4 w-4" strokeWidth={3} />
           Ajouter une commande
         </Button>
@@ -128,12 +158,13 @@ export default function OrdersPage() {
         </Card>
       </div>
 
-      <OrdersTable orders={orders} />
+      <OrdersTable orders={orders} onEdit={handleOpenEdit} />
 
       <OrdersForm
         open={formOpen}
-        onOpenChange={setFormOpen}
-        onSubmit={handleCreateOrder}
+        onOpenChange={handleFormOpenChange}
+        onSubmit={handleSaveOrder}
+        initialOrder={editingOrder}
         loading={formLoading}
       />
     </div>

@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { formatCurrency, formatRelative } from "@/lib/utils";
 import {
   formatOrderItem,
@@ -9,12 +10,14 @@ import {
   summarizeOrderSales,
 } from "@/lib/orders";
 import type { CustomerOrder } from "@/types";
+import { Pencil } from "lucide-react";
 
 interface OrdersTableProps {
   orders: CustomerOrder[];
+  onEdit?: (order: CustomerOrder) => void;
 }
 
-export function OrdersTable({ orders }: OrdersTableProps) {
+export function OrdersTable({ orders, onEdit }: OrdersTableProps) {
   return (
     <Card>
       <CardHeader>
@@ -43,6 +46,9 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                 <th className="text-left p-3 text-xs font-black uppercase tracking-wide">
                   Ajout
                 </th>
+                <th className="text-left p-3 text-xs font-black uppercase tracking-wide">
+                  Actions
+                </th>
               </tr>
             </thead>
 
@@ -50,7 +56,7 @@ export function OrdersTable({ orders }: OrdersTableProps) {
               {orders.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={6}
+                    colSpan={7}
                     className="p-8 text-center text-sm font-bold text-[var(--foreground)]/40"
                   >
                     Aucune commande
@@ -98,6 +104,19 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                       </td>
                       <td className="p-3 text-sm">
                         <Badge variant="info">{formatRelative(order.imported_at)}</Badge>
+                      </td>
+                      <td className="p-3 text-sm">
+                        {onEdit && (
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            onClick={() => onEdit(order)}
+                          >
+                            <Pencil className="h-4 w-4" strokeWidth={3} />
+                            Modifier
+                          </Button>
+                        )}
                       </td>
                     </tr>
                   );
