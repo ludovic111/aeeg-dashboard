@@ -53,11 +53,11 @@ export async function updateSession(request: NextRequest) {
       .eq("id", user.id)
       .single();
 
-    const userRole = profile?.role;
+    const userRole = profile?.role as string | undefined;
 
     // Block pending users from dashboard — redirect to /pending
     if (
-      userRole === "pending" &&
+      (userRole === "pending" || userRole === "regular_member") &&
       !request.nextUrl.pathname.startsWith("/pending") &&
       !request.nextUrl.pathname.startsWith("/api/auth")
     ) {
@@ -72,7 +72,10 @@ export async function updateSession(request: NextRequest) {
       request.nextUrl.pathname.startsWith("/register")
     ) {
       const url = request.nextUrl.clone();
-      url.pathname = userRole === "pending" ? "/pending" : "/";
+      url.pathname =
+        userRole === "pending" || userRole === "regular_member"
+          ? "/pending"
+          : "/";
       return NextResponse.redirect(url);
     }
   }

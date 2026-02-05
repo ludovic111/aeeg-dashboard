@@ -28,7 +28,8 @@ export default function PendingPage() {
         .eq("id", user.id)
         .single();
 
-      if (profile?.role && profile.role !== "pending") {
+      const role = profile?.role as string | undefined;
+      if (role && role !== "pending" && role !== "regular_member") {
         router.push("/");
         router.refresh();
       }

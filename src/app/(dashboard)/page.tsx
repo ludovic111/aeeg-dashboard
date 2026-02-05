@@ -13,7 +13,6 @@ import { summarizeOrdersSales } from "@/lib/orders";
 import type { CustomerOrder } from "@/types";
 
 interface DashboardData {
-  nextMeeting: { title: string; date: string } | null;
   taskCount: number;
   ordersCount: number;
   salesTotalChf: number;
@@ -36,14 +35,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function fetchDashboardData() {
-      const now = new Date().toISOString();
-      const [meetingsRes, tasksRes, ordersRes, membersRes] = await Promise.all([
-        supabase
-          .from("meetings")
-          .select("title, date")
-          .gte("date", now)
-          .order("date", { ascending: true })
-          .limit(1),
+      const [tasksRes, ordersRes, membersRes] = await Promise.all([
         supabase
           .from("tasks")
           .select("id")
@@ -54,7 +46,6 @@ export default function DashboardPage() {
         supabase.from("profiles").select("id"),
       ]);
 
-      const nextMeeting = meetingsRes.data?.[0] || null;
       const taskCount = tasksRes.data?.length || 0;
       const ordersCount = ordersRes.data?.length || 0;
       const salesTotalChf = summarizeOrdersSales(
@@ -110,7 +101,6 @@ export default function DashboardPage() {
         .slice(0, 10);
 
       setData({
-        nextMeeting,
         taskCount,
         ordersCount,
         salesTotalChf,
@@ -127,8 +117,8 @@ export default function DashboardPage() {
     return (
       <div className="space-y-6">
         <Skeleton className="h-8 w-64" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-          {[...Array(5)].map((_, i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
             <Skeleton key={i} className="h-28" />
           ))}
         </div>
@@ -155,7 +145,6 @@ export default function DashboardPage() {
       )}
 
       <OverviewCards
-        nextMeeting={data?.nextMeeting || null}
         taskCount={data?.taskCount || 0}
         ordersCount={data?.ordersCount || 0}
         salesTotalChf={data?.salesTotalChf || 0}

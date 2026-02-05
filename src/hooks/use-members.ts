@@ -14,7 +14,7 @@ export function useMembers() {
     const { data } = await supabase
       .from("profiles")
       .select("*")
-      .neq("role", "pending")
+      .not("role", "in", '("pending","regular_member")')
       .order("full_name", { ascending: true });
     setMembers((data as Profile[]) || []);
     setLoading(false);
@@ -28,7 +28,7 @@ export function useMembers() {
       const { data } = await supabase
         .from("profiles")
         .select("*")
-        .neq("role", "pending")
+        .not("role", "in", '("pending","regular_member")')
         .order("full_name", { ascending: true });
 
       if (!active) return;

@@ -38,8 +38,10 @@ export default function DashboardLayout({
         .eq("id", user.id)
         .single();
 
+      const role = (data?.role || "") as string;
+
       // Block pending users from dashboard
-      if (data?.role === "pending") {
+      if (role === "pending" || role === "regular_member") {
         router.push("/pending");
         return;
       }

@@ -43,7 +43,8 @@ export function useAuth() {
   const isAdmin = profile?.role === "admin" || isSuperAdmin;
   const isCommitteeMember =
     profile?.role === "committee_member" || isAdmin;
-  const isPending = profile?.role === "pending";
+  const roleValue = (profile?.role || "") as string;
+  const isPending = roleValue === "pending" || roleValue === "regular_member";
 
   const signOut = async () => {
     await supabase.auth.signOut();

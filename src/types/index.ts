@@ -36,6 +36,34 @@ export interface Meeting {
   action_items?: MeetingActionItem[];
 }
 
+export interface Poll {
+  id: string;
+  question: string;
+  description: string | null;
+  closes_at: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+  creator?: Pick<Profile, "id" | "full_name" | "avatar_url">;
+  options?: PollOption[];
+}
+
+export interface PollOption {
+  id: string;
+  poll_id: string;
+  label: string;
+  position: number;
+  created_at: string;
+}
+
+export interface PollVote {
+  id: string;
+  poll_id: string;
+  option_id: string;
+  voter_id: string;
+  created_at: string;
+}
+
 export interface MeetingActionItem {
   id: string;
   meeting_id: string;
@@ -83,6 +111,26 @@ export interface CustomerOrderItem {
   quantity: number;
   color?: SweatColor;
   size?: SweatSize;
+}
+
+export interface SharedFolder {
+  id: string;
+  name: string;
+  parent_id: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SharedFile {
+  id: string;
+  folder_id: string | null;
+  name: string;
+  storage_path: string;
+  mime_type: string | null;
+  size_bytes: number;
+  created_by: string | null;
+  created_at: string;
 }
 
 export interface UserFeedback {

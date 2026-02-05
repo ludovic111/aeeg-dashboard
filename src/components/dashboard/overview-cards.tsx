@@ -1,11 +1,10 @@
 "use client";
 
-import { Banknote, CalendarDays, CheckSquare, PackageSearch, Users } from "lucide-react";
+import { Banknote, CheckSquare, PackageSearch, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 
 interface OverviewCardsProps {
-  nextMeeting: { title: string; date: string } | null;
   taskCount: number;
   ordersCount: number;
   salesTotalChf: number;
@@ -13,20 +12,12 @@ interface OverviewCardsProps {
 }
 
 export function OverviewCards({
-  nextMeeting,
   taskCount,
   ordersCount,
   salesTotalChf,
   memberCount,
 }: OverviewCardsProps) {
   const cards = [
-    {
-      title: "Prochaine réunion",
-      value: nextMeeting ? nextMeeting.title : "Aucune",
-      subtitle: nextMeeting ? formatDate(nextMeeting.date) : "",
-      icon: CalendarDays,
-      color: "#4ECDC4",
-    },
     {
       title: "Tâches en cours",
       value: String(taskCount),
@@ -58,7 +49,7 @@ export function OverviewCards({
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4">
       {cards.map((card) => {
         const Icon = card.icon;
         return (

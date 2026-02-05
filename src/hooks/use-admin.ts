@@ -17,12 +17,12 @@ export function useAdmin() {
       supabase
         .from("profiles")
         .select("*")
-        .eq("role", "pending")
+        .in("role", ["pending", "regular_member"])
         .order("created_at", { ascending: false }),
       supabase
         .from("profiles")
         .select("*")
-        .neq("role", "pending")
+        .not("role", "in", '("pending","regular_member")')
         .order("full_name", { ascending: true }),
     ]);
 
@@ -41,12 +41,12 @@ export function useAdmin() {
         supabase
           .from("profiles")
           .select("*")
-          .eq("role", "pending")
+          .in("role", ["pending", "regular_member"])
           .order("created_at", { ascending: false }),
         supabase
           .from("profiles")
           .select("*")
-          .neq("role", "pending")
+          .not("role", "in", '("pending","regular_member")')
           .order("full_name", { ascending: true }),
       ]);
 
