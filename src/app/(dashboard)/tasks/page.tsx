@@ -71,8 +71,12 @@ export default function TasksPage() {
         assigned_to: data.assigned_to || null,
         deadline: data.deadline ? new Date(data.deadline).toISOString() : null,
       });
-      if (error) toast.error("Erreur lors de la mise à jour");
-      else toast.success("Tâche mise à jour !");
+      if (error) {
+        toast.error(error.message || "Erreur lors de la mise à jour");
+        setMutating(false);
+        return;
+      }
+      toast.success("Tâche mise à jour !");
     } else {
       const { error } = await createTask({
         title: data.title,
@@ -82,8 +86,12 @@ export default function TasksPage() {
         assigned_to: data.assigned_to || null,
         deadline: data.deadline ? new Date(data.deadline).toISOString() : null,
       });
-      if (error) toast.error("Erreur lors de la création");
-      else toast.success("Tâche créée !");
+      if (error) {
+        toast.error(error.message || "Erreur lors de la création");
+        setMutating(false);
+        return;
+      }
+      toast.success("Tâche créée !");
     }
     setMutating(false);
     setDialogOpen(false);

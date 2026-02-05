@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash2 } from "lucide-react";
+import { useEffect } from "react";
 import { taskSchema, type TaskFormData } from "@/lib/validations";
 import {
   Dialog,
@@ -24,6 +25,8 @@ import {
 } from "@/components/ui/select";
 import { TASK_PRIORITIES, TASK_STATUSES } from "@/lib/constants";
 import type { Task, Profile, TaskStatus, TaskPriority } from "@/types";
+
+const UNASSIGNED_VALUE = "__unassigned__";
 
 interface TaskDialogProps {
   open: boolean;
@@ -71,6 +74,21 @@ export function TaskDialog({
     await onSubmit(data);
     reset();
   };
+
+  useEffect(() => {
+    if (!open) return;
+
+    reset({
+      title: task?.title || "",
+      description: task?.description || "",
+      status: task?.status || defaultStatus,
+      priority: task?.priority || "medium",
+      assigned_to: task?.assigned_to || "",
+      deadline: task?.deadline
+        ? new Date(task.deadline).toISOString().slice(0, 16)
+        : "",
+    });
+  }, [task, defaultStatus, open, reset]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -150,14 +168,19 @@ export function TaskDialog({
             <div className="space-y-2">
               <Label>Assigné à</Label>
               <Select
-                value={watch("assigned_to") || ""}
-                onValueChange={(v) => setValue("assigned_to", v)}
+                value={watch("assigned_to") || UNASSIGNED_VALUE}
+                onValueChange={(v) =>
+                  setValue(
+                    "assigned_to",
+                    v === UNASSIGNED_VALUE ? "" : v
+                  )
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Non assigné" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Non assigné</SelectItem>
+                  <SelectItem value={UNASSIGNED_VALUE}>Non assigné</SelectItem>
                   {members.map((m) => (
                     <SelectItem key={m.id} value={m.id}>
                       {m.full_name || m.email}
