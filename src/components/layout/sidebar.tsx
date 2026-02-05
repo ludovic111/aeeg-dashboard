@@ -7,7 +7,6 @@ import {
   ClipboardList,
   CheckSquare,
   PackageSearch,
-  CalendarDays,
   Users,
   LogOut,
 } from "lucide-react";
@@ -21,7 +20,6 @@ const navItems = [
   { href: "/meetings", label: "Réunions", icon: ClipboardList },
   { href: "/tasks", label: "Tâches", icon: CheckSquare },
   { href: "/orders", label: "Commandes", icon: PackageSearch },
-  { href: "/calendar", label: "Calendrier", icon: CalendarDays },
   { href: "/members", label: "Membres", icon: Users },
 ];
 

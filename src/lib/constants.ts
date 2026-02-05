@@ -48,7 +48,6 @@ export const NAV_ITEMS = [
   { href: "/meetings", label: "Réunions", icon: "ClipboardList" },
   { href: "/tasks", label: "Tâches", icon: "CheckSquare" },
   { href: "/orders", label: "Commandes", icon: "PackageSearch" },
-  { href: "/calendar", label: "Calendrier", icon: "CalendarDays" },
   { href: "/members", label: "Membres", icon: "Users" },
 ] as const;
 
