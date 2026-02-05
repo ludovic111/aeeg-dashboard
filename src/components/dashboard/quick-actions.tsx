@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Plus, ClipboardList, CheckSquare, CalendarDays } from "lucide-react";
+import { Plus, ClipboardList, CheckSquare, PackageSearch } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function QuickActions() {
@@ -21,9 +21,9 @@ export function QuickActions() {
       variant: "yellow" as const,
     },
     {
-      label: "Voir le calendrier",
-      icon: CalendarDays,
-      href: "/calendar",
+      label: "Voir commandes",
+      icon: PackageSearch,
+      href: "/orders",
       variant: "purple" as const,
     },
     {

@@ -38,8 +38,25 @@ export default function CalendarPage() {
   }, [supabase]);
 
   useEffect(() => {
-    fetchEvents();
-  }, [fetchEvents]);
+    let active = true;
+
+    async function loadInitialEvents() {
+      setLoading(true);
+      const { data } = await supabase
+        .from("events")
+        .select("*")
+        .order("start_date", { ascending: true });
+
+      if (!active) return;
+      setEvents((data as CalendarEvent[]) || []);
+      setLoading(false);
+    }
+
+    loadInitialEvents();
+    return () => {
+      active = false;
+    };
+  }, [supabase]);
 
   // Realtime
   useEffect(() => {

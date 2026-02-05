@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import dynamic from "next/dynamic";
 import { meetingSchema, type MeetingFormData } from "@/lib/validations";
@@ -26,7 +26,7 @@ export function MeetingForm({ meeting, onSubmit, loading }: MeetingFormProps) {
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     formState: { errors },
   } = useForm<MeetingFormData>({
     resolver: zodResolver(meetingSchema),
@@ -41,7 +41,7 @@ export function MeetingForm({ meeting, onSubmit, loading }: MeetingFormProps) {
     },
   });
 
-  const minutes = watch("minutes");
+  const minutes = useWatch({ control, name: "minutes" });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">

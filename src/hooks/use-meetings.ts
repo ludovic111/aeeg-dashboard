@@ -22,8 +22,27 @@ export function useMeetings() {
   }, [supabase]);
 
   useEffect(() => {
-    fetchMeetings();
-  }, [fetchMeetings]);
+    let active = true;
+
+    async function loadInitialMeetings() {
+      setLoading(true);
+      const { data } = await supabase
+        .from("meetings")
+        .select(
+          "*, creator:profiles!meetings_created_by_fkey(id, full_name, avatar_url)"
+        )
+        .order("date", { ascending: false });
+
+      if (!active) return;
+      setMeetings((data as unknown as Meeting[]) || []);
+      setLoading(false);
+    }
+
+    loadInitialMeetings();
+    return () => {
+      active = false;
+    };
+  }, [supabase]);
 
   return { meetings, loading, refetch: fetchMeetings };
 }
@@ -61,8 +80,40 @@ export function useMeeting(id: string) {
   }, [supabase, id]);
 
   useEffect(() => {
-    fetchMeeting();
-  }, [fetchMeeting]);
+    let active = true;
+
+    async function loadInitialMeeting() {
+      setLoading(true);
+      const [meetingRes, itemsRes] = await Promise.all([
+        supabase
+          .from("meetings")
+          .select(
+            "*, creator:profiles!meetings_created_by_fkey(id, full_name, avatar_url)"
+          )
+          .eq("id", id)
+          .single(),
+        supabase
+          .from("meeting_action_items")
+          .select(
+            "*, assignee:profiles!meeting_action_items_assigned_to_fkey(id, full_name, avatar_url)"
+          )
+          .eq("meeting_id", id)
+          .order("created_at", { ascending: true }),
+      ]);
+
+      if (!active) return;
+      setMeeting((meetingRes.data as unknown as Meeting) || null);
+      setActionItems(
+        (itemsRes.data as unknown as MeetingActionItem[]) || []
+      );
+      setLoading(false);
+    }
+
+    loadInitialMeeting();
+    return () => {
+      active = false;
+    };
+  }, [supabase, id]);
 
   return { meeting, actionItems, loading, refetch: fetchMeeting };
 }

@@ -3,26 +3,11 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  LayoutDashboard,
-  ClipboardList,
-  CheckSquare,
-  PackageSearch,
-  Users,
-  LogOut,
-  X,
-} from "lucide-react";
+import { LogOut, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { APP_NAV_ITEMS, isNavItemActive } from "@/lib/navigation";
 import { Avatar } from "@/components/ui/avatar";
 import type { Profile } from "@/types";
-
-const navItems = [
-  { href: "/", label: "Tableau de bord", icon: LayoutDashboard },
-  { href: "/meetings", label: "Réunions", icon: ClipboardList },
-  { href: "/tasks", label: "Tâches", icon: CheckSquare },
-  { href: "/orders", label: "Commandes", icon: PackageSearch },
-  { href: "/members", label: "Membres", icon: Users },
-];
 
 interface MobileNavProps {
   isOpen: boolean;
@@ -78,10 +63,8 @@ export function MobileNav({
 
         {/* Nav */}
         <nav className="flex-1 p-4 space-y-1">
-          {navItems.map((item) => {
-            const isActive =
-              pathname === item.href ||
-              (item.href !== "/" && pathname.startsWith(item.href));
+          {APP_NAV_ITEMS.map((item) => {
+            const isActive = isNavItemActive(pathname, item.href);
             const Icon = item.icon;
 
             return (
@@ -89,6 +72,7 @@ export function MobileNav({
                 key={item.href}
                 href={item.href}
                 onClick={onClose}
+                aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold transition-all",
                   isActive

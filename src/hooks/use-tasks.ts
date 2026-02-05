@@ -22,8 +22,27 @@ export function useTasks() {
   }, [supabase]);
 
   useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+    let active = true;
+
+    async function loadInitialTasks() {
+      setLoading(true);
+      const { data } = await supabase
+        .from("tasks")
+        .select(
+          "*, assignee:profiles!tasks_assigned_to_fkey(id, full_name, avatar_url), creator:profiles!tasks_created_by_fkey(id, full_name)"
+        )
+        .order("position", { ascending: true });
+
+      if (!active) return;
+      setTasks((data as unknown as Task[]) || []);
+      setLoading(false);
+    }
+
+    loadInitialTasks();
+    return () => {
+      active = false;
+    };
+  }, [supabase]);
 
   // Realtime subscription
   useEffect(() => {

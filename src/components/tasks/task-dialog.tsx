@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash2 } from "lucide-react";
 import { useEffect } from "react";
@@ -53,8 +53,8 @@ export function TaskDialog({
     register,
     handleSubmit,
     setValue,
-    watch,
     reset,
+    control,
     formState: { errors },
   } = useForm<TaskFormData>({
     resolver: zodResolver(taskSchema),
@@ -69,6 +69,10 @@ export function TaskDialog({
         : "",
     },
   });
+
+  const statusValue = useWatch({ control, name: "status" }) || defaultStatus;
+  const priorityValue = useWatch({ control, name: "priority" }) || "medium";
+  const assignedToValue = useWatch({ control, name: "assigned_to" });
 
   const handleFormSubmit = async (data: TaskFormData) => {
     await onSubmit(data);
@@ -128,7 +132,7 @@ export function TaskDialog({
             <div className="space-y-2">
               <Label>Statut</Label>
               <Select
-                value={watch("status")}
+                value={statusValue}
                 onValueChange={(v) => setValue("status", v as TaskStatus)}
               >
                 <SelectTrigger>
@@ -147,7 +151,7 @@ export function TaskDialog({
             <div className="space-y-2">
               <Label>Priorité</Label>
               <Select
-                value={watch("priority")}
+                value={priorityValue}
                 onValueChange={(v) => setValue("priority", v as TaskPriority)}
               >
                 <SelectTrigger>
@@ -168,7 +172,7 @@ export function TaskDialog({
             <div className="space-y-2">
               <Label>Assigné à</Label>
               <Select
-                value={watch("assigned_to") || UNASSIGNED_VALUE}
+                value={assignedToValue || UNASSIGNED_VALUE}
                 onValueChange={(v) =>
                   setValue(
                     "assigned_to",

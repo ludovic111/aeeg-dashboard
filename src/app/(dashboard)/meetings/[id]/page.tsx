@@ -1,7 +1,6 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import { ArrowLeft, MapPin, Clock, ExternalLink, Trash2 } from "lucide-react";
@@ -15,7 +14,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { formatDateTime } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
-import type { Profile } from "@/types";
 
 export default function MeetingDetailPage() {
   const params = useParams();
@@ -24,15 +22,7 @@ export default function MeetingDetailPage() {
   const { meeting, actionItems, loading, refetch } = useMeeting(id);
   const { isAdmin, isCommitteeMember, profile } = useAuth();
   const { deleteMeeting } = useMeetingMutations();
-  const [members, setMembers] = useState<Profile[]>([]);
   const supabase = createClient();
-
-  useEffect(() => {
-    supabase
-      .from("profiles")
-      .select("*")
-      .then(({ data }) => setMembers(data || []));
-  }, [supabase]);
 
   const canEdit =
     isAdmin ||
@@ -157,7 +147,6 @@ export default function MeetingDetailPage() {
       <ActionItemsList
         meetingId={id}
         items={actionItems}
-        members={members}
         canEdit={canEdit}
         onRefresh={refetch}
       />

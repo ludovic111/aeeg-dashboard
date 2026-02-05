@@ -1,4 +1,5 @@
 import * as React from "react";
+import Image from "next/image";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn, getInitials } from "@/lib/utils";
 
@@ -31,9 +32,12 @@ function Avatar({ className, size, src, name, ...props }: AvatarProps) {
   return (
     <div className={cn(avatarVariants({ size }), className)} {...props}>
       {src && !imgError ? (
-        <img
+        <Image
           src={src}
           alt={name}
+          fill
+          unoptimized
+          sizes="56px"
           className="h-full w-full object-cover"
           onError={() => setImgError(true)}
         />

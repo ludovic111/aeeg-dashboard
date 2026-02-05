@@ -45,7 +45,6 @@ export function KanbanBoard({
     )
       return;
 
-    const sourceStatus = source.droppableId as TaskStatus;
     const destStatus = destination.droppableId as TaskStatus;
 
     // Optimistic update

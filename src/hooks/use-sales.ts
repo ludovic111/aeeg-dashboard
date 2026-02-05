@@ -40,8 +40,38 @@ export function useSales(startDate?: string, endDate?: string) {
   }, [supabase, startDate, endDate]);
 
   useEffect(() => {
-    fetchSales();
-  }, [fetchSales]);
+    let active = true;
+
+    async function loadInitialSales() {
+      setLoading(true);
+      let query = supabase
+        .from("sales_entries")
+        .select("*")
+        .order("date", { ascending: false });
+
+      if (startDate) query = query.gte("date", startDate);
+      if (endDate) query = query.lte("date", endDate);
+
+      const { data } = await query;
+      const salesData = (data as SalesEntry[]) || [];
+      const totalRevenue = salesData.reduce(
+        (sum, entry) => sum + Number(entry.revenue),
+        0
+      );
+      const orderCount = salesData.length;
+      const averageOrder = orderCount > 0 ? totalRevenue / orderCount : 0;
+
+      if (!active) return;
+      setEntries(salesData);
+      setStats({ totalRevenue, orderCount, averageOrder });
+      setLoading(false);
+    }
+
+    loadInitialSales();
+    return () => {
+      active = false;
+    };
+  }, [supabase, startDate, endDate]);
 
   return { entries, stats, loading, refetch: fetchSales };
 }

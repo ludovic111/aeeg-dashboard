@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TASK_PRIORITIES } from "@/lib/constants";
-import type { Profile, TaskPriority } from "@/types";
+import type { Profile } from "@/types";
 
 interface TaskFiltersProps {
   search: string;
@@ -34,7 +34,10 @@ export function TaskFilters({
   members,
   onReset,
 }: TaskFiltersProps) {
-  const hasFilters = search || priorityFilter || assigneeFilter;
+  const hasFilters =
+    Boolean(search) ||
+    priorityFilter !== "all" ||
+    assigneeFilter !== "all";
 
   return (
     <div className="flex flex-wrap items-center gap-3">

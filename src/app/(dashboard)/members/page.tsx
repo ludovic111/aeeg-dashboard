@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ROLES } from "@/lib/constants";
-import type { Profile, UserRole } from "@/types";
+import type { Profile } from "@/types";
 
 export default function MembersPage() {
   const { profile: currentUser } = useAuth();

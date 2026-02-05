@@ -43,14 +43,6 @@ export const COLOR_OPTIONS = [
   { value: "#AA96DA", label: "Violet" },
 ] as const;
 
-export const NAV_ITEMS = [
-  { href: "/", label: "Tableau de bord", icon: "LayoutDashboard" },
-  { href: "/meetings", label: "Réunions", icon: "ClipboardList" },
-  { href: "/tasks", label: "Tâches", icon: "CheckSquare" },
-  { href: "/orders", label: "Commandes", icon: "PackageSearch" },
-  { href: "/members", label: "Membres", icon: "Users" },
-] as const;
-
 export const CALENDAR_MESSAGES = {
   allDay: "Toute la journée",
   previous: "Précédent",

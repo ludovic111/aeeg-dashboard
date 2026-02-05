@@ -3,17 +3,11 @@
 import { useTheme } from "next-themes";
 import { Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme, setTheme } = useTheme();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
+  if (!resolvedTheme) {
     return (
       <Button variant="outline" size="icon">
         <Sun className="h-4 w-4" />
@@ -25,10 +19,10 @@ export function ThemeToggle() {
     <Button
       variant="outline"
       size="icon"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       aria-label="Changer le thème"
     >
-      {theme === "dark" ? (
+      {resolvedTheme === "dark" ? (
         <Sun className="h-4 w-4" strokeWidth={3} />
       ) : (
         <Moon className="h-4 w-4" strokeWidth={3} />

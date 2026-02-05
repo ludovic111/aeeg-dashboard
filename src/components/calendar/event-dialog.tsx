@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash2 } from "lucide-react";
 import { eventSchema, type EventFormData } from "@/lib/validations";
@@ -48,8 +48,8 @@ export function EventDialog({
     register,
     handleSubmit,
     setValue,
-    watch,
     reset,
+    control,
     formState: { errors },
   } = useForm<EventFormData>({
     resolver: zodResolver(eventSchema),
@@ -67,6 +67,9 @@ export function EventDialog({
       color: event?.color || "#4ECDC4",
     },
   });
+
+  const typeValue = useWatch({ control, name: "type" }) || "event";
+  const colorValue = useWatch({ control, name: "color" }) || "#4ECDC4";
 
   const handleFormSubmit = async (data: EventFormData) => {
     await onSubmit(data);
@@ -101,7 +104,7 @@ export function EventDialog({
             <div className="space-y-2">
               <Label>Type</Label>
               <Select
-                value={watch("type")}
+                value={typeValue}
                 onValueChange={(v) => setValue("type", v as EventType)}
               >
                 <SelectTrigger>
@@ -120,7 +123,7 @@ export function EventDialog({
             <div className="space-y-2">
               <Label>Couleur</Label>
               <Select
-                value={watch("color")}
+                value={colorValue}
                 onValueChange={(v) => setValue("color", v)}
               >
                 <SelectTrigger>

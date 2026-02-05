@@ -9,12 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useMeetingMutations } from "@/hooks/use-meetings";
-import type { MeetingActionItem, Profile } from "@/types";
+import type { MeetingActionItem } from "@/types";
 
 interface ActionItemsListProps {
   meetingId: string;
   items: MeetingActionItem[];
-  members: Profile[];
   canEdit: boolean;
   onRefresh: () => void;
 }
@@ -22,7 +21,6 @@ interface ActionItemsListProps {
 export function ActionItemsList({
   meetingId,
   items,
-  members,
   canEdit,
   onRefresh,
 }: ActionItemsListProps) {

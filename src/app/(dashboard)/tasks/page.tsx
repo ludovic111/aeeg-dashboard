@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { useTasks, useTaskMutations } from "@/hooks/use-tasks";
@@ -14,10 +15,19 @@ import type { TaskFormData } from "@/lib/validations";
 export default function TasksPage() {
   const { tasks, loading, refetch, setTasksOptimistic } = useTasks();
   const { createTask, updateTask, deleteTask } = useTaskMutations();
+  const searchParams = useSearchParams();
+  const shouldOpenFromQuery = searchParams.get("new") === "true";
+  const queryStatus = searchParams.get("status");
+  const initialStatus: TaskStatus =
+    queryStatus === "todo" ||
+    queryStatus === "in_progress" ||
+    queryStatus === "done"
+      ? queryStatus
+      : "todo";
   const [members, setMembers] = useState<Profile[]>([]);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(shouldOpenFromQuery);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [defaultStatus, setDefaultStatus] = useState<TaskStatus>("todo");
+  const [defaultStatus, setDefaultStatus] = useState<TaskStatus>(initialStatus);
   const [mutating, setMutating] = useState(false);
   const supabase = createClient();
 

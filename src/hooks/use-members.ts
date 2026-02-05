@@ -21,8 +21,26 @@ export function useMembers() {
   }, [supabase]);
 
   useEffect(() => {
-    fetchMembers();
-  }, [fetchMembers]);
+    let active = true;
+
+    async function loadInitialMembers() {
+      setLoading(true);
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .neq("role", "pending")
+        .order("full_name", { ascending: true });
+
+      if (!active) return;
+      setMembers((data as Profile[]) || []);
+      setLoading(false);
+    }
+
+    loadInitialMembers();
+    return () => {
+      active = false;
+    };
+  }, [supabase]);
 
   return { members, loading, refetch: fetchMembers };
 }

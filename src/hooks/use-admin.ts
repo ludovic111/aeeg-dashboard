@@ -32,8 +32,35 @@ export function useAdmin() {
   }, [supabase]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    let active = true;
+
+    async function loadInitialData() {
+      setLoading(true);
+
+      const [pendingRes, membersRes] = await Promise.all([
+        supabase
+          .from("profiles")
+          .select("*")
+          .eq("role", "pending")
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("profiles")
+          .select("*")
+          .neq("role", "pending")
+          .order("full_name", { ascending: true }),
+      ]);
+
+      if (!active) return;
+      setPendingMembers((pendingRes.data as Profile[]) || []);
+      setAllMembers((membersRes.data as Profile[]) || []);
+      setLoading(false);
+    }
+
+    loadInitialData();
+    return () => {
+      active = false;
+    };
+  }, [supabase]);
 
   // Realtime subscription on profiles table
   useEffect(() => {
