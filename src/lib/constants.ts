@@ -47,7 +47,7 @@ export const NAV_ITEMS = [
   { href: "/", label: "Tableau de bord", icon: "LayoutDashboard" },
   { href: "/meetings", label: "Réunions", icon: "ClipboardList" },
   { href: "/tasks", label: "Tâches", icon: "CheckSquare" },
-  { href: "/sales", label: "Ventes", icon: "ShoppingBag" },
+  { href: "/orders", label: "Commandes", icon: "PackageSearch" },
   { href: "/calendar", label: "Calendrier", icon: "CalendarDays" },
   { href: "/members", label: "Membres", icon: "Users" },
 ] as const;
