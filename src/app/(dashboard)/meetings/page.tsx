@@ -34,7 +34,7 @@ export default function MeetingsPage() {
         <div>
           <h1 className="text-3xl font-black">📋 Réunions</h1>
           <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
-            Planifier une date et consulter l&apos;ordre du jour (PDF)
+            Planifier une date et consulter l&apos;ordre du jour (DOCX)
           </p>
         </div>
         <Link href="/meetings/new">

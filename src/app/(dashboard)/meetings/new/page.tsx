@@ -24,12 +24,17 @@ export default function NewMeetingPage() {
     event.preventDefault();
 
     if (!agendaFile) {
-      toast.error("Merci de sélectionner un PDF d'ordre du jour");
+      toast.error("Merci de sélectionner un fichier DOCX d'ordre du jour");
       return;
     }
 
-    if (agendaFile.type !== "application/pdf") {
-      toast.error("Le fichier doit être au format PDF");
+    const isDocxMime =
+      agendaFile.type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    const isDocxName = /\.docx$/i.test(agendaFile.name);
+
+    if (!isDocxMime && !isDocxName) {
+      toast.error("Le fichier doit être au format DOCX (.docx)");
       return;
     }
 
@@ -41,12 +46,13 @@ export default function NewMeetingPage() {
     const { error: uploadError } = await supabase.storage
       .from("meeting-agendas")
       .upload(filePath, agendaFile, {
-        contentType: "application/pdf",
+        contentType:
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         upsert: false,
       });
 
     if (uploadError) {
-      toast.error(uploadError.message || "Impossible d'envoyer le PDF");
+      toast.error(uploadError.message || "Impossible d'envoyer le fichier DOCX");
       setLoading(false);
       return;
     }
@@ -84,7 +90,7 @@ export default function NewMeetingPage() {
         <div>
           <h1 className="text-3xl font-black">📝 Nouvelle réunion</h1>
           <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
-            Choisir une date et ajouter le PDF de l&apos;ordre du jour
+            Choisir une date et ajouter le DOCX de l&apos;ordre du jour
           </p>
         </div>
       </div>
@@ -92,7 +98,7 @@ export default function NewMeetingPage() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base">
-            📄 Ordre du jour (PDF)
+            📄 Ordre du jour (DOCX)
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -109,11 +115,11 @@ export default function NewMeetingPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="agenda-file">PDF de l&apos;ordre du jour *</Label>
+              <Label htmlFor="agenda-file">DOCX de l&apos;ordre du jour *</Label>
               <Input
                 id="agenda-file"
                 type="file"
-                accept="application/pdf"
+                accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 onChange={(e) => setAgendaFile(e.target.files?.[0] || null)}
                 required
               />

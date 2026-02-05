@@ -1,12 +1,22 @@
 import { NextResponse } from "next/server";
+import { inflateRawSync } from "node:zlib";
 import { createClient } from "@/lib/supabase/server";
-import { inflateSync } from "node:zlib";
 
 export const runtime = "nodejs";
 
 interface GrokSummaryBody {
   meetingId: string;
 }
+
+interface ZipEntry {
+  compressionMethod: number;
+  compressedSize: number;
+  localHeaderOffset: number;
+}
+
+const ZIP_EOCD_SIGNATURE = 0x06054b50;
+const ZIP_CENTRAL_DIR_SIGNATURE = 0x02014b50;
+const ZIP_LOCAL_FILE_SIGNATURE = 0x04034b50;
 
 function extractMessageContent(content: unknown): string {
   if (typeof content === "string") {
@@ -34,112 +44,127 @@ function extractMessageContent(content: unknown): string {
   return "";
 }
 
-function decodePdfString(input: string): string {
-  let output = "";
+function findEndOfCentralDirectory(buffer: Buffer): number {
+  const start = Math.max(0, buffer.length - 0xffff - 22);
 
-  for (let i = 0; i < input.length; i += 1) {
-    const char = input[i];
-    if (char !== "\\") {
-      output += char;
-      continue;
+  for (let offset = buffer.length - 22; offset >= start; offset -= 1) {
+    if (buffer.readUInt32LE(offset) === ZIP_EOCD_SIGNATURE) {
+      return offset;
     }
-
-    const next = input[i + 1];
-    if (!next) break;
-
-    if (next === "n") {
-      output += "\n";
-      i += 1;
-      continue;
-    }
-    if (next === "r") {
-      output += "\r";
-      i += 1;
-      continue;
-    }
-    if (next === "t") {
-      output += "\t";
-      i += 1;
-      continue;
-    }
-    if (next === "b") {
-      output += "\b";
-      i += 1;
-      continue;
-    }
-    if (next === "f") {
-      output += "\f";
-      i += 1;
-      continue;
-    }
-    if (next === "(" || next === ")" || next === "\\") {
-      output += next;
-      i += 1;
-      continue;
-    }
-
-    if (/[0-7]/.test(next)) {
-      let octal = next;
-      if (/[0-7]/.test(input[i + 2] || "")) octal += input[i + 2];
-      if (/[0-7]/.test(input[i + 3] || "")) octal += input[i + 3];
-      output += String.fromCharCode(Number.parseInt(octal, 8));
-      i += octal.length;
-      continue;
-    }
-
-    output += next;
-    i += 1;
   }
 
-  return output;
+  return -1;
 }
 
-function extractTextFromContentStream(content: string): string[] {
-  const chunks: string[] = [];
-
-  const tjRegex = /\((?:\\.|[^\\)])*\)\s*Tj/g;
-  for (const match of content.matchAll(tjRegex)) {
-    const raw = match[0].replace(/\s*Tj$/, "");
-    const inner = raw.slice(1, -1);
-    const text = decodePdfString(inner).trim();
-    if (text) chunks.push(text);
+function findZipEntry(buffer: Buffer, targetName: string): ZipEntry | null {
+  const eocdOffset = findEndOfCentralDirectory(buffer);
+  if (eocdOffset < 0) {
+    return null;
   }
 
-  const tjArrayRegex = /\[([\s\S]*?)\]\s*TJ/g;
-  for (const match of content.matchAll(tjArrayRegex)) {
-    const parts = match[1].match(/\((?:\\.|[^\\)])*\)/g) || [];
-    for (const part of parts) {
-      const text = decodePdfString(part.slice(1, -1)).trim();
-      if (text) chunks.push(text);
+  const centralDirectorySize = buffer.readUInt32LE(eocdOffset + 12);
+  const centralDirectoryOffset = buffer.readUInt32LE(eocdOffset + 16);
+  const centralDirectoryEnd = centralDirectoryOffset + centralDirectorySize;
+
+  let offset = centralDirectoryOffset;
+  while (offset < centralDirectoryEnd) {
+    const signature = buffer.readUInt32LE(offset);
+    if (signature !== ZIP_CENTRAL_DIR_SIGNATURE) {
+      break;
     }
+
+    const compressionMethod = buffer.readUInt16LE(offset + 10);
+    const compressedSize = buffer.readUInt32LE(offset + 20);
+    const fileNameLength = buffer.readUInt16LE(offset + 28);
+    const extraFieldLength = buffer.readUInt16LE(offset + 30);
+    const fileCommentLength = buffer.readUInt16LE(offset + 32);
+    const localHeaderOffset = buffer.readUInt32LE(offset + 42);
+
+    const fileNameStart = offset + 46;
+    const fileNameEnd = fileNameStart + fileNameLength;
+    const fileName = buffer.slice(fileNameStart, fileNameEnd).toString("utf8");
+
+    if (fileName === targetName) {
+      return {
+        compressionMethod,
+        compressedSize,
+        localHeaderOffset,
+      };
+    }
+
+    offset = fileNameEnd + extraFieldLength + fileCommentLength;
   }
 
-  return chunks;
+  return null;
 }
 
-function extractPdfText(pdfBuffer: Buffer): string {
-  const binary = pdfBuffer.toString("latin1");
-  const streamRegex = /stream\r?\n([\s\S]*?)\r?\nendstream/g;
-  const pieces: string[] = [];
-
-  for (const match of binary.matchAll(streamRegex)) {
-    const rawStream = Buffer.from(match[1], "latin1");
-    const candidates = [rawStream];
-
-    try {
-      candidates.push(inflateSync(rawStream));
-    } catch {
-      // Not a flate stream; keep raw bytes only.
-    }
-
-    for (const candidate of candidates) {
-      const content = candidate.toString("latin1");
-      pieces.push(...extractTextFromContentStream(content));
-    }
+function readZipEntryData(buffer: Buffer, entry: ZipEntry): Buffer {
+  const signature = buffer.readUInt32LE(entry.localHeaderOffset);
+  if (signature !== ZIP_LOCAL_FILE_SIGNATURE) {
+    throw new Error("Invalid DOCX local file header");
   }
 
-  return pieces
-    .join("\n")
+  const fileNameLength = buffer.readUInt16LE(entry.localHeaderOffset + 26);
+  const extraFieldLength = buffer.readUInt16LE(entry.localHeaderOffset + 28);
+  const dataStart = entry.localHeaderOffset + 30 + fileNameLength + extraFieldLength;
+  const dataEnd = dataStart + entry.compressedSize;
+  const compressedData = buffer.slice(dataStart, dataEnd);
+
+  if (entry.compressionMethod === 0) {
+    return compressedData;
+  }
+
+  if (entry.compressionMethod === 8) {
+    return inflateRawSync(compressedData);
+  }
+
+  throw new Error(`Unsupported DOCX compression method: ${entry.compressionMethod}`);
+}
+
+function decodeXmlEntities(value: string): string {
+  return value.replace(
+    /&(#x?[0-9a-fA-F]+|amp|lt|gt|quot|apos);/g,
+    (_match, entity: string) => {
+      if (entity === "amp") return "&";
+      if (entity === "lt") return "<";
+      if (entity === "gt") return ">";
+      if (entity === "quot") return '"';
+      if (entity === "apos") return "'";
+
+      if (entity.startsWith("#x")) {
+        const code = Number.parseInt(entity.slice(2), 16);
+        return Number.isNaN(code) ? "" : String.fromCodePoint(code);
+      }
+
+      if (entity.startsWith("#")) {
+        const code = Number.parseInt(entity.slice(1), 10);
+        return Number.isNaN(code) ? "" : String.fromCodePoint(code);
+      }
+
+      return "";
+    }
+  );
+}
+
+function extractDocxText(docxBuffer: Buffer): string {
+  const documentEntry = findZipEntry(docxBuffer, "word/document.xml");
+  if (!documentEntry) {
+    throw new Error("word/document.xml not found in DOCX");
+  }
+
+  const xmlBuffer = readZipEntryData(docxBuffer, documentEntry);
+  const xml = xmlBuffer.toString("utf8");
+
+  const withBreaks = xml
+    .replace(/<w:tab\s*\/\s*>/g, "\t")
+    .replace(/<w:br[^>]*\/\s*>/g, "\n")
+    .replace(/<\/w:p>/g, "\n")
+    .replace(/<\/w:tr>/g, "\n");
+
+  const rawText = withBreaks.replace(/<[^>]+>/g, "");
+
+  return decodeXmlEntities(rawText)
+    .replace(/\r/g, "")
     .replace(/[ \t]+\n/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
@@ -190,45 +215,49 @@ export async function POST(request: Request) {
     }
 
     if (!meeting) {
-      return NextResponse.json(
-        { error: "Meeting not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Meeting not found" }, { status: 404 });
     }
 
     if (!meeting.agenda_pdf_path) {
       return NextResponse.json(
-        { error: "No agenda PDF found for this meeting" },
+        { error: "No agenda DOCX found for this meeting" },
         { status: 400 }
       );
     }
 
-    const agendaPdfUrl = supabase.storage
+    if (!meeting.agenda_pdf_path.toLowerCase().endsWith(".docx")) {
+      return NextResponse.json(
+        { error: "The agenda file must be a .docx document" },
+        { status: 400 }
+      );
+    }
+
+    const agendaFileUrl = supabase.storage
       .from("meeting-agendas")
       .getPublicUrl(meeting.agenda_pdf_path).data.publicUrl;
 
-    const pdfResponse = await fetch(agendaPdfUrl);
-    if (!pdfResponse.ok) {
+    const fileResponse = await fetch(agendaFileUrl);
+    if (!fileResponse.ok) {
       return NextResponse.json(
-        { error: "Unable to download agenda PDF" },
+        { error: "Unable to download agenda file" },
         { status: 502 }
       );
     }
 
-    const pdfArrayBuffer = await pdfResponse.arrayBuffer();
-    const pdfText = extractPdfText(Buffer.from(pdfArrayBuffer));
+    const fileArrayBuffer = await fileResponse.arrayBuffer();
+    const docxText = extractDocxText(Buffer.from(fileArrayBuffer));
 
-    if (!pdfText) {
+    if (!docxText) {
       return NextResponse.json(
-        { error: "Unable to extract readable text from PDF" },
+        { error: "Unable to retrieve text from DOCX" },
         { status: 422 }
       );
     }
 
-    const clippedPdfText = pdfText.slice(0, 24000);
+    const clippedDocxText = docxText.slice(0, 24000);
 
     const prompt = [
-      "Tu reçois le texte extrait automatiquement d'un ordre du jour PDF.",
+      "Tu reçois le texte extrait automatiquement d'un ordre du jour DOCX.",
       "",
       "Contexte:",
       `- Titre: ${meeting.title}`,
@@ -242,11 +271,11 @@ export async function POST(request: Request) {
       "",
       "Contraintes:",
       "- Utilise des listes à puces courtes.",
-      "- Si une information est absente du PDF, écris 'Non précisé' pour cet élément.",
+      "- Si une information est absente du document, écris 'Non précisé' pour cet élément.",
       "- N'invente pas de faits non présents dans le document.",
       "",
       "Texte extrait de l'ODJ:",
-      clippedPdfText,
+      clippedDocxText,
     ].join("\n");
 
     const grokResponse = await fetch("https://api.x.ai/v1/chat/completions", {

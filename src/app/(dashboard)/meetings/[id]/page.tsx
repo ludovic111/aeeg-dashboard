@@ -112,11 +112,14 @@ export default function MeetingDetailPage() {
     );
   }
 
-  const agendaPdfUrl = meeting.agenda_pdf_path
+  const agendaFileUrl = meeting.agenda_pdf_path
     ? supabase.storage
         .from("meeting-agendas")
         .getPublicUrl(meeting.agenda_pdf_path).data.publicUrl
     : null;
+  const isDocxAgenda = meeting.agenda_pdf_path
+    ? meeting.agenda_pdf_path.toLowerCase().endsWith(".docx")
+    : false;
 
   return (
     <div className="space-y-6 max-w-[1400px]">
@@ -151,39 +154,58 @@ export default function MeetingDetailPage() {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
-        {/* Agenda PDF */}
-        {agendaPdfUrl ? (
+        {/* Agenda File */}
+        {agendaFileUrl ? (
           <Card accentColor="#FFE66D" className="xl:col-span-2">
             <CardHeader>
-              <CardTitle className="text-base">📑 Ordre du jour (PDF)</CardTitle>
+              <CardTitle className="text-base">📑 Ordre du jour</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="h-[70vh] w-full border-2 border-[var(--border-color)] rounded-lg overflow-hidden bg-white">
-                <iframe
-                  title="Ordre du jour"
-                  src={agendaPdfUrl}
-                  className="h-full w-full"
-                />
-              </div>
-              <a
-                href={agendaPdfUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-black underline"
-              >
-                Ouvrir le PDF dans un nouvel onglet
-                <ExternalLink className="h-4 w-4" strokeWidth={3} />
-              </a>
+              {isDocxAgenda ? (
+                <>
+                  <p className="text-sm font-bold text-[var(--foreground)]/70">
+                    Fichier DOCX importé. Utilisez le bouton ci-dessous pour l&apos;ouvrir ou le télécharger.
+                  </p>
+                  <a
+                    href={agendaFileUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-black underline"
+                  >
+                    Ouvrir le DOCX dans un nouvel onglet
+                    <ExternalLink className="h-4 w-4" strokeWidth={3} />
+                  </a>
+                </>
+              ) : (
+                <>
+                  <div className="h-[70vh] w-full border-2 border-[var(--border-color)] rounded-lg overflow-hidden bg-white">
+                    <iframe
+                      title="Ordre du jour"
+                      src={agendaFileUrl}
+                      className="h-full w-full"
+                    />
+                  </div>
+                  <a
+                    href={agendaFileUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-black underline"
+                  >
+                    Ouvrir le fichier dans un nouvel onglet
+                    <ExternalLink className="h-4 w-4" strokeWidth={3} />
+                  </a>
+                </>
+              )}
             </CardContent>
           </Card>
         ) : (
           <Card accentColor="#FFE66D" className="xl:col-span-2">
             <CardHeader>
-              <CardTitle className="text-base">📑 Ordre du jour (PDF)</CardTitle>
+              <CardTitle className="text-base">📑 Ordre du jour</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm font-bold text-[var(--foreground)]/60">
-                Aucun PDF importé pour cette réunion.
+                Aucun fichier importé pour cette réunion.
               </p>
             </CardContent>
           </Card>
@@ -199,12 +221,12 @@ export default function MeetingDetailPage() {
               variant="outline"
               size="sm"
               onClick={handleGenerateSummary}
-              disabled={!agendaPdfUrl || summaryLoading}
+              disabled={!agendaFileUrl || !isDocxAgenda || summaryLoading}
             >
               <Sparkles className="h-4 w-4" strokeWidth={3} />
               {summaryLoading
                 ? "Génération en cours..."
-                : "Générer le résumé à partir du PDF"}
+                : "Générer le résumé à partir du DOCX"}
             </Button>
             {meeting.agenda_ai_summary ? (
               <div data-color-mode="light" className="text-sm">
@@ -212,7 +234,9 @@ export default function MeetingDetailPage() {
               </div>
             ) : (
               <p className="text-sm font-bold text-[var(--foreground)]/60">
-                Cliquez sur le bouton pour générer le résumé à partir du PDF.
+                {isDocxAgenda
+                  ? "Cliquez sur le bouton pour générer le résumé à partir du DOCX."
+                  : "Importez un ODJ en format DOCX pour générer un résumé."}
               </p>
             )}
           </CardContent>
