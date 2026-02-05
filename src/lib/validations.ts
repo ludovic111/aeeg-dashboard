@@ -57,6 +57,23 @@ export const salesEntrySchema = z.object({
   date: z.string().min(1, "La date est requise"),
 });
 
+export const customerOrderSchema = z.object({
+  order_number: z
+    .string()
+    .min(1, "Le numéro de commande est requis")
+    .regex(/^#\d+$/, "Le numéro doit être au format #1234"),
+  full_name: z.string().min(1, "Le nom est requis"),
+  email: z
+    .string()
+    .trim()
+    .optional()
+    .transform((value) => value || undefined)
+    .refine((value) => !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), {
+      message: "Adresse e-mail invalide",
+    }),
+  order_details: z.string().min(1, "Le détail de la commande est requis"),
+});
+
 export const profileSchema = z.object({
   full_name: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
   phone: z.string().optional(),
@@ -70,4 +87,5 @@ export type ActionItemFormData = z.infer<typeof actionItemSchema>;
 export type TaskFormData = z.infer<typeof taskSchema>;
 export type EventFormData = z.infer<typeof eventSchema>;
 export type SalesEntryFormData = z.infer<typeof salesEntrySchema>;
+export type CustomerOrderFormData = z.infer<typeof customerOrderSchema>;
 export type ProfileFormData = z.infer<typeof profileSchema>;

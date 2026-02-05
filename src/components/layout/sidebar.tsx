@@ -7,6 +7,7 @@ import {
   ClipboardList,
   CheckSquare,
   ShoppingBag,
+  PackageSearch,
   CalendarDays,
   Users,
   LogOut,
@@ -21,6 +22,7 @@ const navItems = [
   { href: "/meetings", label: "Réunions", icon: ClipboardList },
   { href: "/tasks", label: "Tâches", icon: CheckSquare },
   { href: "/sales", label: "Ventes", icon: ShoppingBag },
+  { href: "/orders", label: "Commandes", icon: PackageSearch },
   { href: "/calendar", label: "Calendrier", icon: CalendarDays },
   { href: "/members", label: "Membres", icon: Users },
 ];

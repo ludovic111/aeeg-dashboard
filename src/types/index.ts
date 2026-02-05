@@ -94,3 +94,14 @@ export interface SalesStats {
   orderCount: number;
   averageOrder: number;
 }
+
+export interface CustomerOrder {
+  id: string;
+  order_number: string;
+  full_name: string;
+  order_details: string;
+  email: string | null;
+  imported_at: string;
+  created_at: string;
+  updated_at: string;
+}
