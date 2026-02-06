@@ -8,11 +8,7 @@ export async function updateSession(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const isAuthPage =
     pathname.startsWith("/login") || pathname.startsWith("/register");
-  const isTutorialGatePage =
-    pathname.startsWith("/welcome") || pathname.startsWith("/watch-tutorial");
   const isAuthApiRoute = pathname.startsWith("/api/auth");
-  const hasTutorialGate =
-    request.cookies.get("tutorial_gate")?.value === "done";
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -41,14 +37,10 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Unauthenticated users must pass the tutorial gate before auth pages.
-  if (!user && !isTutorialGatePage && !isAuthApiRoute) {
-    if (isAuthPage && hasTutorialGate) {
-      return supabaseResponse;
-    }
-
+  // Redirect unauthenticated users to login
+  if (!user && !isAuthPage && !isAuthApiRoute) {
     const url = request.nextUrl.clone();
-    url.pathname = "/welcome";
+    url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
@@ -73,8 +65,8 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    // Redirect authenticated users away from tutorial/auth pages
-    if (isAuthPage || isTutorialGatePage) {
+    // Redirect authenticated users away from auth pages
+    if (isAuthPage) {
       const url = request.nextUrl.clone();
       url.pathname =
         userRole === "pending" || userRole === "regular_member"

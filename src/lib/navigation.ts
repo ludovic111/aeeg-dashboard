@@ -9,7 +9,6 @@ import {
   Users,
   Vote,
   FolderOpen,
-  PlayCircle,
   Joystick,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -28,7 +27,6 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
   { href: "/parties", label: "Soirées", icon: PartyPopper },
   { href: "/polls", label: "Sondages", icon: Vote },
   { href: "/files", label: "Fichiers", icon: FolderOpen },
-  { href: "/tutorial", label: "Tutoriel", icon: PlayCircle },
   { href: "/jeux", label: "Jeux", icon: Joystick },
   { href: "/feedback", label: "Retours", icon: MessageSquareWarning },
   { href: "/profile", label: "Profil", icon: CircleUserRound },
