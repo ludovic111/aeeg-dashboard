@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { PointerEvent } from "react";
+import type { ChangeEvent, PointerEvent } from "react";
 import { RotateCcw, Rocket, Trophy } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
@@ -93,6 +93,9 @@ function createStars(count: number): Star[] {
 
 export default function EscapeFromLaraPage() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const enemyImageRef = useRef<HTMLImageElement | null>(null);
+  const enemyImageObjectUrlRef = useRef<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const lastFrameTimestampRef = useRef<number>(0);
   const gameStateRef = useRef<InternalGameState>(buildInitialState());
@@ -103,6 +106,7 @@ export default function EscapeFromLaraPage() {
   const [score, setScore] = useState(0);
   const [runDurationMs, setRunDurationMs] = useState(0);
   const [lastRunScore, setLastRunScore] = useState<number | null>(null);
+  const [enemyPhotoReady, setEnemyPhotoReady] = useState(false);
 
   const { profile } = useAuth();
   const {
@@ -119,6 +123,29 @@ export default function EscapeFromLaraPage() {
   useEffect(() => {
     submitScoreRef.current = submitScore;
   }, [submitScore]);
+
+  useEffect(() => {
+    const image = new Image();
+
+    image.onload = () => {
+      enemyImageRef.current = image;
+      setEnemyPhotoReady(true);
+    };
+
+    image.onerror = () => {
+      enemyImageRef.current = null;
+      setEnemyPhotoReady(false);
+    };
+
+    image.src = "/lara-spaceship.webp";
+
+    return () => {
+      if (enemyImageObjectUrlRef.current) {
+        URL.revokeObjectURL(enemyImageObjectUrlRef.current);
+        enemyImageObjectUrlRef.current = null;
+      }
+    };
+  }, []);
 
   const drawGame = useCallback(() => {
     const canvas = canvasRef.current;
@@ -158,21 +185,40 @@ export default function EscapeFromLaraPage() {
 
     context.save();
     context.translate(state.enemyX, ENEMY_Y);
-    context.fillStyle = "#ff6b6b";
+
+    context.fillStyle = "#f43f5e";
     context.beginPath();
-    context.moveTo(0, -28);
-    context.lineTo(-36, 16);
-    context.lineTo(36, 16);
+    context.moveTo(0, -36);
+    context.lineTo(-42, 18);
+    context.lineTo(-14, 22);
+    context.lineTo(0, 12);
+    context.lineTo(14, 22);
+    context.lineTo(42, 18);
     context.closePath();
     context.fill();
 
-    context.fillStyle = "#ff9f43";
-    context.fillRect(-16, 12, 32, 16);
+    context.fillStyle = "#fb7185";
+    context.fillRect(-18, 16, 36, 12);
 
-    context.fillStyle = "#1f2937";
-    context.font = "bold 14px system-ui";
-    context.textAlign = "center";
-    context.fillText("LARA", 0, 8);
+    if (enemyPhotoReady && enemyImageRef.current) {
+      context.save();
+      context.beginPath();
+      context.arc(0, -2, 24, 0, Math.PI * 2);
+      context.closePath();
+      context.clip();
+      context.drawImage(enemyImageRef.current, -24, -26, 48, 48);
+      context.restore();
+    } else {
+      context.fillStyle = "#1f2937";
+      context.beginPath();
+      context.arc(0, -2, 24, 0, Math.PI * 2);
+      context.fill();
+      context.fillStyle = "white";
+      context.font = "bold 14px system-ui";
+      context.textAlign = "center";
+      context.fillText("LARA", 0, 3);
+    }
+
     context.restore();
 
     for (const bullet of state.bullets) {
@@ -254,7 +300,7 @@ export default function EscapeFromLaraPage() {
       context.font = "700 17px system-ui";
       context.fillText("Cliquez sur Rejouer pour retenter.", WORLD_WIDTH / 2, 312);
     }
-  }, []);
+  }, [enemyPhotoReady]);
 
   const endGame = useCallback(() => {
     const state = gameStateRef.current;
@@ -402,6 +448,38 @@ export default function EscapeFromLaraPage() {
     }
   };
 
+  const handlePickLaraPhoto = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleLaraPhotoChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (enemyImageObjectUrlRef.current) {
+      URL.revokeObjectURL(enemyImageObjectUrlRef.current);
+      enemyImageObjectUrlRef.current = null;
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    enemyImageObjectUrlRef.current = objectUrl;
+
+    const image = new Image();
+    image.onload = () => {
+      enemyImageRef.current = image;
+      setEnemyPhotoReady(true);
+      toast.success("Photo de Lara appliquee au vaisseau.");
+    };
+    image.onerror = () => {
+      enemyImageRef.current = null;
+      setEnemyPhotoReady(false);
+      toast.error("Impossible de charger cette image.");
+    };
+    image.src = objectUrl;
+
+    event.target.value = "";
+  };
+
   const buildTextState = useCallback(() => {
     const state = gameStateRef.current;
     return JSON.stringify({
@@ -501,10 +579,22 @@ export default function EscapeFromLaraPage() {
           <CardHeader className="gap-3">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <CardTitle className="text-base">Mini-jeu spatial</CardTitle>
-              <Button type="button" onClick={startGame}>
-                <RotateCcw className="h-4 w-4" strokeWidth={3} />
-                {mode === "playing" ? "Recommencer" : "Jouer"}
-              </Button>
+              <div className="flex flex-wrap items-center gap-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleLaraPhotoChange}
+                />
+                <Button type="button" variant="outline" onClick={handlePickLaraPhoto}>
+                  Photo de Lara
+                </Button>
+                <Button type="button" onClick={startGame}>
+                  <RotateCcw className="h-4 w-4" strokeWidth={3} />
+                  {mode === "playing" ? "Recommencer" : "Jouer"}
+                </Button>
+              </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm font-black">
               <div className="rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-2">
@@ -533,6 +623,12 @@ export default function EscapeFromLaraPage() {
               Controle: maintenez le clic (ou le doigt) sur le canvas puis glissez
               horizontalement pour esquiver les projectiles.
             </p>
+            {!enemyPhotoReady && (
+              <p className="text-xs font-bold text-[var(--foreground)]/60">
+                Astuce: utilisez le bouton <span className="underline">Photo de Lara</span>{" "}
+                pour importer son image sur le vaisseau ennemi.
+              </p>
+            )}
             {lastRunScore !== null && (
               <p className="text-sm font-black text-[var(--foreground)]/80">
                 Derniere tentative: {lastRunScore} points en{" "}
