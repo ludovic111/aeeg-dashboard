@@ -9,12 +9,6 @@ interface SubmitScoreResult {
   error: Error | null;
 }
 
-interface OwnScoreRow {
-  id: string;
-  best_score: number;
-  best_duration_ms: number;
-}
-
 type LeaderboardRow = {
   id: string;
   player_id: string;
@@ -78,7 +72,7 @@ export function useVendrediMidiLeaderboard() {
       .from("vendredi_midi_scores")
       .select("id, best_score, best_duration_ms")
       .eq("player_id", user.id)
-      .maybeSingle<OwnScoreRow>();
+      .maybeSingle();
 
     if (ownScoreRes.error) {
       setPersonalBest(0);
@@ -133,7 +127,7 @@ export function useVendrediMidiLeaderboard() {
         .from("vendredi_midi_scores")
         .select("id, best_score, best_duration_ms")
         .eq("player_id", user.id)
-        .maybeSingle<OwnScoreRow>();
+        .maybeSingle();
 
       if (!active) return;
 
@@ -179,7 +173,7 @@ export function useVendrediMidiLeaderboard() {
         .from("vendredi_midi_scores")
         .select("id, best_score, best_duration_ms")
         .eq("player_id", user.id)
-        .maybeSingle<OwnScoreRow>();
+        .maybeSingle();
 
       if (existingRes.error) {
         setSubmitting(false);
