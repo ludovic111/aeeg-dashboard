@@ -102,12 +102,12 @@ export default function WatchTutorialPage() {
   return (
     <Card accentColor="#6BCB77">
       <CardHeader>
-        <CardTitle className="text-2xl">Watch Tutorial First</CardTitle>
+        <CardTitle className="text-2xl">Regardez le tutoriel d&apos;abord</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm font-bold text-[var(--foreground)]/70">
-          Please watch this tutorial before logging in. The continue button
-          unlocks only when the video ends.
+          Veuillez regarder ce tutoriel avant de vous connecter. Le bouton
+          pour continuer se débloque uniquement à la fin de la vidéo.
         </p>
 
         <div className="overflow-hidden rounded-lg border-2 border-[var(--border-color)] bg-black shadow-[3px_3px_0px_0px_var(--shadow-color)]">
@@ -123,8 +123,8 @@ export default function WatchTutorialPage() {
           disabled={!canContinue}
         >
           {canContinue
-            ? "I have watched the tutorial, continue to login"
-            : "Finish the video to continue"}
+            ? "J&apos;ai regardé le tutoriel, continuer vers la connexion"
+            : "Terminez la vidéo pour continuer"}
         </Button>
       </CardContent>
     </Card>

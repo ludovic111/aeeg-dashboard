@@ -31,12 +31,12 @@ export default function WelcomePage() {
       <CardHeader>
         <CardTitle className="text-2xl flex items-center gap-2">
           <PlayCircle className="h-6 w-6" strokeWidth={3} />
-          Tutorial Check
+          Vérification du tutoriel
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm font-bold text-[var(--foreground)]/70">
-          Before logging in, choose one option below.
+          Avant de vous connecter, choisissez une option ci-dessous.
         </p>
 
         <Button
@@ -44,7 +44,7 @@ export default function WelcomePage() {
           className="w-full"
           onClick={handleAlreadyWatched}
         >
-          I already watched the tutorial
+          J&apos;ai déjà regardé le tutoriel
         </Button>
 
         <Button
@@ -53,7 +53,7 @@ export default function WelcomePage() {
           className="w-full"
           onClick={handleNotWatched}
         >
-          I have not watched it
+          Je ne l&apos;ai pas encore regardé
         </Button>
       </CardContent>
     </Card>
