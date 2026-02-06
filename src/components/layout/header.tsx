@@ -49,7 +49,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                   key={item.href}
                   href={item.href}
                   aria-current={isActive ? "page" : undefined}
-                  className="rounded-[var(--radius-pill)] px-4 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.09em] text-[var(--text-secondary)] transition-colors hover:text-[var(--foreground)]"
+                  className="rounded-[var(--radius-pill)] px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.1em] text-[var(--text-secondary)] transition-colors hover:text-[var(--foreground)]"
                 >
                   {item.label}
                 </Link>

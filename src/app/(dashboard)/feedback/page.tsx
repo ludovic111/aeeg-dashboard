@@ -94,7 +94,7 @@ export default function FeedbackPage() {
         </p>
       </div>
 
-      <Card accentColor="#FFE66D">
+      <Card accentColor="var(--card-accent-yellow)">
         <CardHeader>
           <CardTitle>Nouveau retour</CardTitle>
         </CardHeader>
@@ -186,7 +186,7 @@ export default function FeedbackPage() {
         </div>
       ) : filteredItems.length === 0 ? (
         <Card>
-          <CardContent className="py-10 text-center text-sm font-bold text-[var(--foreground)]/50">
+          <CardContent className="py-10 text-center text-sm font-bold text-[var(--text-muted)]">
             Aucun retour pour ce filtre.
           </CardContent>
         </Card>
@@ -221,7 +221,7 @@ export default function FeedbackPage() {
                     <p className="text-sm mt-1 whitespace-pre-wrap">
                       {item.description}
                     </p>
-                    <p className="text-xs font-mono text-[var(--foreground)]/50 mt-2">
+                    <p className="text-xs font-mono text-[var(--text-muted)] mt-2">
                       {item.creator?.full_name || item.creator?.email || "Utilisateur"} ·{" "}
                       {formatRelative(item.created_at)}
                     </p>

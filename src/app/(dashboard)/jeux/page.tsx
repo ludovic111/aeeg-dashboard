@@ -17,7 +17,7 @@ const AVAILABLE_GAMES = [
     description:
       "Esquivez les salves de Lara et survivez le plus longtemps possible.",
     href: "/jeux/escape-from-lara",
-    accentColor: "#4ECDC4",
+    accentColor: "var(--card-accent-teal)",
   },
   {
     id: "vendredi-midi-simulator",
@@ -25,7 +25,7 @@ const AVAILABLE_GAMES = [
     description:
       "Controlez Leo chez Miams: suivez des commandes aleatoires et achetez un maximum de plats.",
     href: "/jeux/vendredi-midi-simulator",
-    accentColor: "#FF9F1C",
+    accentColor: "var(--card-accent-orange)",
   },
 ] as const;
 
@@ -59,7 +59,7 @@ export default function JeuxPage() {
           </Card>
         ))}
 
-        <Card accentColor="#FFE66D">
+        <Card accentColor="var(--card-accent-yellow)">
           <CardHeader className="space-y-2">
             <CardTitle className="flex items-center gap-2 text-base">
               <Gamepad2 className="h-5 w-5" strokeWidth={3} />
@@ -70,13 +70,13 @@ export default function JeuxPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
-            <p className="text-sm font-bold text-[var(--foreground)]/70">
+            <p className="text-sm font-bold text-[var(--text-secondary)]">
               Ajoutez un nouveau jeu sous <code>/src/app/(dashboard)/jeux</code>{" "}
               puis créez sa carte ici.
             </p>
           </CardContent>
           <CardFooter className="justify-end">
-            <span className="inline-flex items-center gap-2 rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-4 py-2 text-sm font-black text-[var(--foreground)]/70">
+            <span className="inline-flex items-center gap-2 rounded-[var(--radius-element)] border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-4 py-2 text-sm font-black text-[var(--text-secondary)]">
               <Clock3 className="h-4 w-4" strokeWidth={3} />
               Bientot
             </span>

@@ -545,7 +545,7 @@ export default function VendrediMidiSimulatorPage() {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)] gap-6 items-start">
-        <Card accentColor="#FF9F1C">
+        <Card accentColor="var(--card-accent-orange)">
           <CardHeader className="gap-3">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <CardTitle className="text-base">Jeu principal</CardTitle>
@@ -554,16 +554,16 @@ export default function VendrediMidiSimulatorPage() {
               </Button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-sm font-black">
-              <div className="rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-2">
+              <div className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-2">
                 Etat: {statusLabel}
               </div>
-              <div className="rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-2">
+              <div className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-2">
                 Score: {score}
               </div>
-              <div className="rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-2">
+              <div className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-2">
                 Commandes: {completedOrders}
               </div>
-              <div className="rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-2">
+              <div className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-2">
                 Temps: {formatDuration(timeLeftMs)}
               </div>
             </div>
@@ -574,33 +574,33 @@ export default function VendrediMidiSimulatorPage() {
               width={WORLD_WIDTH}
               height={WORLD_HEIGHT}
               onPointerDown={onCanvasPointerDown}
-              className="w-full rounded-lg border-2 border-[var(--border-color)] bg-black/20 touch-none select-none"
+              className="w-full rounded-[var(--radius-element)] border-2 border-[var(--border-color)] bg-black/20 touch-none select-none"
             />
-            <p className="text-xs font-bold text-[var(--foreground)]/70">
+            <p className="text-xs font-bold text-[var(--text-secondary)]">
               Controles: fleches ou A/D pour bouger Leo, Espace/Entrer pour acheter.
               Sur mobile: touchez le comptoir voulu pour acheter.
             </p>
             {lastRunScore !== null && (
-              <p className="text-sm font-black text-[var(--foreground)]/80">
+              <p className="text-sm font-black text-[var(--text-secondary)]">
                 Derniere tentative: {lastRunScore} plats achetes.
               </p>
             )}
           </CardContent>
         </Card>
 
-        <Card accentColor="#2EC4B6">
+        <Card accentColor="var(--card-accent-teal)">
           <CardHeader className="space-y-3">
             <CardTitle className="text-base flex items-center gap-2">
               <Trophy className="h-5 w-5" strokeWidth={3} />
               Leaderboard
             </CardTitle>
-            <div className="rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)] p-3 space-y-1">
+            <div className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] bg-[var(--card-bg)] p-3 space-y-1">
               <p className="text-sm font-black">Votre meilleur score: {personalBest}</p>
-              <p className="text-xs font-bold text-[var(--foreground)]/65">
+              <p className="text-xs font-bold text-[var(--text-secondary)]">
                 Temps record: {formatDuration(personalBestDurationMs)}
               </p>
               {submitting && (
-                <p className="text-xs font-bold text-[var(--foreground)]/65">
+                <p className="text-xs font-bold text-[var(--text-secondary)]">
                   Sauvegarde du score en cours...
                 </p>
               )}
@@ -614,7 +614,7 @@ export default function VendrediMidiSimulatorPage() {
                 ))}
               </div>
             ) : entries.length === 0 ? (
-              <p className="text-sm font-bold text-[var(--foreground)]/65">
+              <p className="text-sm font-bold text-[var(--text-secondary)]">
                 Aucun score pour le moment. Lancez la premiere partie.
               </p>
             ) : (
@@ -642,13 +642,13 @@ export default function VendrediMidiSimulatorPage() {
                       />
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-black">{displayName}</p>
-                        <p className="text-xs font-bold text-[var(--foreground)]/65">
+                        <p className="text-xs font-bold text-[var(--text-secondary)]">
                           Mis a jour {formatRelative(entry.updated_at)}
                         </p>
                       </div>
                       <div className="text-right">
                         <p className="text-sm font-black">{entry.best_score}</p>
-                        <p className="text-xs font-bold text-[var(--foreground)]/65">
+                        <p className="text-xs font-bold text-[var(--text-secondary)]">
                           {formatDuration(entry.best_duration_ms)}
                         </p>
                       </div>
@@ -661,14 +661,14 @@ export default function VendrediMidiSimulatorPage() {
         </Card>
       </div>
 
-      <Card accentColor="#FFE66D">
+      <Card accentColor="var(--card-accent-yellow)">
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="flex items-start gap-3">
               <ShoppingBag className="h-5 w-5 mt-0.5" strokeWidth={3} />
               <div className="space-y-1">
                 <p className="text-sm font-black">Objectif</p>
-                <p className="text-sm font-bold text-[var(--foreground)]/70">
+                <p className="text-sm font-bold text-[var(--text-secondary)]">
                   Achetez le maximum de plats tout en respectant les commandes.
                 </p>
               </div>
@@ -677,7 +677,7 @@ export default function VendrediMidiSimulatorPage() {
               <Clock3 className="h-5 w-5 mt-0.5" strokeWidth={3} />
               <div className="space-y-1">
                 <p className="text-sm font-black">Regles</p>
-                <p className="text-sm font-bold text-[var(--foreground)]/70">
+                <p className="text-sm font-bold text-[var(--text-secondary)]">
                   Les commandes changent aleatoirement et expirent. Les erreurs font
                   perdre des points et du temps.
                 </p>

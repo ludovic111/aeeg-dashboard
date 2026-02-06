@@ -26,7 +26,7 @@ interface ActivityFeedProps {
 
 export function ActivityFeed({ activities }: ActivityFeedProps) {
   return (
-    <Card accentColor="#95E1D3" accentPosition="left">
+    <Card accentColor="var(--card-accent-mint)" accentPosition="left">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           Activite recente

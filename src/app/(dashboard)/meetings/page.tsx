@@ -47,7 +47,7 @@ export default function MeetingsPage() {
 
       {/* Search */}
       <div className="relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--foreground)]/40" strokeWidth={3} />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--text-muted)]" strokeWidth={3} />
         <Input
           placeholder="Rechercher..."
           value={search}

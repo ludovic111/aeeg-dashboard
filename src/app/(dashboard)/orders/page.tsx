@@ -212,7 +212,7 @@ export default function OrdersPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
         <Card>
           <CardContent className="p-4">
-            <p className="text-xs font-black uppercase tracking-wide text-[var(--foreground)]/60">
+            <p className="text-xs font-black uppercase tracking-wide text-[var(--text-secondary)]">
               Total commandes
             </p>
             <p className="text-3xl font-black mt-1">{orders.length}</p>
@@ -221,7 +221,7 @@ export default function OrdersPage() {
 
         <Card>
           <CardContent className="p-4">
-            <p className="text-xs font-black uppercase tracking-wide text-[var(--foreground)]/60">
+            <p className="text-xs font-black uppercase tracking-wide text-[var(--text-secondary)]">
               Ventes totales
             </p>
             <p className="text-3xl font-black mt-1">{formatCurrency(salesSummary.totalRevenueChf)}</p>
@@ -230,7 +230,7 @@ export default function OrdersPage() {
 
         <Card>
           <CardContent className="p-4">
-            <p className="text-xs font-black uppercase tracking-wide text-[var(--foreground)]/60">
+            <p className="text-xs font-black uppercase tracking-wide text-[var(--text-secondary)]">
               Sweats vendus
             </p>
             <p className="text-3xl font-black mt-1">{salesSummary.sweatCount}</p>
@@ -239,7 +239,7 @@ export default function OrdersPage() {
 
         <Card>
           <CardContent className="p-4">
-            <p className="text-xs font-black uppercase tracking-wide text-[var(--foreground)]/60">
+            <p className="text-xs font-black uppercase tracking-wide text-[var(--text-secondary)]">
               Gourdes vendues
             </p>
             <p className="text-3xl font-black mt-1">{salesSummary.gourdeCount}</p>
@@ -248,7 +248,7 @@ export default function OrdersPage() {
 
         <Card>
           <CardContent className="p-4">
-            <p className="text-xs font-black uppercase tracking-wide text-[var(--foreground)]/60">
+            <p className="text-xs font-black uppercase tracking-wide text-[var(--text-secondary)]">
               Couverture email
             </p>
             <p className="text-3xl font-black mt-1">{emailCoverage}%</p>

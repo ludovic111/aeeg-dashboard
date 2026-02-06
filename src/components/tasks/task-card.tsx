@@ -33,7 +33,7 @@ export function TaskCard({ task, index, onClick }: TaskCardProps) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           onClick={() => onClick(task)}
-          className={`cursor-pointer rounded-[0.95rem] border border-[var(--border-color)] bg-[var(--card-bg)] p-3 transition-colors ${
+          className={`cursor-pointer rounded-[var(--radius-card)] border border-[var(--border-color)] bg-[var(--card-bg)] p-3 transition-colors ${
             snapshot.isDragging
               ? "border-[var(--accent-gold)]"
               : "hover:border-[var(--accent-teal)]"
@@ -49,7 +49,7 @@ export function TaskCard({ task, index, onClick }: TaskCardProps) {
           </div>
 
           {task.description && (
-            <p className="text-xs text-[var(--foreground)]/60 mb-2 line-clamp-2">
+            <p className="text-xs text-[var(--text-secondary)] mb-2 line-clamp-2">
               {task.description}
             </p>
           )}

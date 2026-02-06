@@ -14,7 +14,7 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
   return (
     <Link href={`/meetings/${meeting.id}`}>
       <Card
-        accentColor="#4ECDC4"
+        accentColor="var(--card-accent-teal)"
         accentPosition="left"
         className="cursor-pointer transition-colors hover:border-[var(--accent-teal)]"
       >
@@ -26,20 +26,20 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
           </div>
 
           <div className="space-y-1.5 text-sm">
-            <div className="flex items-center gap-2 text-[var(--foreground)]/70">
+            <div className="flex items-center gap-2 text-[var(--text-secondary)]">
               <Clock className="h-3.5 w-3.5" strokeWidth={3} />
               <span className="font-mono">
                 {formatDate(meeting.date)} · {formatTime(meeting.date)}
               </span>
             </div>
             {meeting.location && (
-              <div className="flex items-center gap-2 text-[var(--foreground)]/70">
+              <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                 <MapPin className="h-3.5 w-3.5" strokeWidth={3} />
                 <span className="font-bold">{meeting.location}</span>
               </div>
             )}
             {meeting.action_items && meeting.action_items.length > 0 && (
-              <div className="flex items-center gap-2 text-[var(--foreground)]/70">
+              <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                 <ListChecks className="h-3.5 w-3.5" strokeWidth={3} />
                 <span className="font-bold">
                   {meeting.action_items.length} actions

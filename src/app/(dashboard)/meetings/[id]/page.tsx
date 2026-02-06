@@ -131,12 +131,12 @@ export default function MeetingDetailPage() {
         <div className="flex-1">
           <h1 className="text-xl sm:text-2xl font-black">{meeting.title}</h1>
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1">
-            <span className="text-sm font-mono text-[var(--foreground)]/60">
+            <span className="text-sm font-mono text-[var(--text-secondary)]">
               <Clock className="h-3.5 w-3.5 inline mr-1" />
               {formatDateTime(meeting.date)}
             </span>
             {meeting.location && (
-              <span className="text-sm font-bold text-[var(--foreground)]/60">
+              <span className="text-sm font-bold text-[var(--text-secondary)]">
                 <MapPin className="h-3.5 w-3.5 inline mr-1" />
                 {meeting.location}
               </span>
@@ -155,14 +155,14 @@ export default function MeetingDetailPage() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
         {/* Agenda File */}
         {agendaFileUrl ? (
-          <Card accentColor="#FFE66D" className="xl:col-span-2">
+          <Card accentColor="var(--card-accent-yellow)" className="xl:col-span-2">
             <CardHeader>
               <CardTitle className="text-base">Ordre du jour</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {isDocxAgenda ? (
                 <>
-                  <p className="text-sm font-bold text-[var(--foreground)]/70">
+                  <p className="text-sm font-bold text-[var(--text-secondary)]">
                     Fichier DOCX importé. Utilisez le bouton ci-dessous pour l&apos;ouvrir ou le télécharger.
                   </p>
                   <a
@@ -177,7 +177,7 @@ export default function MeetingDetailPage() {
                 </>
               ) : (
                 <>
-                  <div className="h-[55vh] sm:h-[70vh] w-full border-2 border-[var(--border-color)] rounded-lg overflow-hidden bg-white">
+                  <div className="h-[55vh] sm:h-[70vh] w-full border-2 border-[var(--border-color)] rounded-[var(--radius-element)] overflow-hidden bg-white">
                     <iframe
                       title="Ordre du jour"
                       src={agendaFileUrl}
@@ -199,19 +199,19 @@ export default function MeetingDetailPage() {
             </CardContent>
           </Card>
         ) : (
-          <Card accentColor="#FFE66D" className="xl:col-span-2">
+          <Card accentColor="var(--card-accent-yellow)" className="xl:col-span-2">
             <CardHeader>
               <CardTitle className="text-base">Ordre du jour</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm font-bold text-[var(--foreground)]/60">
+              <p className="text-sm font-bold text-[var(--text-secondary)]">
                 Aucun fichier importé pour cette réunion.
               </p>
             </CardContent>
           </Card>
         )}
 
-        <Card accentColor="#4ECDC4">
+        <Card accentColor="var(--card-accent-teal)">
           <CardHeader>
             <CardTitle className="text-base">Resume ODJ (Grok)</CardTitle>
           </CardHeader>
@@ -234,7 +234,7 @@ export default function MeetingDetailPage() {
                 <MarkdownPreview source={meeting.agenda_ai_summary} />
               </div>
             ) : (
-              <p className="text-sm font-bold text-[var(--foreground)]/60">
+              <p className="text-sm font-bold text-[var(--text-secondary)]">
                 {isDocxAgenda
                   ? "Cliquez sur le bouton pour générer le résumé à partir du DOCX."
                   : "Importez un ODJ en format DOCX pour générer un résumé."}

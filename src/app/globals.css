@@ -1,5 +1,44 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════════════════
+   NDS Design Token System
+   ───────────────────────────────────────────────────────────────────
+   Single source of truth for all visual properties.
+   Every component must reference these tokens — no hardcoded values.
+
+   COLORS
+     Backgrounds:  --bg-dark, --bg-dark-elevated, --bg-light, --bg-light-elevated
+     Semantic:      --background, --foreground, --card-bg, --sidebar-bg, --input-bg
+     Text:          --text-primary, --text-secondary (0.68), --text-muted (0.36), --text-dark
+     Accents:       --accent-gold, --accent-yellow, --accent-orange, --accent-teal
+     Card accents:  --card-accent-yellow, --card-accent-coral, --card-accent-mint,
+                    --card-accent-purple, --card-accent-teal, --card-accent-gold,
+                    --card-accent-orange
+     Borders:       --border-color (theme-aware)
+
+   TYPOGRAPHY
+     Fonts:         --font-display (serif), --font-body (sans), --font-mono-family (mono)
+     Use text-[var(--text-secondary)] for secondary text, text-[var(--text-muted)] for muted.
+     Never use arbitrary foreground opacity (/60, /55, /50, etc).
+
+   RADII
+     --radius-card:    1.1rem   (cards, dialogs, toasts, select dropdowns)
+     --radius-element: 0.75rem  (inner elements, list items, badges within cards)
+     --radius-pill:    999px    (buttons, inputs, pills)
+
+   TRANSITIONS
+     Standard: transition-colors duration-200 (via Tailwind)
+     All interactive elements must use this.
+
+   SPACING
+     Section vertical padding: py-6 (within dashboard)
+     Card internal padding: p-4 sm:p-6
+     Content max-width: max-w-[1480px]
+     Page horizontal padding: px-4 sm:px-6 md:px-10 lg:px-14
+     Inter-section gap: space-y-6
+     Grid gaps: gap-3 (tight), gap-4 (default), gap-6 (loose)
+   ═══════════════════════════════════════════════════════════════════ */
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -22,26 +61,51 @@
 }
 
 :root {
+  /* ── Backgrounds ── */
   --bg-dark: #0a0a0a;
   --bg-dark-elevated: #111111;
   --bg-light: #edecea;
   --bg-light-elevated: #f5f5f0;
+
+  /* ── Text ── */
   --text-primary: #f5f5f0;
   --text-secondary: rgba(245, 245, 240, 0.68);
   --text-muted: rgba(245, 245, 240, 0.36);
   --text-dark: #1a1a1a;
+
+  /* ── Accent palette ── */
   --accent-gold: #d4a847;
   --accent-yellow: #ffd600;
   --accent-orange: #ff5722;
   --accent-teal: #5b8a8a;
+
+  /* ── Card accent colors (semantic names for accentColor props) ── */
+  --card-accent-yellow: #ffe66d;
+  --card-accent-coral: #f38181;
+  --card-accent-mint: #95e1d3;
+  --card-accent-purple: #aa96da;
+  --card-accent-teal: #4ecdc4;
+  --card-accent-gold: #d4a847;
+  --card-accent-orange: #ff9f1c;
+
+  /* ── Borders ── */
   --border-dark: rgba(255, 255, 255, 0.12);
   --border-light: rgba(0, 0, 0, 0.1);
+
+  /* ── Typography ── */
   --font-display: "Instrument Serif", Georgia, serif;
   --font-body: "Inter", -apple-system, sans-serif;
   --font-mono-family: "JetBrains Mono", monospace;
+
+  /* ── Radii ── */
+  --radius-card: 1.1rem;
+  --radius-element: 0.75rem;
   --radius-pill: 999px;
+
+  /* ── Spacing ── */
   --section-padding: clamp(80px, 12vh, 200px);
 
+  /* ── Theme-aware semantic tokens (dark default) ── */
   --background: var(--bg-dark);
   --foreground: var(--text-primary);
   --border-color: var(--border-dark);
@@ -153,7 +217,7 @@ a:hover {
 
 .display-eyebrow {
   font-family: var(--font-sans);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -207,12 +271,12 @@ a:hover {
   background-size: 200% 100%;
   animation: nds-shimmer 1.8s infinite;
   border: 1px solid var(--border-color);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-element);
 }
 
 [data-sonner-toaster] [data-sonner-toast] {
   border: 1px solid var(--border-color) !important;
-  border-radius: 0.95rem !important;
+  border-radius: var(--radius-card) !important;
   box-shadow: 0 24px 70px -45px rgba(0, 0, 0, 0.75) !important;
   font-family: var(--font-sans) !important;
   font-weight: 500 !important;
@@ -239,7 +303,7 @@ a:hover {
 
 .w-md-editor {
   border: 1px solid var(--border-color) !important;
-  border-radius: 1rem !important;
+  border-radius: var(--radius-card) !important;
   box-shadow: none !important;
 }
 

@@ -10,14 +10,14 @@ export default function TutorialPage() {
         </p>
       </div>
 
-      <Card accentColor="#5B8A8A">
+      <Card accentColor="var(--accent-teal)">
         <CardHeader>
           <CardTitle className="text-base">
             Video YouTube: FPBPLXPGt4I
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="overflow-hidden rounded-[1rem] border border-[var(--border-color)] bg-black/90">
+          <div className="overflow-hidden rounded-[var(--radius-element)] border border-[var(--border-color)] bg-black/90">
             <div className="aspect-video">
               <iframe
                 className="h-full w-full"

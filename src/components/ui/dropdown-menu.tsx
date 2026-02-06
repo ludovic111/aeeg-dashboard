@@ -18,7 +18,7 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "z-50 min-w-[8rem] overflow-hidden rounded-[1rem] border border-[var(--border-color)] bg-[var(--card-bg)] p-1 shadow-[0_24px_60px_-35px_rgba(0,0,0,0.9)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+        "z-50 min-w-[8rem] overflow-hidden rounded-[var(--radius-card)] border border-[var(--border-color)] bg-[var(--card-bg)] p-1 shadow-[0_24px_60px_-35px_rgba(0,0,0,0.9)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
         className
       )}
       {...props}
@@ -36,7 +36,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-pointer select-none items-center gap-2 rounded-[0.7rem] px-2 py-1.5 text-sm font-medium outline-none transition-colors focus:bg-[var(--foreground)] focus:text-[var(--background)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex cursor-pointer select-none items-center gap-2 rounded-[var(--radius-element)] px-2 py-1.5 text-sm font-medium outline-none transition-colors focus:bg-[var(--foreground)] focus:text-[var(--background)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       inset && "pl-8",
       className
     )}
@@ -69,7 +69,7 @@ const DropdownMenuSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={cn("-mx-1 my-1 h-[2px] bg-[var(--border-color)]", className)}
+    className={cn("-mx-1 my-1 h-px bg-[var(--border-color)]", className)}
     {...props}
   />
 ));

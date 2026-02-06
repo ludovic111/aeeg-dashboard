@@ -49,7 +49,7 @@ export default function PendingPage() {
   };
 
   return (
-    <Card accentColor="#D4A847">
+    <Card accentColor="var(--card-accent-gold)">
       <CardContent className="p-8 text-center">
         <h2 className="font-[var(--font-display)] text-[2.3rem] leading-[0.92] mb-2">
           Demande en cours d&apos;examen

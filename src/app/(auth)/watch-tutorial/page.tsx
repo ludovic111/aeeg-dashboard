@@ -100,7 +100,7 @@ export default function WatchTutorialPage() {
   };
 
   return (
-    <Card accentColor="#5B8A8A">
+    <Card accentColor="var(--accent-teal)">
       <CardHeader>
         <CardTitle className="text-[2rem]">Regardez le tutoriel d&apos;abord</CardTitle>
       </CardHeader>

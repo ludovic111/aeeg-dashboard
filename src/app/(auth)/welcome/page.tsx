@@ -26,7 +26,7 @@ export default function WelcomePage() {
   };
 
   return (
-    <Card accentColor="#D4A847">
+    <Card accentColor="var(--card-accent-gold)">
       <CardHeader>
         <CardTitle className="text-[2rem]">Verification du tutoriel</CardTitle>
       </CardHeader>

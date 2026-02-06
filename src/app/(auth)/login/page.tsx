@@ -45,7 +45,7 @@ export default function LoginPage() {
   };
 
   return (
-    <Card accentColor="#5B8A8A">
+    <Card accentColor="var(--accent-teal)">
       <CardHeader>
         <CardTitle className="text-[2rem]">Connexion</CardTitle>
       </CardHeader>

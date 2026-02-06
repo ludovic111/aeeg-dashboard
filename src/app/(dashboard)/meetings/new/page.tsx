@@ -122,7 +122,7 @@ export default function NewMeetingPage() {
                 required
               />
               {agendaFile && (
-                <p className="text-xs font-bold text-[var(--foreground)]/60">
+                <p className="text-xs font-bold text-[var(--text-secondary)]">
                   Fichier: {agendaFile.name}
                 </p>
               )}

@@ -534,7 +534,7 @@ export default function EscapeFromLaraPage() {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)] gap-6 items-start">
-        <Card accentColor="#4ECDC4">
+        <Card accentColor="var(--card-accent-teal)">
           <CardHeader className="gap-3">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <CardTitle className="text-base">Mini-jeu spatial</CardTitle>
@@ -544,13 +544,13 @@ export default function EscapeFromLaraPage() {
               </Button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm font-black">
-              <div className="rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-2">
+              <div className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-2">
                 Etat: {statusLabel}
               </div>
-              <div className="rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-2">
+              <div className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-2">
                 Score: {score}
               </div>
-              <div className="rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-2">
+              <div className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-2">
                 Duree: {formatDuration(runDurationMs)}
               </div>
             </div>
@@ -564,20 +564,20 @@ export default function EscapeFromLaraPage() {
               onPointerMove={handleCanvasPointerMove}
               onPointerUp={handleCanvasPointerUp}
               onPointerCancel={handleCanvasPointerUp}
-              className="w-full rounded-lg border-2 border-[var(--border-color)] bg-black touch-none select-none"
+              className="w-full rounded-[var(--radius-element)] border-2 border-[var(--border-color)] bg-black touch-none select-none"
             />
-            <p className="text-xs font-bold text-[var(--foreground)]/60">
+            <p className="text-xs font-bold text-[var(--text-secondary)]">
               Controle: maintenez le clic (ou le doigt) sur le canvas puis glissez
               horizontalement pour esquiver les projectiles.
             </p>
             {!enemyPhotoReady && (
-              <p className="text-xs font-bold text-[var(--foreground)]/60">
+              <p className="text-xs font-bold text-[var(--text-secondary)]">
                 Image de Lara introuvable. Ajoutez{" "}
                 <span className="underline">/public/lara-spaceship.webp</span>.
               </p>
             )}
             {lastRunScore !== null && (
-              <p className="text-sm font-black text-[var(--foreground)]/80">
+              <p className="text-sm font-black text-[var(--text-secondary)]">
                 Derniere tentative: {lastRunScore} points en{" "}
                 {formatDuration(runDurationMs)}.
               </p>
@@ -585,19 +585,19 @@ export default function EscapeFromLaraPage() {
           </CardContent>
         </Card>
 
-        <Card accentColor="#FFE66D">
+        <Card accentColor="var(--card-accent-yellow)">
           <CardHeader className="space-y-3">
             <CardTitle className="text-base flex items-center gap-2">
               <Trophy className="h-5 w-5" strokeWidth={3} />
               Leaderboard
             </CardTitle>
-            <div className="rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)] p-3 space-y-1">
+            <div className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] bg-[var(--card-bg)] p-3 space-y-1">
               <p className="text-sm font-black">Votre meilleur score: {personalBest}</p>
-              <p className="text-xs font-bold text-[var(--foreground)]/65">
+              <p className="text-xs font-bold text-[var(--text-secondary)]">
                 Duree record: {formatDuration(personalBestDurationMs)}
               </p>
               {submitting && (
-                <p className="text-xs font-bold text-[var(--foreground)]/65">
+                <p className="text-xs font-bold text-[var(--text-secondary)]">
                   Sauvegarde du score en cours...
                 </p>
               )}
@@ -611,7 +611,7 @@ export default function EscapeFromLaraPage() {
                 ))}
               </div>
             ) : entries.length === 0 ? (
-              <p className="text-sm font-bold text-[var(--foreground)]/65">
+              <p className="text-sm font-bold text-[var(--text-secondary)]">
                 Aucun score pour le moment. Lancez la premiere partie.
               </p>
             ) : (
@@ -639,13 +639,13 @@ export default function EscapeFromLaraPage() {
                       />
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-black">{displayName}</p>
-                        <p className="text-xs font-bold text-[var(--foreground)]/65">
+                        <p className="text-xs font-bold text-[var(--text-secondary)]">
                           Mis a jour {formatRelative(entry.updated_at)}
                         </p>
                       </div>
                       <div className="text-right">
                         <p className="text-sm font-black">{entry.best_score}</p>
-                        <p className="text-xs font-bold text-[var(--foreground)]/65">
+                        <p className="text-xs font-bold text-[var(--text-secondary)]">
                           {formatDuration(entry.best_duration_ms)}
                         </p>
                       </div>
@@ -658,13 +658,13 @@ export default function EscapeFromLaraPage() {
         </Card>
       </div>
 
-      <Card accentColor="#FF6B6B">
+      <Card accentColor="var(--card-accent-coral)">
         <CardContent className="pt-6">
           <div className="flex items-start gap-3">
             <Rocket className="h-5 w-5 mt-0.5" strokeWidth={3} />
             <div className="space-y-1">
               <p className="text-sm font-black">Objectif</p>
-              <p className="text-sm font-bold text-[var(--foreground)]/70">
+              <p className="text-sm font-bold text-[var(--text-secondary)]">
                 Lara envoie des salves de plus en plus denses et rapides. Votre
                 mission est simple: survivre le plus longtemps possible.
               </p>

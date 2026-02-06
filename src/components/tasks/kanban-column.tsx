@@ -29,7 +29,7 @@ export function KanbanColumn({
   return (
     <div className="flex flex-col min-w-[85vw] sm:min-w-[280px] w-full sm:w-80 snap-start">
       <div
-        className="flex items-center justify-between rounded-t-[1rem] border border-b-0 border-[var(--border-color)] p-3"
+        className="flex items-center justify-between rounded-t-[var(--radius-card)] border border-b-0 border-[var(--border-color)] p-3"
         style={{ backgroundColor: columnColors[status] }}
       >
         <div className="flex items-center gap-2">
@@ -55,7 +55,7 @@ export function KanbanColumn({
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`flex-1 min-h-[200px] space-y-2 rounded-b-[1rem] border border-t-0 border-[var(--border-color)] p-2 transition-colors ${
+            className={`flex-1 min-h-[200px] space-y-2 rounded-b-[var(--radius-card)] border border-t-0 border-[var(--border-color)] p-2 transition-colors ${
               snapshot.isDraggingOver
                 ? "bg-[var(--foreground)]/6"
                 : "bg-[var(--card-bg)]/55"

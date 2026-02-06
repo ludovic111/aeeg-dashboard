@@ -108,7 +108,7 @@ export function AdminPanel() {
       </div>
 
       {/* Pending Requests */}
-      <Card accentColor="#FFE66D">
+      <Card accentColor="var(--card-accent-yellow)">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             Demandes en attente
@@ -129,7 +129,7 @@ export function AdminPanel() {
               {pendingMembers.map((member) => (
                 <div
                   key={member.id}
-                  className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)]"
+                  className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-[var(--radius-element)] border-2 border-[var(--border-color)] bg-[var(--card-bg)]"
                 >
                   <Avatar
                     name={member.full_name || member.email}
@@ -139,10 +139,10 @@ export function AdminPanel() {
                     <p className="font-black text-sm truncate">
                       {member.full_name || "Sans nom"}
                     </p>
-                    <p className="font-mono text-xs text-[var(--foreground)]/60 truncate">
+                    <p className="font-mono text-xs text-[var(--text-secondary)] truncate">
                       {member.email}
                     </p>
-                    <p className="text-xs text-[var(--foreground)]/40 mt-0.5">
+                    <p className="text-xs text-[var(--text-muted)] mt-0.5">
                       Demande le {formatDate(member.created_at)}
                     </p>
                   </div>
@@ -180,7 +180,7 @@ export function AdminPanel() {
       </Card>
 
       {/* Member Management */}
-      <Card accentColor="#AA96DA">
+      <Card accentColor="var(--card-accent-purple)">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             Gestion des membres
@@ -189,7 +189,7 @@ export function AdminPanel() {
         </CardHeader>
         <CardContent>
           {allMembers.length === 0 ? (
-            <p className="text-sm font-bold text-[var(--foreground)]/60 text-center py-6">
+            <p className="text-sm font-bold text-[var(--text-secondary)] text-center py-6">
               Aucun membre actif
             </p>
           ) : (
@@ -199,7 +199,7 @@ export function AdminPanel() {
                 return (
                   <div
                     key={member.id}
-                    className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)]"
+                    className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-[var(--radius-element)] border-2 border-[var(--border-color)] bg-[var(--card-bg)]"
                   >
                     <Avatar
                       name={member.full_name || member.email}
@@ -212,7 +212,7 @@ export function AdminPanel() {
                           <span className="text-[var(--accent-orange)] ml-1">(vous)</span>
                         )}
                       </p>
-                      <p className="font-mono text-xs text-[var(--foreground)]/60 truncate">
+                      <p className="font-mono text-xs text-[var(--text-secondary)] truncate">
                         {member.email}
                       </p>
                     </div>

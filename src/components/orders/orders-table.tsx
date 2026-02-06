@@ -25,7 +25,7 @@ export function OrdersTable({ orders, onEdit }: OrdersTableProps) {
       </CardHeader>
       <CardContent className="p-3 md:p-0">
         {orders.length === 0 ? (
-          <div className="p-8 text-center text-sm font-bold text-[var(--foreground)]/40">
+          <div className="p-8 text-center text-sm font-bold text-[var(--text-muted)]">
             Aucune commande
           </div>
         ) : (
@@ -40,18 +40,18 @@ export function OrdersTable({ orders, onEdit }: OrdersTableProps) {
               return (
                 <div
                   key={order.id}
-                  className="rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)] p-3 space-y-2"
+                  className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] bg-[var(--card-bg)] p-3 space-y-2"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <p className="text-sm font-black truncate">{order.full_name}</p>
-                      <p className="text-xs font-mono text-[var(--foreground)]/70">
+                      <p className="text-xs font-mono text-[var(--text-secondary)]">
                         #{order.order_number}
                       </p>
                     </div>
                     <Badge variant="info">{formatRelative(order.imported_at)}</Badge>
                   </div>
-                  <p className="text-xs font-mono text-[var(--foreground)]/70 break-words">
+                  <p className="text-xs font-mono text-[var(--text-secondary)] break-words">
                     {order.email || "Sans email"}
                   </p>
                   <div className="space-y-1 text-sm">
@@ -132,7 +132,7 @@ export function OrdersTable({ orders, onEdit }: OrdersTableProps) {
                     <td className="p-3 text-sm font-bold">{order.full_name}</td>
                     <td className="p-3 text-sm font-mono">
                       {order.email || (
-                        <span className="text-[var(--foreground)]/50">-</span>
+                        <span className="text-[var(--text-muted)]">-</span>
                       )}
                     </td>
                     <td className="p-3 text-sm">

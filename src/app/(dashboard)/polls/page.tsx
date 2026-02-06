@@ -114,7 +114,7 @@ export default function PollsPage() {
         </p>
       </div>
 
-      <Card accentColor="#4ECDC4">
+      <Card accentColor="var(--card-accent-teal)">
         <CardHeader>
           <CardTitle className="text-base">Créer un sondage</CardTitle>
         </CardHeader>
@@ -234,7 +234,7 @@ export default function PollsPage() {
             const canDeletePoll = isAdmin || poll.created_by === profile?.id;
 
             return (
-              <Card key={poll.id} accentColor="#FFE66D">
+              <Card key={poll.id} accentColor="var(--card-accent-yellow)">
                 <CardHeader>
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                     <CardTitle className="text-base">{poll.question}</CardTitle>
@@ -252,7 +252,7 @@ export default function PollsPage() {
                       </Button>
                     )}
                   </div>
-                  <p className="text-xs font-bold text-[var(--foreground)]/60">
+                  <p className="text-xs font-bold text-[var(--text-secondary)]">
                     {poll.creator?.full_name || "Membre du comité"} · {poll.total_voters} votant
                     {poll.total_voters > 1 ? "s" : ""} · {poll.total_votes} choix
                     {poll.closes_at
@@ -261,7 +261,7 @@ export default function PollsPage() {
                     {isClosed ? " · Clôturé" : ""}
                   </p>
                   {poll.description && (
-                    <p className="text-sm font-bold text-[var(--foreground)]/70">
+                    <p className="text-sm font-bold text-[var(--text-secondary)]">
                       {poll.description}
                     </p>
                   )}
@@ -273,7 +273,7 @@ export default function PollsPage() {
                     return (
                       <div
                         key={option.id}
-                        className="rounded-lg border-2 border-[var(--border-color)] p-2 space-y-2"
+                        className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] p-2 space-y-2"
                       >
                         <Button
                           type="button"
@@ -290,14 +290,14 @@ export default function PollsPage() {
 
                         <div className="space-y-1">
                           {option.votes.length === 0 ? (
-                            <p className="text-xs font-bold text-[var(--foreground)]/55">
+                            <p className="text-xs font-bold text-[var(--text-secondary)]">
                               Aucun vote sur cette option.
                             </p>
                           ) : (
                             option.votes.map((vote) => (
                               <p
                                 key={vote.id}
-                                className="text-xs font-bold text-[var(--foreground)]/70"
+                                className="text-xs font-bold text-[var(--text-secondary)]"
                               >
                                 {vote.voter?.full_name || vote.voter?.email || "Membre"} ·{" "}
                                 {formatDateTime(vote.created_at)}

@@ -81,7 +81,7 @@ export function MobileNav({
                 onClick={onClose}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "flex items-center justify-between rounded-[1rem] border px-4 py-3 text-sm transition-colors",
+                  "flex items-center justify-between rounded-[var(--radius-card)] border px-4 py-3 text-sm transition-colors",
                   isActive
                     ? "border-[var(--accent-yellow)] bg-[color:color-mix(in_srgb,var(--accent-yellow)_22%,transparent)] text-[var(--foreground)]"
                     : "border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--foreground)]"

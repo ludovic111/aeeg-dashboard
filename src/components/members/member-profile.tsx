@@ -105,7 +105,7 @@ export function MemberProfile({
           >
             {ROLES[member.role].label}
           </Badge>
-          <p className="text-xs font-mono text-[var(--foreground)]/50 mt-2">
+          <p className="text-xs font-mono text-[var(--text-muted)] mt-2">
             Membre depuis {formatDate(member.created_at)}
           </p>
         </div>
@@ -156,14 +156,14 @@ export function MemberProfile({
         ) : (
           <div className="space-y-3 pt-4">
             <div>
-              <p className="text-xs font-bold text-[var(--foreground)]/50 uppercase">
+              <p className="text-xs font-bold text-[var(--text-muted)] uppercase">
                 E-mail
               </p>
               <p className="font-mono text-sm">{member.email}</p>
             </div>
             {member.phone && (
               <div>
-                <p className="text-xs font-bold text-[var(--foreground)]/50 uppercase">
+                <p className="text-xs font-bold text-[var(--text-muted)] uppercase">
                   Téléphone
                 </p>
                 <p className="font-mono text-sm">{member.phone}</p>
@@ -171,7 +171,7 @@ export function MemberProfile({
             )}
             {member.bio && (
               <div>
-                <p className="text-xs font-bold text-[var(--foreground)]/50 uppercase">
+                <p className="text-xs font-bold text-[var(--text-muted)] uppercase">
                   Bio
                 </p>
                 <p className="text-sm">{member.bio}</p>

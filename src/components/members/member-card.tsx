@@ -15,10 +15,10 @@ const roleBadgeVariants: Record<string, "danger" | "coral" | "purple" | "warning
 };
 
 const roleAccentColors: Record<string, string> = {
-  superadmin: "#FF6B6B",
-  admin: "#F38181",
-  committee_member: "#AA96DA",
-  pending: "#FFE66D",
+  superadmin: "var(--card-accent-coral)",
+  admin: "var(--card-accent-coral)",
+  committee_member: "var(--card-accent-purple)",
+  pending: "var(--card-accent-yellow)",
 };
 
 interface MemberCardProps {
@@ -51,12 +51,12 @@ export function MemberCard({ member, onClick }: MemberCardProps) {
         </div>
 
         <div className="space-y-1.5">
-          <div className="flex items-center gap-2 text-sm text-[var(--foreground)]/70">
+          <div className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
             <Mail className="h-3.5 w-3.5 shrink-0" strokeWidth={2} />
             <span className="font-mono truncate text-xs">{member.email}</span>
           </div>
           {member.phone && (
-            <div className="flex items-center gap-2 text-sm text-[var(--foreground)]/70">
+            <div className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
               <Phone className="h-3.5 w-3.5 shrink-0" strokeWidth={2} />
               <span className="font-mono text-xs">{member.phone}</span>
             </div>

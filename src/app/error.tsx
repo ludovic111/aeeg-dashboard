@@ -17,7 +17,7 @@ export default function Error({
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[var(--background)] p-4">
-      <Card accentColor="#FF5722" className="max-w-md w-full">
+      <Card accentColor="var(--accent-orange)" className="max-w-md w-full">
         <CardContent className="p-8 text-center">
           <h2 className="font-[var(--font-display)] text-[2.3rem] leading-[0.95] mb-2">
             Une erreur est survenue

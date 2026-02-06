@@ -196,7 +196,7 @@ export default function FilesPage() {
         </p>
       </div>
 
-      <Card accentColor="#AA96DA">
+      <Card accentColor="var(--card-accent-purple)">
         <CardHeader>
           <CardTitle className="text-base">Navigation</CardTitle>
         </CardHeader>
@@ -299,7 +299,7 @@ export default function FilesPage() {
               )}
 
               {visibleFolders.length === 0 ? (
-                <p className="text-sm font-bold text-[var(--foreground)]/60">
+                <p className="text-sm font-bold text-[var(--text-secondary)]">
                   Aucun dossier ici.
                 </p>
               ) : (
@@ -342,21 +342,21 @@ export default function FilesPage() {
             </CardHeader>
             <CardContent className="space-y-2">
               {visibleFiles.length === 0 ? (
-                <p className="text-sm font-bold text-[var(--foreground)]/60">
+                <p className="text-sm font-bold text-[var(--text-secondary)]">
                   Aucun fichier ici.
                 </p>
               ) : (
                 visibleFiles.map((file) => (
                   <div
                     key={file.id}
-                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-2 rounded-lg border-2 border-[var(--border-color)]"
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-2 rounded-[var(--radius-element)] border-2 border-[var(--border-color)]"
                   >
                     <div className="min-w-0">
                       <p className="text-sm font-bold truncate flex items-center gap-2">
                         <FileText className="h-4 w-4 shrink-0" strokeWidth={3} />
                         {file.name}
                       </p>
-                      <p className="text-xs font-bold text-[var(--foreground)]/60 mt-1">
+                      <p className="text-xs font-bold text-[var(--text-secondary)] mt-1">
                         {Math.max(1, Math.round(file.size_bytes / 1024))} KB · {" "}
                         {formatRelative(file.created_at)}
                       </p>

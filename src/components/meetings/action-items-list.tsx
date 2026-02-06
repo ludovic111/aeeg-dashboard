@@ -75,7 +75,7 @@ export function ActionItemsList({
         {items.map((item) => (
           <div
             key={item.id}
-            className="rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)] p-3 space-y-3"
+            className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] bg-[var(--card-bg)] p-3 space-y-3"
           >
             <div className="flex items-start gap-3">
               <Checkbox
@@ -85,7 +85,7 @@ export function ActionItemsList({
               <span
                 className={`flex-1 text-sm font-bold ${
                   item.status === "done"
-                    ? "line-through text-[var(--foreground)]/40"
+                    ? "line-through text-[var(--text-muted)]"
                     : ""
                 }`}
               >
@@ -106,7 +106,7 @@ export function ActionItemsList({
               {canEdit && (
                 <button
                   onClick={() => handleDelete(item.id)}
-                  className="p-1 rounded border-2 border-[var(--border-color)] hover:bg-brutal-red hover:text-white transition-colors"
+                  className="p-1 rounded-[var(--radius-element)] border-2 border-[var(--border-color)] hover:bg-brutal-red hover:text-white transition-colors"
                 >
                   <Trash2 className="h-3.5 w-3.5" strokeWidth={3} />
                 </button>

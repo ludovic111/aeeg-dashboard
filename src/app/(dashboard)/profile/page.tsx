@@ -196,7 +196,7 @@ export default function ProfilePage() {
         </p>
       </div>
 
-      <Card accentColor="#4ECDC4">
+      <Card accentColor="var(--card-accent-teal)">
         <CardHeader>
           <CardTitle>Informations personnelles</CardTitle>
         </CardHeader>
@@ -224,7 +224,7 @@ export default function ProfilePage() {
                 <Camera className="h-4 w-4" strokeWidth={3} />
                 Changer la photo
               </Button>
-              <p className="text-xs font-bold text-[var(--foreground)]/50">
+              <p className="text-xs font-bold text-[var(--text-muted)]">
                 JPG, PNG, WEBP (max 5MB)
               </p>
             </div>

@@ -190,7 +190,7 @@ export function OrdersForm({
               return (
                 <div
                   key={field.id}
-                  className="rounded-lg border-2 border-[var(--border-color)] p-3 space-y-3"
+                  className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] p-3 space-y-3"
                 >
                   <div className="grid grid-cols-1 sm:grid-cols-[1.2fr_0.8fr_auto] gap-3 items-end">
                     <div className="space-y-2">

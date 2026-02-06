@@ -78,7 +78,7 @@ const ActivityFeed = dynamic(
     ),
   {
     loading: () => (
-      <Card accentColor="#95E1D3">
+      <Card accentColor="var(--card-accent-mint)">
         <CardHeader>
           <CardTitle className="text-base">Activite recente</CardTitle>
         </CardHeader>
@@ -360,56 +360,56 @@ export default function DashboardPage() {
       value: String(data?.openTaskCount || 0),
       subtitle: `${data?.tasksDueSoonCount || 0} à traiter cette semaine`,
       icon: ListTodo,
-      color: "#FFE66D",
+      color: "var(--card-accent-yellow)",
     },
     {
       title: "Tâches en retard",
       value: String(data?.overdueTaskCount || 0),
       subtitle: "à replanifier rapidement",
       icon: AlertTriangle,
-      color: "#F38181",
+      color: "var(--card-accent-coral)",
     },
     {
       title: "Ventes totales",
       value: formatCurrency(data?.salesTotalChf || 0),
       subtitle: `${data?.ordersCount || 0} commandes`,
       icon: Banknote,
-      color: "#95E1D3",
+      color: "var(--card-accent-mint)",
     },
     {
       title: "Commandes (7 jours)",
       value: String(data?.ordersThisWeekCount || 0),
       subtitle: "nouveaux ajouts",
       icon: PackageSearch,
-      color: "#AA96DA",
+      color: "var(--card-accent-purple)",
     },
     {
       title: "Réunions",
       value: String(data?.meetingsCount || 0),
       subtitle: `${data?.meetingsWithSummaryCount || 0} avec résumé IA`,
       icon: ClipboardCheck,
-      color: "#FFE66D",
+      color: "var(--card-accent-yellow)",
     },
     {
       title: "Sondages ouverts",
       value: String(data?.openPollCount || 0),
       subtitle: "votes en cours",
       icon: Vote,
-      color: "#95E1D3",
+      color: "var(--card-accent-mint)",
     },
     {
       title: "Soirées à venir",
       value: String(data?.upcomingSoireeCount || 0),
       subtitle: "événements planifiés",
       icon: CalendarClock,
-      color: "#F38181",
+      color: "var(--card-accent-coral)",
     },
     {
       title: "Membres actifs",
       value: String(data?.memberCount || 0),
       subtitle: "sur la plateforme",
       icon: Users,
-      color: "#AA96DA",
+      color: "var(--card-accent-purple)",
     },
   ];
 
@@ -443,7 +443,7 @@ export default function DashboardPage() {
       <section className="grid grid-cols-1 gap-3 border-y border-[var(--border-color)] py-6 md:grid-cols-3">
         {workflowSteps.map((step) => (
           <div key={step.id} className="space-y-2 pr-4">
-            <p className="font-[var(--font-mono-family)] text-xs tracking-[0.08em] text-[var(--text-muted)]">
+            <p className="mono-meta text-[var(--text-muted)]">
               {step.id}
             </p>
             <p className="font-semibold">{step.title}</p>
@@ -467,16 +467,16 @@ export default function DashboardPage() {
               <CardContent className="p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-xs font-bold text-[var(--foreground)]/60 uppercase tracking-wide">
+                    <p className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wide">
                       {card.title}
                     </p>
                     <p className="text-2xl font-black mt-1 font-mono">{card.value}</p>
-                    <p className="text-xs font-bold text-[var(--foreground)]/55 mt-1">
+                    <p className="text-xs font-bold text-[var(--text-muted)] mt-1">
                       {card.subtitle}
                     </p>
                   </div>
                   <div
-                    className="p-2 rounded-lg border-2 border-[var(--border-color)]"
+                    className="p-2 rounded-[var(--radius-element)] border-2 border-[var(--border-color)]"
                     style={{ backgroundColor: card.color }}
                   >
                     <Icon className="h-5 w-5 text-black" strokeWidth={3} />
@@ -491,13 +491,13 @@ export default function DashboardPage() {
       <QuickActions />
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
-        <Card accentColor="#4ECDC4">
+        <Card accentColor="var(--card-accent-teal)">
           <CardHeader>
             <CardTitle className="text-base">Prochaines echeances</CardTitle>
           </CardHeader>
           <CardContent>
             {(data?.upcoming || []).length === 0 ? (
-              <p className="text-sm font-bold text-[var(--foreground)]/60">
+              <p className="text-sm font-bold text-[var(--text-secondary)]">
                 Aucune échéance à venir.
               </p>
             ) : (
@@ -505,7 +505,7 @@ export default function DashboardPage() {
                 {(data?.upcoming || []).map((item) => (
                   <div
                     key={item.id}
-                    className="rounded-lg border-2 border-[var(--border-color)] p-2"
+                    className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] p-2"
                   >
                     <div className="flex items-center justify-between gap-2">
                       <p className="text-sm font-black truncate">{item.title}</p>
@@ -525,10 +525,10 @@ export default function DashboardPage() {
                           : "Soirée"}
                       </Badge>
                     </div>
-                    <p className="text-xs font-bold text-[var(--foreground)]/65 mt-1">
+                    <p className="text-xs font-bold text-[var(--text-secondary)] mt-1">
                       {item.subtitle}
                     </p>
-                    <p className="text-xs font-bold text-[var(--foreground)]/50 mt-1">
+                    <p className="text-xs font-bold text-[var(--text-muted)] mt-1">
                       {formatDateTime(item.date)}
                     </p>
                   </div>

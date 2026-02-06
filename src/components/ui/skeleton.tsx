@@ -6,7 +6,7 @@ function Skeleton({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("brutal-skeleton rounded-lg", className)}
+      className={cn("brutal-skeleton rounded-[var(--radius-element)]", className)}
       {...props}
     />
   );

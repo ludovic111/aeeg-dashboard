@@ -23,28 +23,28 @@ export function OverviewCards({
       value: String(taskCount),
       subtitle: "tâches actives",
       icon: CheckSquare,
-      color: "#FFE66D",
+      color: "var(--card-accent-yellow)",
     },
     {
       title: "Commandes clients",
       value: String(ordersCount),
       subtitle: "dans le carnet",
       icon: PackageSearch,
-      color: "#F38181",
+      color: "var(--card-accent-coral)",
     },
     {
       title: "Ventes",
       value: formatCurrency(salesTotalChf),
       subtitle: "35 CHF sweat / 15 CHF gourde",
       icon: Banknote,
-      color: "#95E1D3",
+      color: "var(--card-accent-mint)",
     },
     {
       title: "Membres actifs",
       value: String(memberCount),
       subtitle: "membres",
       icon: Users,
-      color: "#AA96DA",
+      color: "var(--card-accent-purple)",
     },
   ];
 
@@ -57,20 +57,20 @@ export function OverviewCards({
             <CardContent className="p-4">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-xs font-bold text-[var(--foreground)]/60 uppercase tracking-wide">
+                  <p className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wide">
                     {card.title}
                   </p>
                   <p className="text-2xl font-black mt-1 font-mono">
                     {card.value}
                   </p>
                   {card.subtitle && (
-                    <p className="text-xs font-bold text-[var(--foreground)]/50 mt-1">
+                    <p className="text-xs font-bold text-[var(--text-muted)] mt-1">
                       {card.subtitle}
                     </p>
                   )}
                 </div>
                 <div
-                  className="p-2 rounded-lg border-2 border-[var(--border-color)]"
+                  className="p-2 rounded-[var(--radius-element)] border-2 border-[var(--border-color)]"
                   style={{ backgroundColor: card.color }}
                 >
                   <Icon className="h-5 w-5 text-black" strokeWidth={3} />

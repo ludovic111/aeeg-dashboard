@@ -36,7 +36,7 @@ export function BottomNav({ onMenuClick }: BottomNavProps) {
                 onTouchStart={() => prefetchRoute(item.href)}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "flex min-h-14 w-full flex-col items-center justify-center gap-1 rounded-[0.8rem] border border-transparent px-2 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors",
+                  "flex min-h-14 w-full flex-col items-center justify-center gap-1 rounded-[var(--radius-element)] border border-transparent px-2 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors",
                   isActive
                     ? "border-[var(--accent-yellow)] bg-[color:color-mix(in_srgb,var(--accent-yellow)_24%,transparent)] text-[var(--foreground)]"
                     : "text-[var(--text-secondary)]"
@@ -52,7 +52,7 @@ export function BottomNav({ onMenuClick }: BottomNavProps) {
           <button
             type="button"
             onClick={onMenuClick}
-            className="flex min-h-14 w-full flex-col items-center justify-center gap-1 rounded-[0.8rem] border border-transparent px-2 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--text-secondary)] transition-colors"
+            className="flex min-h-14 w-full flex-col items-center justify-center gap-1 rounded-[var(--radius-element)] border border-transparent px-2 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--text-secondary)] transition-colors"
           >
             <Menu className="h-4 w-4" strokeWidth={2.5} />
             <span className="truncate">Menu</span>

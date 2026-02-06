@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[var(--background)] p-4">
-      <Card accentColor="#D4A847" className="max-w-md w-full">
+      <Card accentColor="var(--card-accent-gold)" className="max-w-md w-full">
         <CardContent className="p-8 text-center">
           <p className="text-6xl mb-2 font-[var(--font-mono-family)]">404</p>
           <h2 className="font-[var(--font-display)] text-[2.3rem] leading-[0.95] mb-2">

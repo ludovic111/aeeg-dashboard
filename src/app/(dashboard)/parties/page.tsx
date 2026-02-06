@@ -312,7 +312,7 @@ export default function PartiesPage() {
       </div>
 
       {isAdmin && (
-        <Card accentColor="#F38181">
+        <Card accentColor="var(--card-accent-coral)">
           <CardHeader>
             <CardTitle className="text-base">Créer une soirée</CardTitle>
           </CardHeader>
@@ -395,7 +395,7 @@ export default function PartiesPage() {
           </CardHeader>
           <CardContent className="space-y-2">
             {parties.length === 0 ? (
-              <p className="text-sm font-bold text-[var(--foreground)]/60">
+              <p className="text-sm font-bold text-[var(--text-secondary)]">
                 Aucune soirée disponible.
               </p>
             ) : (
@@ -414,7 +414,7 @@ export default function PartiesPage() {
                     >
                       <div className="text-left min-w-0">
                         <p className="font-black truncate">{party.name}</p>
-                        <p className="text-xs font-bold text-[var(--foreground)]/60">
+                        <p className="text-xs font-bold text-[var(--text-secondary)]">
                           {formatPartyDateTime(party.event_date, party.event_time)}
                         </p>
                       </div>
@@ -450,7 +450,7 @@ export default function PartiesPage() {
           </Card>
         ) : (
           <div className="space-y-6">
-            <Card accentColor="#FFE66D">
+            <Card accentColor="var(--card-accent-yellow)">
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
                   <PartyPopper className="h-4 w-4" strokeWidth={3} />
@@ -458,8 +458,8 @@ export default function PartiesPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
-                <div className="rounded-lg border-2 border-[var(--border-color)] p-3">
-                  <p className="text-xs font-black uppercase tracking-wide text-[var(--foreground)]/60">
+                <div className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] p-3">
+                  <p className="text-xs font-black uppercase tracking-wide text-[var(--text-secondary)]">
                     Date & heure
                   </p>
                   <p className="text-sm font-bold mt-1 flex items-center gap-1">
@@ -470,8 +470,8 @@ export default function PartiesPage() {
                     )}
                   </p>
                 </div>
-                <div className="rounded-lg border-2 border-[var(--border-color)] p-3">
-                  <p className="text-xs font-black uppercase tracking-wide text-[var(--foreground)]/60">
+                <div className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] p-3">
+                  <p className="text-xs font-black uppercase tracking-wide text-[var(--text-secondary)]">
                     Lieu
                   </p>
                   <p className="text-sm font-bold mt-1 flex items-center gap-1">
@@ -479,16 +479,16 @@ export default function PartiesPage() {
                     {selectedParty.place}
                   </p>
                 </div>
-                <div className="rounded-lg border-2 border-[var(--border-color)] p-3">
-                  <p className="text-xs font-black uppercase tracking-wide text-[var(--foreground)]/60">
+                <div className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] p-3">
+                  <p className="text-xs font-black uppercase tracking-wide text-[var(--text-secondary)]">
                     Manager
                   </p>
                   <p className="text-sm font-bold mt-1">
                     {selectedParty.manager?.full_name || "Non précisé"}
                   </p>
                 </div>
-                <div className="rounded-lg border-2 border-[var(--border-color)] p-3">
-                  <p className="text-xs font-black uppercase tracking-wide text-[var(--foreground)]/60">
+                <div className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] p-3">
+                  <p className="text-xs font-black uppercase tracking-wide text-[var(--text-secondary)]">
                     Vos droits
                   </p>
                   <Badge variant={canManageSelectedParty ? "success" : "info"}>
@@ -501,7 +501,7 @@ export default function PartiesPage() {
             </Card>
 
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
-              <Card accentColor="#AA96DA">
+              <Card accentColor="var(--card-accent-purple)">
                 <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
                   <Users className="h-4 w-4" strokeWidth={3} />
@@ -535,14 +535,14 @@ export default function PartiesPage() {
                   )}
 
                   {selectedParty.members.length === 0 ? (
-                    <p className="text-sm font-bold text-[var(--foreground)]/60">
+                    <p className="text-sm font-bold text-[var(--text-secondary)]">
                       Aucun membre dans cette soirée.
                     </p>
                   ) : (
                     selectedParty.members.map((member) => (
                       <div
                         key={member.id}
-                        className="flex flex-col sm:flex-row sm:items-center gap-2 rounded-lg border-2 border-[var(--border-color)] p-2"
+                        className="flex flex-col sm:flex-row sm:items-center gap-2 rounded-[var(--radius-element)] border-2 border-[var(--border-color)] p-2"
                       >
                         <Avatar
                           name={member.profile?.full_name || member.profile?.email || "Membre"}
@@ -577,7 +577,7 @@ export default function PartiesPage() {
                 </CardContent>
               </Card>
 
-              <Card accentColor="#95E1D3">
+              <Card accentColor="var(--card-accent-mint)">
                 <CardHeader>
                   <CardTitle className="text-base flex items-center gap-2">
                     <ListChecks className="h-4 w-4" strokeWidth={3} />
@@ -630,7 +630,7 @@ export default function PartiesPage() {
                   )}
 
                   {selectedParty.tasks.length === 0 ? (
-                    <p className="text-sm font-bold text-[var(--foreground)]/60">
+                    <p className="text-sm font-bold text-[var(--text-secondary)]">
                       Aucune tâche pour cette soirée.
                     </p>
                   ) : (
@@ -640,7 +640,7 @@ export default function PartiesPage() {
                       return (
                         <div
                           key={task.id}
-                          className="rounded-lg border-2 border-[var(--border-color)] p-3"
+                          className="rounded-[var(--radius-element)] border-2 border-[var(--border-color)] p-3"
                         >
                           <div className="flex items-start gap-3">
                             <Checkbox
@@ -654,20 +654,20 @@ export default function PartiesPage() {
                               <p
                                 className={`text-sm font-black ${
                                   task.status === "done"
-                                    ? "line-through text-[var(--foreground)]/50"
+                                    ? "line-through text-[var(--text-muted)]"
                                     : ""
                                 }`}
                               >
                                 {task.title}
                               </p>
                               {task.description && (
-                                <p className="text-xs font-bold text-[var(--foreground)]/60 mt-1">
+                                <p className="text-xs font-bold text-[var(--text-secondary)] mt-1">
                                   {task.description}
                                 </p>
                               )}
-                              <p className="text-xs font-bold text-[var(--foreground)]/50 mt-1">
+                              <p className="text-xs font-bold text-[var(--text-muted)] mt-1">
                                 Assigné à{" "}
-                                <span className="text-[var(--foreground)]/80">
+                                <span className="text-[var(--text-secondary)]">
                                   {task.assignee?.full_name || "Membre"}
                                 </span>
                               </p>
@@ -687,7 +687,7 @@ export default function PartiesPage() {
               </Card>
             </div>
 
-            <Card accentColor="#4ECDC4">
+            <Card accentColor="var(--card-accent-teal)">
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
                   <ShoppingBasket className="h-4 w-4" strokeWidth={3} />
@@ -718,7 +718,7 @@ export default function PartiesPage() {
                 )}
 
                 {selectedParty.grocery_items.length === 0 ? (
-                  <p className="text-sm font-bold text-[var(--foreground)]/60">
+                  <p className="text-sm font-bold text-[var(--text-secondary)]">
                     Aucun article de courses.
                   </p>
                 ) : (
@@ -728,7 +728,7 @@ export default function PartiesPage() {
                     .map((item) => (
                       <div
                         key={item.id}
-                        className="flex items-center gap-3 rounded-lg border-2 border-[var(--border-color)] p-2"
+                        className="flex items-center gap-3 rounded-[var(--radius-element)] border-2 border-[var(--border-color)] p-2"
                       >
                         <Checkbox
                           checked={item.checked}
@@ -741,14 +741,14 @@ export default function PartiesPage() {
                           <p
                             className={`text-sm font-bold ${
                               item.checked
-                                ? "line-through text-[var(--foreground)]/50"
+                                ? "line-through text-[var(--text-muted)]"
                                 : ""
                             }`}
                           >
                             {item.label}
                           </p>
                           {item.quantity && (
-                            <p className="text-xs font-bold text-[var(--foreground)]/60">
+                            <p className="text-xs font-bold text-[var(--text-secondary)]">
                               Quantité: {item.quantity}
                             </p>
                           )}
@@ -757,7 +757,7 @@ export default function PartiesPage() {
                           className={`h-4 w-4 ${
                             item.checked
                               ? "text-brutal-teal"
-                              : "text-[var(--foreground)]/30"
+                              : "text-[var(--text-muted)]"
                           }`}
                           strokeWidth={3}
                         />

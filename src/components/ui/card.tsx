@@ -11,7 +11,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     <div
       ref={ref}
       className={cn(
-        "rounded-[1.1rem] border border-[var(--border-color)] bg-[var(--card-bg)] transition-colors",
+        "rounded-[var(--radius-card)] border border-[var(--border-color)] bg-[var(--card-bg)] transition-colors",
         className
       )}
       style={{

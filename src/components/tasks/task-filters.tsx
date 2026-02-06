@@ -43,7 +43,7 @@ export function TaskFilters({
     <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
       <div className="relative w-full sm:flex-1 sm:min-w-[200px] sm:max-w-sm">
         <Search
-          className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--foreground)]/40"
+          className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--text-muted)]"
           strokeWidth={3}
         />
         <Input

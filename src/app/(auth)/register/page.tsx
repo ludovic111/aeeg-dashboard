@@ -51,7 +51,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <Card accentColor="#D4A847">
+    <Card accentColor="var(--card-accent-gold)">
       <CardHeader>
         <CardTitle className="text-[2rem]">Demander l&apos;acces</CardTitle>
       </CardHeader>

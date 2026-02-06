@@ -46,7 +46,7 @@ export function Sidebar({ profile, onSignOut }: SidebarProps) {
               onFocus={() => prefetchRoute(item.href)}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex items-center gap-3 rounded-[0.95rem] border border-transparent px-3 py-2.5 text-sm transition-colors",
+                "flex items-center gap-3 rounded-[var(--radius-card)] border border-transparent px-3 py-2.5 text-sm transition-colors",
                 isActive
                   ? "border-[var(--accent-yellow)] bg-[color:color-mix(in_srgb,var(--accent-yellow)_20%,transparent)] text-[var(--foreground)]"
                   : "text-[var(--text-secondary)] hover:text-[var(--foreground)]"
@@ -75,7 +75,7 @@ export function Sidebar({ profile, onSignOut }: SidebarProps) {
               <p className="text-sm font-bold truncate">
                 {profile.full_name || profile.email}
               </p>
-              <p className="text-xs text-[var(--foreground)]/60 truncate">
+              <p className="text-xs text-[var(--text-secondary)] truncate">
                 {profile.email}
               </p>
             </div>
