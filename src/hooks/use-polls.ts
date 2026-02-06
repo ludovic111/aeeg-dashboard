@@ -226,11 +226,22 @@ export function usePolls() {
     return { error };
   };
 
+  const deletePoll = async (pollId: string) => {
+    const { error } = await supabase.from("polls").delete().eq("id", pollId);
+
+    if (!error) {
+      await fetchPolls();
+    }
+
+    return { error };
+  };
+
   return {
     polls,
     loading,
     createPoll,
     togglePollVote,
+    deletePoll,
     refetch: fetchPolls,
   };
 }

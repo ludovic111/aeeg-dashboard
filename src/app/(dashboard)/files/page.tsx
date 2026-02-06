@@ -9,6 +9,7 @@ import {
   Upload,
   ArrowLeft,
   ExternalLink,
+  Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
@@ -19,17 +20,28 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatRelative } from "@/lib/utils";
+import type { SharedFile, SharedFolder } from "@/types";
 
 export default function FilesPage() {
-  const { isCommitteeMember } = useAuth();
-  const { folders, files, loading, createFolder, uploadFile, createFileSignedUrl } =
-    useSharedDrive();
+  const { profile, isAdmin, isCommitteeMember } = useAuth();
+  const {
+    folders,
+    files,
+    loading,
+    createFolder,
+    uploadFile,
+    createFileSignedUrl,
+    deleteFile,
+    deleteFolder,
+  } = useSharedDrive();
 
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
   const [newFolderName, setNewFolderName] = useState("");
   const [uploadCandidate, setUploadCandidate] = useState<File | null>(null);
   const [creatingFolder, setCreatingFolder] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [deletingFolderId, setDeletingFolderId] = useState<string | null>(null);
+  const [deletingFileId, setDeletingFileId] = useState<string | null>(null);
 
   const folderMap = useMemo(
     () => new Map(folders.map((folder) => [folder.id, folder])),
@@ -131,6 +143,49 @@ export default function FilesPage() {
     }
 
     window.open(signedUrl, "_blank", "noopener,noreferrer");
+  };
+
+  const canDeleteFolder = (folder: SharedFolder) =>
+    isAdmin || folder.created_by === profile?.id;
+
+  const canDeleteFile = (file: SharedFile) =>
+    isAdmin || file.created_by === profile?.id;
+
+  const handleDeleteFolder = async (folder: SharedFolder) => {
+    const confirmed = window.confirm(
+      `Supprimer le dossier "${folder.name}" et son contenu ?`
+    );
+    if (!confirmed) return;
+
+    setDeletingFolderId(folder.id);
+    const { error } = await deleteFolder(folder.id);
+
+    if (error) {
+      toast.error(error.message || "Impossible de supprimer le dossier");
+    } else {
+      toast.success("Dossier supprimé");
+      if (currentFolderId === folder.id) {
+        setCurrentFolderId(folder.parent_id || null);
+      }
+    }
+
+    setDeletingFolderId(null);
+  };
+
+  const handleDeleteFile = async (file: SharedFile) => {
+    const confirmed = window.confirm(`Supprimer le fichier "${file.name}" ?`);
+    if (!confirmed) return;
+
+    setDeletingFileId(file.id);
+    const { error } = await deleteFile(file.id, file.storage_path);
+
+    if (error) {
+      toast.error(error.message || "Impossible de supprimer le fichier");
+    } else {
+      toast.success("Fichier supprimé");
+    }
+
+    setDeletingFileId(null);
   };
 
   return (
@@ -249,16 +304,29 @@ export default function FilesPage() {
                 </p>
               ) : (
                 visibleFolders.map((folder) => (
-                  <Button
-                    key={folder.id}
-                    type="button"
-                    variant="outline"
-                    className="w-full justify-start"
-                    onClick={() => setCurrentFolderId(folder.id)}
-                  >
-                    <Folder className="h-4 w-4" strokeWidth={3} />
-                    {folder.name}
-                  </Button>
+                  <div key={folder.id} className="flex items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="flex-1 justify-start"
+                      onClick={() => setCurrentFolderId(folder.id)}
+                    >
+                      <Folder className="h-4 w-4" strokeWidth={3} />
+                      {folder.name}
+                    </Button>
+                    {canDeleteFolder(folder) && (
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleDeleteFolder(folder)}
+                        disabled={deletingFolderId === folder.id}
+                      >
+                        <Trash2 className="h-4 w-4" strokeWidth={3} />
+                        {deletingFolderId === folder.id ? "Suppression..." : "Supprimer"}
+                      </Button>
+                    )}
+                  </div>
                 ))
               )}
             </CardContent>
@@ -290,15 +358,29 @@ export default function FilesPage() {
                       </p>
                     </div>
 
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleOpenFile(file.storage_path)}
-                    >
-                      <ExternalLink className="h-4 w-4" strokeWidth={3} />
-                      Ouvrir
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleOpenFile(file.storage_path)}
+                      >
+                        <ExternalLink className="h-4 w-4" strokeWidth={3} />
+                        Ouvrir
+                      </Button>
+                      {canDeleteFile(file) && (
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleDeleteFile(file)}
+                          disabled={deletingFileId === file.id}
+                        >
+                          <Trash2 className="h-4 w-4" strokeWidth={3} />
+                          {deletingFileId === file.id ? "Suppression..." : "Supprimer"}
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 ))
               )}

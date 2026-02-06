@@ -290,6 +290,16 @@ export function useParties() {
     return { error };
   };
 
+  const deleteParty = async (partyId: string) => {
+    const { error } = await supabase.from("parties").delete().eq("id", partyId);
+
+    if (!error) {
+      await fetchParties();
+    }
+
+    return { error };
+  };
+
   return {
     parties,
     availableProfiles,
@@ -301,6 +311,7 @@ export function useParties() {
     updatePartyTaskStatus,
     createGroceryItem,
     toggleGroceryItem,
+    deleteParty,
     refetch: fetchParties,
   };
 }

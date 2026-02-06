@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Plus, Vote } from "lucide-react";
+import { Plus, Trash2, Vote } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { usePolls } from "@/hooks/use-polls";
@@ -14,8 +14,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatDateTime } from "@/lib/utils";
 
 export default function PollsPage() {
-  const { isCommitteeMember } = useAuth();
-  const { polls, loading, createPoll, togglePollVote } = usePolls();
+  const { profile, isAdmin, isCommitteeMember } = useAuth();
+  const { polls, loading, createPoll, togglePollVote, deletePoll } = usePolls();
 
   const [question, setQuestion] = useState("");
   const [description, setDescription] = useState("");
@@ -23,6 +23,7 @@ export default function PollsPage() {
   const [options, setOptions] = useState<string[]>(["", ""]);
   const [creating, setCreating] = useState(false);
   const [votingPollId, setVotingPollId] = useState<string | null>(null);
+  const [deletingPollId, setDeletingPollId] = useState<string | null>(null);
 
   const normalizedOptions = useMemo(
     () => options.map((option) => option.trim()).filter(Boolean),
@@ -85,6 +86,24 @@ export default function PollsPage() {
     }
 
     setVotingPollId(null);
+  };
+
+  const handleDeletePoll = async (pollId: string, question: string) => {
+    const confirmed = window.confirm(
+      `Supprimer ce sondage ?\n\n"${question}"`
+    );
+    if (!confirmed) return;
+
+    setDeletingPollId(pollId);
+    const { error } = await deletePoll(pollId);
+
+    if (error) {
+      toast.error(error.message || "Impossible de supprimer le sondage");
+    } else {
+      toast.success("Sondage supprimé");
+    }
+
+    setDeletingPollId(null);
   };
 
   return (
@@ -210,11 +229,26 @@ export default function PollsPage() {
             const isClosed = poll.closes_at
               ? new Date(poll.closes_at) < new Date()
               : false;
+            const canDeletePoll = isAdmin || poll.created_by === profile?.id;
 
             return (
               <Card key={poll.id} accentColor="#FFE66D">
                 <CardHeader>
-                  <CardTitle className="text-base">{poll.question}</CardTitle>
+                  <div className="flex items-start justify-between gap-3">
+                    <CardTitle className="text-base">{poll.question}</CardTitle>
+                    {canDeletePoll && (
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        disabled={deletingPollId === poll.id}
+                        onClick={() => handleDeletePoll(poll.id, poll.question)}
+                      >
+                        <Trash2 className="h-4 w-4" strokeWidth={3} />
+                        {deletingPollId === poll.id ? "Suppression..." : "Supprimer"}
+                      </Button>
+                    )}
+                  </div>
                   <p className="text-xs font-bold text-[var(--foreground)]/60">
                     {poll.creator?.full_name || "Membre du comité"} · {poll.total_voters} votant
                     {poll.total_voters > 1 ? "s" : ""} · {poll.total_votes} choix

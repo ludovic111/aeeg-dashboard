@@ -119,6 +119,73 @@ export function useSharedDrive() {
     return { signedUrl: data?.signedUrl || null, error };
   };
 
+  const deleteFile = async (fileId: string, storagePath: string) => {
+    const { error: storageError } = await supabase.storage
+      .from("shared-files")
+      .remove([storagePath]);
+
+    if (storageError) {
+      return { error: storageError };
+    }
+
+    const { error } = await supabase.from("shared_files").delete().eq("id", fileId);
+
+    if (!error) {
+      await fetchDrive();
+    }
+
+    return { error };
+  };
+
+  const deleteFolder = async (folderId: string) => {
+    const folderIdsToDelete = new Set<string>([folderId]);
+    let changed = true;
+
+    while (changed) {
+      changed = false;
+      for (const folder of folders) {
+        if (
+          folder.parent_id &&
+          folderIdsToDelete.has(folder.parent_id) &&
+          !folderIdsToDelete.has(folder.id)
+        ) {
+          folderIdsToDelete.add(folder.id);
+          changed = true;
+        }
+      }
+    }
+
+    const storagePaths = files
+      .filter(
+        (file) => file.folder_id !== null && folderIdsToDelete.has(file.folder_id)
+      )
+      .map((file) => file.storage_path);
+
+    if (storagePaths.length > 0) {
+      for (let index = 0; index < storagePaths.length; index += 100) {
+        const chunk = storagePaths.slice(index, index + 100);
+        const { error: storageError } = await supabase.storage
+          .from("shared-files")
+          .remove(chunk);
+
+        if (storageError) {
+          return { error: storageError };
+        }
+      }
+    }
+
+    const { error } = await supabase
+      .from("shared_folders")
+      .delete()
+      .eq("id", folderId);
+
+    if (!error) {
+      await fetchDrive();
+    }
+
+    return { error };
+  };
+
   return {
     folders,
     files,
@@ -126,6 +193,8 @@ export function useSharedDrive() {
     createFolder,
     uploadFile,
     createFileSignedUrl,
+    deleteFile,
+    deleteFolder,
     refetch: fetchDrive,
   };
 }

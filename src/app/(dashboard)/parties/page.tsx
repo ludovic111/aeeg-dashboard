@@ -62,6 +62,7 @@ export default function PartiesPage() {
     updatePartyTaskStatus,
     createGroceryItem,
     toggleGroceryItem,
+    deleteParty,
   } = useParties();
 
   const [selectedPartyId, setSelectedPartyId] = useState<string | null>(null);
@@ -84,6 +85,7 @@ export default function PartiesPage() {
   const [newGroceryLabel, setNewGroceryLabel] = useState("");
   const [newGroceryQuantity, setNewGroceryQuantity] = useState("");
   const [creatingGroceryItem, setCreatingGroceryItem] = useState(false);
+  const [deletingPartyId, setDeletingPartyId] = useState<string | null>(null);
 
   const effectiveSelectedPartyId =
     selectedPartyId && parties.some((party) => party.id === selectedPartyId)
@@ -267,6 +269,27 @@ export default function PartiesPage() {
     }
   };
 
+  const handleDeleteParty = async (partyId: string, partyName: string) => {
+    const confirmed = window.confirm(
+      `Supprimer la soirée "${partyName}" ?\nCette action est irréversible.`
+    );
+    if (!confirmed) return;
+
+    setDeletingPartyId(partyId);
+    const { error } = await deleteParty(partyId);
+
+    if (error) {
+      toast.error(error.message || "Impossible de supprimer la soirée");
+    } else {
+      toast.success("Soirée supprimée");
+      if (effectiveSelectedPartyId === partyId) {
+        setSelectedPartyId(null);
+      }
+    }
+
+    setDeletingPartyId(null);
+  };
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -377,22 +400,38 @@ export default function PartiesPage() {
                 Aucune soirée disponible.
               </p>
             ) : (
-              parties.map((party) => (
-                <Button
-                  key={party.id}
-                  type="button"
-                  variant={effectiveSelectedPartyId === party.id ? "default" : "outline"}
-                  className="w-full justify-start h-auto py-2"
-                  onClick={() => setSelectedPartyId(party.id)}
-                >
-                  <div className="text-left min-w-0">
-                    <p className="font-black truncate">{party.name}</p>
-                    <p className="text-xs font-bold text-[var(--foreground)]/60">
-                      {formatPartyDateTime(party.event_date, party.event_time)}
-                    </p>
+              parties.map((party) => {
+                const canDeleteParty = isAdmin || party.created_by === profile?.id;
+                return (
+                  <div key={party.id} className="flex items-center gap-2">
+                    <Button
+                      type="button"
+                      variant={effectiveSelectedPartyId === party.id ? "default" : "outline"}
+                      className="flex-1 justify-start h-auto py-2"
+                      onClick={() => setSelectedPartyId(party.id)}
+                    >
+                      <div className="text-left min-w-0">
+                        <p className="font-black truncate">{party.name}</p>
+                        <p className="text-xs font-bold text-[var(--foreground)]/60">
+                          {formatPartyDateTime(party.event_date, party.event_time)}
+                        </p>
+                      </div>
+                    </Button>
+                    {canDeleteParty && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="destructive"
+                        disabled={deletingPartyId === party.id}
+                        onClick={() => handleDeleteParty(party.id, party.name)}
+                      >
+                        <Trash2 className="h-4 w-4" strokeWidth={3} />
+                        {deletingPartyId === party.id ? "Suppression..." : "Supprimer"}
+                      </Button>
+                    )}
                   </div>
-                </Button>
-              ))
+                );
+              })
             )}
           </CardContent>
         </Card>
