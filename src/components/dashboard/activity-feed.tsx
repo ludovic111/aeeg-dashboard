@@ -14,10 +14,10 @@ interface Activity {
 }
 
 const typeIcons: Record<string, string> = {
-  meeting: "📋",
-  task: "✅",
-  sale: "🛍️",
-  member: "👤",
+  meeting: "MEETING",
+  task: "TASK",
+  sale: "SALE",
+  member: "MEMBER",
 };
 
 interface ActivityFeedProps {
@@ -29,12 +29,12 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
     <Card accentColor="#95E1D3" accentPosition="left">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          📰 Activité récente
+          Activite recente
         </CardTitle>
       </CardHeader>
       <CardContent>
         {activities.length === 0 ? (
-          <p className="text-sm text-[var(--foreground)]/50 font-bold text-center py-8">
+          <p className="py-8 text-center text-sm text-[var(--text-secondary)]">
             Aucune activité récente
           </p>
         ) : (
@@ -50,13 +50,13 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
                   size="sm"
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold">
-                    <span className="mr-1">
-                      {typeIcons[activity.type] || "📌"}
+                  <p className="text-sm font-medium">
+                    <span className="mr-2 mono-meta text-[var(--text-muted)]">
+                      {typeIcons[activity.type] || "ITEM"}
                     </span>
                     {activity.description}
                   </p>
-                  <p className="text-xs text-[var(--foreground)]/50 font-mono mt-0.5">
+                  <p className="mt-0.5 text-xs font-mono text-[var(--text-muted)]">
                     {formatRelative(activity.created_at)}
                   </p>
                 </div>

@@ -4,10 +4,8 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
-import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { MobileNav } from "@/components/layout/mobile-nav";
-import { BottomNav } from "@/components/layout/bottom-nav";
 import { SiteCredit } from "@/components/layout/site-credit";
 import type { Profile } from "@/types";
 
@@ -43,24 +41,23 @@ function DashboardChrome({ onSignOut, children }: DashboardChromeProps) {
   const { profile } = useAuth();
 
   return (
-    <div className="flex min-h-dvh bg-[var(--background)]">
-      <Sidebar profile={profile} onSignOut={onSignOut} />
+    <div className="min-h-dvh bg-[var(--background)]">
+      <Header onMenuClick={() => setMobileNavOpen(true)} />
       <MobileNav
         isOpen={mobileNavOpen}
         onClose={() => setMobileNavOpen(false)}
         profile={profile}
         onSignOut={onSignOut}
       />
-      <div className="flex-1 flex flex-col min-h-dvh overflow-hidden">
-        <Header onMenuClick={() => setMobileNavOpen(true)} />
-        <main className="flex-1 overflow-y-auto p-3 pb-28 sm:p-6 sm:pb-8 lg:p-8 lg:pb-8">
+      <main className="mx-auto w-full max-w-[1480px] px-4 pb-20 pt-10 sm:px-6 md:px-10 lg:px-14 lg:pt-14">
+        <div className="space-y-10">
           {children}
-          <div className="mt-8 text-center">
+          <div className="border-t border-[var(--border-color)] pt-8 text-center">
             <SiteCredit />
+            <p className="page-wordmark mt-10 text-left">AEEG</p>
           </div>
-        </main>
-        <BottomNav onMenuClick={() => setMobileNavOpen(true)} />
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
+import { Menu, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { APP_NAV_ITEMS, isNavItemActive } from "@/lib/navigation";
 import { ThemeToggle } from "./theme-toggle";
@@ -13,6 +14,7 @@ interface HeaderProps {
 
 export function Header({ onMenuClick }: HeaderProps) {
   const pathname = usePathname();
+
   const currentNavLabel = useMemo(() => {
     const activeItem = APP_NAV_ITEMS.find((item) =>
       isNavItemActive(pathname, item.href)
@@ -20,23 +22,50 @@ export function Header({ onMenuClick }: HeaderProps) {
     return activeItem?.label || "Navigation";
   }, [pathname]);
 
+  const quickNav = useMemo(
+    () => APP_NAV_ITEMS.filter((item) => item.href === "/" || item.href === "/tasks"),
+    []
+  );
+
   return (
-    <header className="sticky top-0 z-30 lg:hidden flex items-center justify-between gap-2 px-3 py-2.5 bg-[var(--card-bg)] border-b-4 border-[var(--border-color)] backdrop-blur supports-[backdrop-filter]:bg-[var(--card-bg)]/95">
-      <div className="flex items-center gap-3">
-        <Button variant="outline" size="icon" onClick={onMenuClick}>
-          <Menu className="h-5 w-5" strokeWidth={3} />
-        </Button>
-        <div className="flex items-center gap-2">
-          <span className="text-xl">🎓</span>
-          <div>
-            <h1 className="text-base sm:text-lg font-black leading-tight">AEEG</h1>
-            <p className="text-[11px] font-bold text-[var(--foreground)]/60">
-              {currentNavLabel}
-            </p>
-          </div>
+    <header className="sticky top-0 z-40 border-b border-[var(--border-color)] bg-[var(--background)]/95 backdrop-blur supports-[backdrop-filter]:bg-[var(--background)]/85">
+      <div className="mx-auto flex w-full max-w-[1480px] items-center justify-between gap-3 px-4 py-3 sm:px-6 md:px-10 lg:px-14">
+        <Link href="/" className="min-w-0">
+          <p className="caps-label">Association d&apos;eleves d&apos;Emilie Gourd</p>
+          <p className="text-[1.8rem] leading-none tracking-[-0.02em] font-[var(--font-display)]">
+            AEEG
+          </p>
+          <p className="mono-meta mt-1 truncate text-[var(--text-muted)]">
+            {currentNavLabel}
+          </p>
+        </Link>
+
+        <div className="flex items-center gap-2 sm:gap-3">
+          <nav className="hidden items-center gap-1 md:flex" aria-label="Navigation rapide">
+            {quickNav.map((item) => {
+              const isActive = isNavItemActive(pathname, item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className="rounded-[var(--radius-pill)] px-4 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.09em] text-[var(--text-secondary)] transition-colors hover:text-[var(--foreground)]"
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <ThemeToggle />
+
+          <Button variant="yellow" size="sm" onClick={onMenuClick}>
+            <Menu className="h-4 w-4" strokeWidth={2.6} />
+            Menu
+            <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2.6} />
+          </Button>
         </div>
       </div>
-      <ThemeToggle />
     </header>
   );
 }

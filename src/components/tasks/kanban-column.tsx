@@ -15,9 +15,9 @@ interface KanbanColumnProps {
 }
 
 const columnColors: Record<TaskStatus, string> = {
-  todo: "#FFE66D",
-  in_progress: "#4ECDC4",
-  done: "#95E1D3",
+  todo: "color-mix(in srgb, var(--accent-yellow) 26%, transparent)",
+  in_progress: "color-mix(in srgb, var(--accent-teal) 20%, transparent)",
+  done: "color-mix(in srgb, var(--accent-gold) 18%, transparent)",
 };
 
 export function KanbanColumn({
@@ -28,39 +28,37 @@ export function KanbanColumn({
 }: KanbanColumnProps) {
   return (
     <div className="flex flex-col min-w-[85vw] sm:min-w-[280px] w-full sm:w-80 snap-start">
-      {/* Column Header */}
       <div
-        className="flex items-center justify-between p-3 rounded-t-lg border-2 border-[var(--border-color)] border-b-0"
+        className="flex items-center justify-between rounded-t-[1rem] border border-b-0 border-[var(--border-color)] p-3"
         style={{ backgroundColor: columnColors[status] }}
       >
         <div className="flex items-center gap-2">
-          <h3 className="font-black text-sm text-black">
+          <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--text-secondary)]">
             {TASK_STATUSES[status].label}
           </h3>
-          <span className="inline-flex items-center justify-center h-5 w-5 rounded-full border-2 border-black bg-white text-xs font-black text-black">
+          <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-[var(--border-color)] bg-[var(--card-bg)] text-[11px] font-medium">
             {tasks.length}
           </span>
         </div>
         <Button
           variant="ghost"
           size="sm"
-          className="h-7 w-7 p-0 border-2 border-black bg-white hover:bg-black hover:text-white"
+          className="h-7 w-7 border border-[var(--border-color)] bg-[var(--card-bg)] p-0 hover:bg-[var(--foreground)] hover:text-[var(--background)]"
           onClick={() => onAddClick(status)}
         >
           <Plus className="h-3.5 w-3.5" strokeWidth={3} />
         </Button>
       </div>
 
-      {/* Droppable Area */}
       <Droppable droppableId={status}>
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`flex-1 p-2 space-y-2 min-h-[200px] rounded-b-lg border-2 border-[var(--border-color)] border-t-0 transition-colors ${
+            className={`flex-1 min-h-[200px] space-y-2 rounded-b-[1rem] border border-t-0 border-[var(--border-color)] p-2 transition-colors ${
               snapshot.isDraggingOver
-                ? "bg-[var(--border-color)]/5"
-                : "bg-[var(--background)]"
+                ? "bg-[var(--foreground)]/6"
+                : "bg-[var(--card-bg)]/55"
             }`}
           >
             {tasks.map((task, index) => (
@@ -73,7 +71,7 @@ export function KanbanColumn({
             ))}
             {provided.placeholder}
             {tasks.length === 0 && !snapshot.isDraggingOver && (
-              <div className="flex items-center justify-center h-20 text-sm text-[var(--foreground)]/30 font-bold">
+              <div className="flex h-20 items-center justify-center text-sm text-[var(--text-muted)]">
                 Glisser une tâche ici
               </div>
             )}

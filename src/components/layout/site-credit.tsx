@@ -6,7 +6,12 @@ interface SiteCreditProps {
 
 export function SiteCredit({ className }: SiteCreditProps) {
   return (
-    <p className={cn("text-xs font-bold text-[var(--foreground)]/60", className)}>
+    <p
+      className={cn(
+        "mono-meta text-[var(--text-muted)]",
+        className
+      )}
+    >
       Fait avec amour par Ludovic et Codex.
     </p>
   );

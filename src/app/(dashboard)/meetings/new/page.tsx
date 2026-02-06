@@ -88,8 +88,8 @@ export default function NewMeetingPage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-black">📝 Nouvelle réunion</h1>
-          <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
+          <h1 className="display-hero max-w-[9ch]">Nouvelle reunion</h1>
+          <p className="mt-2 text-sm text-[var(--text-secondary)]">
             Choisir une date et ajouter le DOCX de l&apos;ordre du jour
           </p>
         </div>
@@ -97,9 +97,7 @@ export default function NewMeetingPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">
-            📄 Ordre du jour (DOCX)
-          </CardTitle>
+          <CardTitle className="text-base">Ordre du jour (DOCX)</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-5">

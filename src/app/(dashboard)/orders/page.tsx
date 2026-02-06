@@ -49,9 +49,8 @@ export default function OrdersPage() {
   if (!isCommitteeMember) {
     return (
       <div className="text-center py-16">
-        <p className="text-5xl mb-4">🔒</p>
-        <p className="font-black text-lg">Accès restreint</p>
-        <p className="text-sm text-[var(--foreground)]/60 font-bold mt-1">
+        <p className="font-[var(--font-display)] text-[2.1rem] leading-none">Acces restreint</p>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">
           Seuls les membres du comité et les admins peuvent accéder à cette page
         </p>
       </div>
@@ -193,8 +192,8 @@ export default function OrdersPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black">📦 Commandes clients</h1>
-          <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
+          <h1 className="display-hero max-w-[11ch]">Commandes clients</h1>
+          <p className="mt-2 text-sm text-[var(--text-secondary)]">
             Les nouvelles commandes apparaissent en haut automatiquement
           </p>
         </div>

@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn, getInitials } from "@/lib/utils";
 
 const avatarVariants = cva(
-  "relative inline-flex items-center justify-center rounded-full border-2 border-[var(--border-color)] bg-brutal-yellow font-black text-black overflow-hidden",
+  "relative inline-flex items-center justify-center overflow-hidden rounded-full border border-[var(--border-color)] bg-[color:color-mix(in_srgb,var(--accent-gold)_20%,var(--card-bg)_80%)] font-semibold text-[var(--foreground)]",
   {
     variants: {
       size: {

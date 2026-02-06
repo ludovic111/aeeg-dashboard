@@ -33,10 +33,10 @@ export function TaskCard({ task, index, onClick }: TaskCardProps) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           onClick={() => onClick(task)}
-          className={`p-3 rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)] cursor-pointer transition-all ${
+          className={`cursor-pointer rounded-[0.95rem] border border-[var(--border-color)] bg-[var(--card-bg)] p-3 transition-colors ${
             snapshot.isDragging
-              ? "shadow-[6px_6px_0px_0px_var(--shadow-color)] -rotate-2"
-              : "shadow-[2px_2px_0px_0px_var(--shadow-color)] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_var(--shadow-color)]"
+              ? "border-[var(--accent-gold)]"
+              : "hover:border-[var(--accent-teal)]"
           }`}
         >
           <div className="flex items-start justify-between gap-2 mb-2">
@@ -59,7 +59,7 @@ export function TaskCard({ task, index, onClick }: TaskCardProps) {
               {task.deadline && (
                 <span
                   className={`flex items-center gap-1 text-xs font-mono ${
-                    isOverdue ? "text-brutal-red font-bold" : "text-[var(--foreground)]/50"
+                    isOverdue ? "text-[var(--accent-orange)] font-semibold" : "text-[var(--text-muted)]"
                   }`}
                 >
                   {isOverdue ? (

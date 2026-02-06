@@ -112,7 +112,7 @@ export function TaskDialog({
               {...register("title")}
             />
             {errors.title && (
-              <p className="text-sm font-bold text-brutal-red">
+              <p className="text-sm font-bold text-[var(--accent-orange)]">
                 {errors.title.message}
               </p>
             )}

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Clock, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -49,21 +49,15 @@ export default function PendingPage() {
   };
 
   return (
-    <Card accentColor="#FFE66D">
+    <Card accentColor="#D4A847">
       <CardContent className="p-8 text-center">
-        <div className="flex justify-center mb-4">
-          <div className="p-4 rounded-full bg-brutal-yellow/20 border-2 border-[var(--border-color)]">
-            <Clock className="h-8 w-8 text-brutal-yellow" strokeWidth={3} />
-          </div>
-        </div>
-
-        <h2 className="text-2xl font-black mb-2">
+        <h2 className="font-[var(--font-display)] text-[2.3rem] leading-[0.92] mb-2">
           Demande en cours d&apos;examen
         </h2>
-        <p className="text-sm font-bold text-[var(--foreground)]/60 mb-2">
+        <p className="text-sm text-[var(--text-secondary)] mb-2">
           Votre demande d&apos;acces a bien ete envoyee.
         </p>
-        <p className="text-sm text-[var(--foreground)]/50 mb-6">
+        <p className="text-sm text-[var(--text-muted)] mb-6">
           Un administrateur doit approuver votre compte avant que vous puissiez
           acceder au tableau de bord. Vous serez redirige automatiquement une
           fois votre compte approuve.

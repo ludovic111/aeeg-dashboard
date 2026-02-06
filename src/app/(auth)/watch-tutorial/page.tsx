@@ -100,17 +100,17 @@ export default function WatchTutorialPage() {
   };
 
   return (
-    <Card accentColor="#6BCB77">
+    <Card accentColor="#5B8A8A">
       <CardHeader>
-        <CardTitle className="text-2xl">Regardez le tutoriel d&apos;abord</CardTitle>
+        <CardTitle className="text-[2rem]">Regardez le tutoriel d&apos;abord</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-sm font-bold text-[var(--foreground)]/70">
+        <p className="text-sm text-[var(--text-secondary)]">
           Veuillez regarder ce tutoriel avant de vous connecter. Le bouton
           pour continuer se débloque uniquement à la fin de la vidéo.
         </p>
 
-        <div className="overflow-hidden rounded-lg border-2 border-[var(--border-color)] bg-black shadow-[3px_3px_0px_0px_var(--shadow-color)]">
+        <div className="overflow-hidden rounded-[1rem] border border-[var(--border-color)] bg-black/90">
           <div className="aspect-video">
             <div id={PLAYER_ELEMENT_ID} className="h-full w-full" />
           </div>

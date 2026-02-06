@@ -190,8 +190,8 @@ export default function ProfilePage() {
   return (
     <div className="space-y-6 max-w-3xl">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-black">👤 Mon profil</h1>
-        <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
+        <h1 className="display-hero max-w-[9ch]">Mon profil</h1>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">
           Modifier votre photo, nom, email et mot de passe
         </p>
       </div>
@@ -235,7 +235,7 @@ export default function ProfilePage() {
               <Label htmlFor="full_name">Nom complet</Label>
               <Input id="full_name" {...register("full_name")} />
               {errors.full_name && (
-                <p className="text-sm font-bold text-brutal-red">
+                <p className="text-sm font-bold text-[var(--accent-orange)]">
                   {errors.full_name.message}
                 </p>
               )}
@@ -245,7 +245,7 @@ export default function ProfilePage() {
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" {...register("email")} />
               {errors.email && (
-                <p className="text-sm font-bold text-brutal-red">
+                <p className="text-sm font-bold text-[var(--accent-orange)]">
                   {errors.email.message}
                 </p>
               )}
@@ -261,7 +261,7 @@ export default function ProfilePage() {
                   {...register("password")}
                 />
                 {errors.password && (
-                  <p className="text-sm font-bold text-brutal-red">
+                  <p className="text-sm font-bold text-[var(--accent-orange)]">
                     {errors.password.message}
                   </p>
                 )}
@@ -276,7 +276,7 @@ export default function ProfilePage() {
                   {...register("confirmPassword")}
                 />
                 {errors.confirmPassword && (
-                  <p className="text-sm font-bold text-brutal-red">
+                  <p className="text-sm font-bold text-[var(--accent-orange)]">
                     {errors.confirmPassword.message}
                   </p>
                 )}

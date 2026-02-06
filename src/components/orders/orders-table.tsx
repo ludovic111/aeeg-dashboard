@@ -21,7 +21,7 @@ export function OrdersTable({ orders, onEdit }: OrdersTableProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">📦 Commandes clients</CardTitle>
+        <CardTitle className="text-base">Commandes clients</CardTitle>
       </CardHeader>
       <CardContent className="p-3 md:p-0">
         {orders.length === 0 ? (

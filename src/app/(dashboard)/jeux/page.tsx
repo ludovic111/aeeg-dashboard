@@ -33,8 +33,8 @@ export default function JeuxPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-black">Jeux</h1>
-        <p className="mt-1 text-sm font-bold text-[var(--foreground)]/60">
+        <h1 className="display-hero max-w-[6ch]">Jeux</h1>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">
           Choisissez un jeu puis lancez votre partie.
         </p>
       </div>

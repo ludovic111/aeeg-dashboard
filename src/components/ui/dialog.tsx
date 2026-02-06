@@ -17,7 +17,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-50 bg-black/68 backdrop-blur-[2px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -34,13 +34,13 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-[calc(100%-1rem)] max-h-[90dvh] max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto bg-[var(--card-bg)] p-4 sm:p-6 border-4 border-[var(--border-color)] rounded-lg shadow-[8px_8px_0px_0px_var(--shadow-color)] duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+        "fixed left-[50%] top-[50%] z-50 grid w-[calc(100%-1rem)] max-h-[90dvh] max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto rounded-[1.1rem] border border-[var(--border-color)] bg-[var(--card-bg)] p-4 duration-200 shadow-[0_34px_90px_-40px_rgba(0,0,0,0.95)] sm:p-6 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
         className
       )}
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-md border-2 border-[var(--border-color)] p-1 opacity-70 hover:opacity-100 hover:bg-brutal-red hover:text-white transition-all">
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full border border-[var(--border-color)] p-1 opacity-70 transition-colors hover:bg-[var(--foreground)] hover:text-[var(--background)] hover:opacity-100">
         <X className="h-4 w-4" strokeWidth={3} />
         <span className="sr-only">Fermer</span>
       </DialogPrimitive.Close>
@@ -66,7 +66,7 @@ const DialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 pt-4 border-t-2 border-[var(--border-color)]",
+      "flex flex-col-reverse border-t border-[var(--border-color)] pt-4 sm:flex-row sm:justify-end sm:space-x-2",
       className
     )}
     {...props}
@@ -80,7 +80,10 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn("text-lg font-black leading-none tracking-tight", className)}
+    className={cn(
+      "font-[var(--font-display)] text-[1.5rem] leading-none tracking-[-0.02em]",
+      className
+    )}
     {...props}
   />
 ));
@@ -92,7 +95,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-[var(--foreground)]/70", className)}
+    className={cn("text-sm text-[var(--text-secondary)]", className)}
     {...props}
   />
 ));

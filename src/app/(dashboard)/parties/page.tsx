@@ -120,9 +120,8 @@ export default function PartiesPage() {
   if (!isCommitteeMember) {
     return (
       <div className="text-center py-16">
-        <p className="text-5xl mb-4">🔒</p>
-        <p className="font-black text-lg">Accès restreint</p>
-        <p className="text-sm text-[var(--foreground)]/60 font-bold mt-1">
+        <p className="font-[var(--font-display)] text-[2.1rem] leading-none">Acces restreint</p>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">
           Seuls les membres du comité et les admins peuvent accéder à cette page
         </p>
       </div>
@@ -306,8 +305,8 @@ export default function PartiesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-black">🎉 Soirées</h1>
-        <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
+        <h1 className="display-hero max-w-[8ch]">Soirees</h1>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">
           Planifiez les soirées, assignez les tâches et pilotez la liste de courses
         </p>
       </div>
@@ -443,9 +442,8 @@ export default function PartiesPage() {
         {!selectedParty ? (
           <Card>
             <CardContent className="p-8 text-center">
-              <p className="text-4xl mb-2">🎈</p>
-              <p className="font-black">Sélectionnez une soirée</p>
-              <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
+              <p className="font-[var(--font-display)] text-[2rem] leading-none">Selectionnez une soiree</p>
+              <p className="mt-2 text-sm text-[var(--text-secondary)]">
                 Choisissez une soirée pour gérer les membres, tâches et courses.
               </p>
             </CardContent>

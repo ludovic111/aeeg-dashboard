@@ -118,7 +118,7 @@ export function MemberProfile({
               <Label htmlFor="edit-name">Nom complet</Label>
               <Input id="edit-name" {...register("full_name")} />
               {errors.full_name && (
-                <p className="text-sm font-bold text-brutal-red">
+                <p className="text-sm font-bold text-[var(--accent-orange)]">
                   {errors.full_name.message}
                 </p>
               )}

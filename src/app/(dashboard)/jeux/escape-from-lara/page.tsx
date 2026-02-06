@@ -526,8 +526,8 @@ export default function EscapeFromLaraPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-black">🚀 Escape From Lara</h1>
-        <p className="mt-1 text-sm font-bold text-[var(--foreground)]/60">
+        <h1 className="display-hero max-w-[11ch]">Escape From Lara</h1>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">
           Glissez le vaisseau de gauche a droite pour survivre aux tirs de Lara.
           Plus vous tenez, plus le jeu accelere.
         </p>

@@ -103,8 +103,7 @@ export default function MeetingDetailPage() {
   if (!meeting) {
     return (
       <div className="text-center py-16">
-        <p className="text-5xl mb-4">🔍</p>
-        <p className="font-black text-lg">Réunion introuvable</p>
+        <p className="font-[var(--font-display)] text-[2rem] leading-none">Reunion introuvable</p>
         <Link href="/meetings">
           <Button className="mt-4">Retour aux réunions</Button>
         </Link>
@@ -158,7 +157,7 @@ export default function MeetingDetailPage() {
         {agendaFileUrl ? (
           <Card accentColor="#FFE66D" className="xl:col-span-2">
             <CardHeader>
-              <CardTitle className="text-base">📑 Ordre du jour</CardTitle>
+              <CardTitle className="text-base">Ordre du jour</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {isDocxAgenda ? (
@@ -202,7 +201,7 @@ export default function MeetingDetailPage() {
         ) : (
           <Card accentColor="#FFE66D" className="xl:col-span-2">
             <CardHeader>
-              <CardTitle className="text-base">📑 Ordre du jour</CardTitle>
+              <CardTitle className="text-base">Ordre du jour</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm font-bold text-[var(--foreground)]/60">
@@ -214,7 +213,7 @@ export default function MeetingDetailPage() {
 
         <Card accentColor="#4ECDC4">
           <CardHeader>
-            <CardTitle className="text-base">🧠 Résumé ODJ (Grok)</CardTitle>
+            <CardTitle className="text-base">Resume ODJ (Grok)</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <Button

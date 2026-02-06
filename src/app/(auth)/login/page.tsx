@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { LogIn } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { loginSchema, type LoginFormData } from "@/lib/validations";
 import { Button } from "@/components/ui/button";
@@ -46,12 +45,9 @@ export default function LoginPage() {
   };
 
   return (
-    <Card accentColor="#4ECDC4">
+    <Card accentColor="#5B8A8A">
       <CardHeader>
-        <CardTitle className="text-2xl flex items-center gap-2">
-          <LogIn className="h-6 w-6" strokeWidth={3} />
-          Connexion
-        </CardTitle>
+        <CardTitle className="text-[2rem]">Connexion</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -64,7 +60,7 @@ export default function LoginPage() {
               {...register("email")}
             />
             {errors.email && (
-              <p className="text-sm font-bold text-brutal-red">
+              <p className="text-sm text-[var(--accent-orange)]">
                 {errors.email.message}
               </p>
             )}
@@ -79,7 +75,7 @@ export default function LoginPage() {
               {...register("password")}
             />
             {errors.password && (
-              <p className="text-sm font-bold text-brutal-red">
+              <p className="text-sm text-[var(--accent-orange)]">
                 {errors.password.message}
               </p>
             )}
@@ -91,11 +87,11 @@ export default function LoginPage() {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-sm font-bold">
+          <p className="text-sm">
             Pas encore de compte ?{" "}
             <Link
               href="/register"
-              className="text-brutal-teal underline underline-offset-4 hover:text-brutal-coral transition-colors"
+              className="text-[var(--accent-gold)] underline underline-offset-4 transition-colors hover:opacity-80"
             >
               Demander l&apos;acces
             </Link>

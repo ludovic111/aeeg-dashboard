@@ -30,7 +30,7 @@ export function MemberCard({ member, onClick }: MemberCardProps) {
   return (
     <Card
       accentColor={roleAccentColors[member.role]}
-      className="hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_var(--shadow-color)] transition-all cursor-pointer"
+      className="cursor-pointer transition-colors hover:border-[var(--accent-gold)]"
       onClick={() => onClick(member)}
     >
       <CardContent className="p-4">

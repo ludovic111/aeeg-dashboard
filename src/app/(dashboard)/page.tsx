@@ -80,7 +80,7 @@ const ActivityFeed = dynamic(
     loading: () => (
       <Card accentColor="#95E1D3">
         <CardHeader>
-          <CardTitle className="text-base">📰 Activité récente</CardTitle>
+          <CardTitle className="text-base">Activite recente</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <Skeleton className="h-16" />
@@ -413,14 +413,44 @@ export default function DashboardPage() {
     },
   ];
 
+  const workflowSteps = [
+    {
+      id: "01",
+      title: "Planifier",
+      description: "Cadrez les reunions et transformez les idees en decisions exploitables.",
+    },
+    {
+      id: "02",
+      title: "Executer",
+      description: "Assignez les taches et suivez l'avancement des equipes en continu.",
+    },
+    {
+      id: "03",
+      title: "Mesurer",
+      description: "Analysez commandes, votes et activite pour ajuster les actions.",
+    },
+  ];
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-black">🏠 Tableau de bord</h1>
-        <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
+        <h1 className="display-hero max-w-[12ch]">Tableau de bord</h1>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">
           Vue d&apos;ensemble opérationnelle de l&apos;AEEG
         </p>
       </div>
+
+      <section className="grid grid-cols-1 gap-3 border-y border-[var(--border-color)] py-6 md:grid-cols-3">
+        {workflowSteps.map((step) => (
+          <div key={step.id} className="space-y-2 pr-4">
+            <p className="font-[var(--font-mono-family)] text-xs tracking-[0.08em] text-[var(--text-muted)]">
+              {step.id}
+            </p>
+            <p className="font-semibold">{step.title}</p>
+            <p className="text-sm text-[var(--text-secondary)]">{step.description}</p>
+          </div>
+        ))}
+      </section>
 
       {isSuperAdmin && (
         <>
@@ -463,7 +493,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
         <Card accentColor="#4ECDC4">
           <CardHeader>
-            <CardTitle className="text-base">⏱️ Prochaines échéances</CardTitle>
+            <CardTitle className="text-base">Prochaines echeances</CardTitle>
           </CardHeader>
           <CardContent>
             {(data?.upcoming || []).length === 0 ? (

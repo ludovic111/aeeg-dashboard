@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -27,15 +26,12 @@ export default function WelcomePage() {
   };
 
   return (
-    <Card accentColor="#FFE66D">
+    <Card accentColor="#D4A847">
       <CardHeader>
-        <CardTitle className="text-2xl flex items-center gap-2">
-          <PlayCircle className="h-6 w-6" strokeWidth={3} />
-          Vérification du tutoriel
-        </CardTitle>
+        <CardTitle className="text-[2rem]">Verification du tutoriel</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-sm font-bold text-[var(--foreground)]/70">
+        <p className="text-sm text-[var(--text-secondary)]">
           Avant de vous connecter, choisissez une option ci-dessous.
         </p>
 

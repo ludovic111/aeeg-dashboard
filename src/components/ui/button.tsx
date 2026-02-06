@@ -3,32 +3,32 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-bold transition-all duration-150 border-2 border-[var(--border-color)] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0 disabled:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--border-color)] focus-visible:ring-offset-2",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-pill)] border border-[var(--border-color)] px-5 text-sm font-medium transition-colors duration-200 cursor-pointer disabled:opacity-45 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-yellow)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]",
   {
     variants: {
       variant: {
         default:
-          "bg-brutal-teal text-black shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_var(--shadow-color)] active:translate-y-1 active:shadow-none",
+          "bg-[var(--accent-yellow)] border-[var(--accent-yellow)] text-[var(--text-dark)] hover:opacity-90",
         destructive:
-          "bg-brutal-red text-white shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_var(--shadow-color)] active:translate-y-1 active:shadow-none",
+          "bg-transparent text-[var(--accent-orange)] border-[color:color-mix(in_srgb,var(--accent-orange)_55%,transparent)] hover:bg-[color:color-mix(in_srgb,var(--accent-orange)_14%,transparent)]",
         outline:
-          "bg-[var(--card-bg)] text-[var(--foreground)] shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_var(--shadow-color)] active:translate-y-1 active:shadow-none",
+          "bg-transparent text-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-[var(--background)]",
         ghost:
-          "border-transparent shadow-none hover:bg-[var(--border-color)]/10",
+          "border-transparent text-[var(--text-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--foreground)]/10",
         yellow:
-          "bg-brutal-yellow text-black shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_var(--shadow-color)] active:translate-y-1 active:shadow-none",
+          "bg-[var(--accent-yellow)] border-[var(--accent-yellow)] text-[var(--text-dark)] hover:opacity-90",
         purple:
-          "bg-brutal-purple text-black shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_var(--shadow-color)] active:translate-y-1 active:shadow-none",
+          "bg-[var(--accent-gold)] border-[var(--accent-gold)] text-[var(--text-dark)] hover:opacity-90",
         coral:
-          "bg-brutal-coral text-black shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_var(--shadow-color)] active:translate-y-1 active:shadow-none",
+          "bg-[var(--accent-orange)] border-[var(--accent-orange)] text-[var(--text-primary)] hover:opacity-90",
         mint:
-          "bg-brutal-mint text-black shadow-[4px_4px_0px_0px_var(--shadow-color)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_var(--shadow-color)] active:translate-y-1 active:shadow-none",
+          "bg-[var(--accent-teal)] border-[var(--accent-teal)] text-[var(--text-primary)] hover:opacity-90",
       },
       size: {
-        default: "h-10 px-4 py-2",
+        default: "h-10 py-2",
         sm: "h-8 px-3 text-xs",
-        lg: "h-12 px-6 text-base",
-        icon: "h-10 w-10",
+        lg: "h-12 px-7 text-base",
+        icon: "h-10 w-10 px-0",
       },
     },
     defaultVariants: {

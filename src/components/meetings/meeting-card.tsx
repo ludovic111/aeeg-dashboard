@@ -16,7 +16,7 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
       <Card
         accentColor="#4ECDC4"
         accentPosition="left"
-        className="hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_var(--shadow-color)] transition-all cursor-pointer"
+        className="cursor-pointer transition-colors hover:border-[var(--accent-teal)]"
       >
         <CardContent className="p-4">
           <div className="flex items-start justify-between mb-2">

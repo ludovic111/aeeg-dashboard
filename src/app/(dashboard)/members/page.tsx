@@ -61,8 +61,8 @@ export default function MembersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-black">👥 Annuaire des membres</h1>
-        <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
+        <h1 className="display-hero max-w-[13ch]">Annuaire des membres</h1>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">
           {members.length} membres enregistrés
         </p>
       </div>
@@ -106,8 +106,7 @@ export default function MembersPage() {
       {/* Grid */}
       {filtered.length === 0 ? (
         <div className="text-center py-16">
-          <p className="text-5xl mb-4">🔍</p>
-          <p className="font-black text-lg">Aucun membre trouvé</p>
+          <p className="font-[var(--font-display)] text-[2rem] leading-none">Aucun membre trouve</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

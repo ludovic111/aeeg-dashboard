@@ -9,7 +9,7 @@ export function ThemeToggle() {
 
   if (!resolvedTheme) {
     return (
-      <Button variant="outline" size="icon">
+      <Button variant="outline" size="icon" aria-label="Changer le thème">
         <Sun className="h-4 w-4" />
       </Button>
     );

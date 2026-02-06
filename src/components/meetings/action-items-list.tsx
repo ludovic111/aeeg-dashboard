@@ -67,8 +67,8 @@ export function ActionItemsList({
 
   return (
     <div className="space-y-3">
-      <h3 className="font-black text-sm uppercase tracking-wide">
-        ✅ Actions ({items.length})
+      <h3 className="text-sm font-semibold uppercase tracking-[0.08em] text-[var(--text-secondary)]">
+        Actions ({items.length})
       </h3>
 
       <div className="space-y-2">

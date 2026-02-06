@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Shield } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { registerSchema, type RegisterFormData } from "@/lib/validations";
 import { Button } from "@/components/ui/button";
@@ -52,15 +51,12 @@ export default function RegisterPage() {
   };
 
   return (
-    <Card accentColor="#AA96DA">
+    <Card accentColor="#D4A847">
       <CardHeader>
-        <CardTitle className="text-2xl flex items-center gap-2">
-          <Shield className="h-6 w-6" strokeWidth={3} />
-          Demander l&apos;acces
-        </CardTitle>
+        <CardTitle className="text-[2rem]">Demander l&apos;acces</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-sm font-bold text-[var(--foreground)]/60 mb-4">
+        <p className="text-sm text-[var(--text-secondary)] mb-4">
           Ce site est reserve aux membres du comite de l&apos;AEEG.
           Remplissez ce formulaire pour demander l&apos;acces.
         </p>
@@ -74,7 +70,7 @@ export default function RegisterPage() {
               {...register("full_name")}
             />
             {errors.full_name && (
-              <p className="text-sm font-bold text-brutal-red">
+              <p className="text-sm text-[var(--accent-orange)]">
                 {errors.full_name.message}
               </p>
             )}
@@ -89,7 +85,7 @@ export default function RegisterPage() {
               {...register("email")}
             />
             {errors.email && (
-              <p className="text-sm font-bold text-brutal-red">
+              <p className="text-sm text-[var(--accent-orange)]">
                 {errors.email.message}
               </p>
             )}
@@ -104,7 +100,7 @@ export default function RegisterPage() {
               {...register("password")}
             />
             {errors.password && (
-              <p className="text-sm font-bold text-brutal-red">
+              <p className="text-sm text-[var(--accent-orange)]">
                 {errors.password.message}
               </p>
             )}
@@ -119,7 +115,7 @@ export default function RegisterPage() {
               {...register("confirmPassword")}
             />
             {errors.confirmPassword && (
-              <p className="text-sm font-bold text-brutal-red">
+              <p className="text-sm text-[var(--accent-orange)]">
                 {errors.confirmPassword.message}
               </p>
             )}
@@ -131,11 +127,11 @@ export default function RegisterPage() {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-sm font-bold">
+          <p className="text-sm">
             Deja un compte ?{" "}
             <Link
               href="/login"
-              className="text-brutal-teal underline underline-offset-4 hover:text-brutal-coral transition-colors"
+              className="text-[var(--accent-gold)] underline underline-offset-4 transition-colors hover:opacity-80"
             >
               Se connecter
             </Link>

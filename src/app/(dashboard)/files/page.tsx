@@ -87,9 +87,8 @@ export default function FilesPage() {
   if (!isCommitteeMember) {
     return (
       <div className="text-center py-16">
-        <p className="text-5xl mb-4">🔒</p>
-        <p className="font-black text-lg">Accès restreint</p>
-        <p className="text-sm text-[var(--foreground)]/60 font-bold mt-1">
+        <p className="font-[var(--font-display)] text-[2.1rem] leading-none">Acces restreint</p>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">
           Seuls les membres du comité et les admins peuvent accéder à cette page
         </p>
       </div>
@@ -191,8 +190,8 @@ export default function FilesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-black">📁 Fichiers</h1>
-        <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
+        <h1 className="display-hero max-w-[8ch]">Fichiers</h1>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">
           Espace partagé pour créer des dossiers et déposer des documents
         </p>
       </div>

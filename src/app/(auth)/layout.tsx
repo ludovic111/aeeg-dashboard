@@ -6,18 +6,35 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--background)] p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <span className="text-5xl">🎓</span>
-          <h1 className="text-3xl font-black mt-4">AEEG</h1>
-          <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
-            Association d&apos;élèves d&apos;Émilie Gourd
-          </p>
+    <div className="min-h-screen bg-[var(--background)] px-4 py-10 sm:px-6 lg:px-10 lg:py-14">
+      <div className="mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-[1.25fr_minmax(360px,460px)] lg:items-end">
+        <div className="fade-in-block space-y-6">
+          <p className="display-eyebrow">AEEG Internal Platform</p>
+          <h1 className="display-hero">
+            Association d&apos;eleves <em>d&apos;Emilie Gourd</em>
+          </h1>
+          <div className="nds-fade-sequence max-w-[760px] space-y-4 text-base">
+            <p>
+              Accedez a l&apos;espace interne pour coordonner les reunions,
+              actions, soirees, commandes et ressources partagees.
+            </p>
+            <p>
+              Une validation d&apos;acces est requise pour garantir la
+              confidentialite des informations du comite.
+            </p>
+            <p className="mono-meta text-[var(--text-muted)]">
+              AEEG · dashboard prive
+            </p>
+          </div>
         </div>
-        {children}
-        <div className="mt-8 text-center">
-          <SiteCredit />
+
+        <div className="w-full lg:justify-self-end">
+          <div className="mx-auto w-full max-w-md space-y-7">
+            {children}
+            <div className="text-center">
+              <SiteCredit />
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -49,7 +49,7 @@ export function MeetingForm({ meeting, onSubmit, loading }: MeetingFormProps) {
         <Label htmlFor="title">Titre *</Label>
         <Input id="title" placeholder="Titre de la réunion" {...register("title")} />
         {errors.title && (
-          <p className="text-sm font-bold text-brutal-red">{errors.title.message}</p>
+          <p className="text-sm font-bold text-[var(--accent-orange)]">{errors.title.message}</p>
         )}
       </div>
 
@@ -58,7 +58,7 @@ export function MeetingForm({ meeting, onSubmit, loading }: MeetingFormProps) {
           <Label htmlFor="date">Date et heure *</Label>
           <Input id="date" type="datetime-local" {...register("date")} />
           {errors.date && (
-            <p className="text-sm font-bold text-brutal-red">{errors.date.message}</p>
+            <p className="text-sm font-bold text-[var(--accent-orange)]">{errors.date.message}</p>
           )}
         </div>
 

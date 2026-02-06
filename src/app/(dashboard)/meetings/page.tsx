@@ -32,8 +32,8 @@ export default function MeetingsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black">📋 Réunions</h1>
-          <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
+          <h1 className="display-hero max-w-[8ch]">Reunions</h1>
+          <p className="mt-2 text-sm text-[var(--text-secondary)]">
             Planifier une date et consulter l&apos;ordre du jour (DOCX)
           </p>
         </div>
@@ -65,9 +65,8 @@ export default function MeetingsPage() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-16">
-          <p className="text-5xl mb-4">📭</p>
-          <p className="font-black text-lg">Aucune réunion trouvée</p>
-          <p className="text-sm text-[var(--foreground)]/60 font-bold mt-1">
+          <p className="font-[var(--font-display)] text-[2rem] leading-none">Aucune reunion trouvee</p>
+          <p className="mt-2 text-sm text-[var(--text-secondary)]">
             Essayez un autre terme de recherche.
           </p>
         </div>

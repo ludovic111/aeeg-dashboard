@@ -114,7 +114,7 @@ export function OrdersForm({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {initialOrder ? "✏️ Modifier la commande" : "🧾 Ajouter une commande"}
+            {initialOrder ? "Modifier la commande" : "Ajouter une commande"}
           </DialogTitle>
         </DialogHeader>
 
@@ -128,7 +128,7 @@ export function OrdersForm({
                 {...register("order_number")}
               />
               {errors.order_number && (
-                <p className="text-sm font-bold text-brutal-red">
+                <p className="text-sm font-bold text-[var(--accent-orange)]">
                   {errors.order_number.message}
                 </p>
               )}
@@ -142,7 +142,7 @@ export function OrdersForm({
                 {...register("full_name")}
               />
               {errors.full_name && (
-                <p className="text-sm font-bold text-brutal-red">
+                <p className="text-sm font-bold text-[var(--accent-orange)]">
                   {errors.full_name.message}
                 </p>
               )}
@@ -158,7 +158,7 @@ export function OrdersForm({
               {...register("email")}
             />
             {errors.email && (
-              <p className="text-sm font-bold text-brutal-red">
+              <p className="text-sm font-bold text-[var(--accent-orange)]">
                 {errors.email.message}
               </p>
             )}
@@ -320,7 +320,7 @@ export function OrdersForm({
                   {(errors.order_items?.[index]?.quantity ||
                     errors.order_items?.[index]?.color ||
                     errors.order_items?.[index]?.size) && (
-                    <p className="text-sm font-bold text-brutal-red">
+                    <p className="text-sm font-bold text-[var(--accent-orange)]">
                       {errors.order_items?.[index]?.quantity?.message ||
                         errors.order_items?.[index]?.color?.message ||
                         errors.order_items?.[index]?.size?.message}
@@ -331,7 +331,7 @@ export function OrdersForm({
             })}
 
             {errors.order_items && !Array.isArray(errors.order_items) && (
-              <p className="text-sm font-bold text-brutal-red">
+              <p className="text-sm font-bold text-[var(--accent-orange)]">
                 {errors.order_items.message}
               </p>
             )}

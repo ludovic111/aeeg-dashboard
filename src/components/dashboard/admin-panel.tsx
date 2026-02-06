@@ -103,8 +103,8 @@ export function AdminPanel() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2">
-        <Shield className="h-6 w-6 text-brutal-red" strokeWidth={3} />
-        <h2 className="text-2xl font-black">Administration</h2>
+        <Shield className="h-6 w-6 text-[var(--accent-orange)]" strokeWidth={3} />
+        <h2 className="font-[var(--font-display)] text-[2rem] leading-none">Administration</h2>
       </div>
 
       {/* Pending Requests */}
@@ -120,8 +120,7 @@ export function AdminPanel() {
         <CardContent>
           {pendingMembers.length === 0 ? (
             <div className="text-center py-6">
-              <p className="text-3xl mb-2">🎉</p>
-              <p className="text-sm font-bold text-[var(--foreground)]/60">
+              <p className="text-sm text-[var(--text-secondary)]">
                 Aucune demande en attente
               </p>
             </div>
@@ -210,7 +209,7 @@ export function AdminPanel() {
                       <p className="font-black text-sm truncate">
                         {member.full_name || "Sans nom"}
                         {isSelf && (
-                          <span className="text-brutal-red ml-1">(vous)</span>
+                          <span className="text-[var(--accent-orange)] ml-1">(vous)</span>
                         )}
                       </p>
                       <p className="font-mono text-xs text-[var(--foreground)]/60 truncate">

@@ -3,17 +3,23 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-md border-2 border-[var(--border-color)] px-2.5 py-0.5 text-xs font-bold transition-colors",
+  "inline-flex items-center rounded-[var(--radius-pill)] border border-[var(--border-color)] px-2.5 py-1 text-[0.68rem] font-medium uppercase tracking-[0.08em] transition-colors",
   {
     variants: {
       variant: {
-        default: "bg-[var(--card-bg)] text-[var(--foreground)]",
-        success: "bg-brutal-mint text-black",
-        warning: "bg-brutal-yellow text-black",
-        danger: "bg-brutal-red text-white",
-        info: "bg-brutal-teal text-black",
-        purple: "bg-brutal-purple text-black",
-        coral: "bg-brutal-coral text-black",
+        default: "bg-transparent text-[var(--text-secondary)]",
+        success:
+          "bg-[color:color-mix(in_srgb,var(--accent-teal)_26%,transparent)] text-[var(--foreground)] border-[color:color-mix(in_srgb,var(--accent-teal)_50%,transparent)]",
+        warning:
+          "bg-[color:color-mix(in_srgb,var(--accent-yellow)_28%,transparent)] text-[var(--text-dark)] border-[color:color-mix(in_srgb,var(--accent-yellow)_68%,transparent)]",
+        danger:
+          "bg-[color:color-mix(in_srgb,var(--accent-orange)_22%,transparent)] text-[var(--accent-orange)] border-[color:color-mix(in_srgb,var(--accent-orange)_52%,transparent)]",
+        info:
+          "bg-[color:color-mix(in_srgb,var(--accent-teal)_20%,transparent)] text-[var(--foreground)] border-[color:color-mix(in_srgb,var(--accent-teal)_46%,transparent)]",
+        purple:
+          "bg-[color:color-mix(in_srgb,var(--accent-gold)_25%,transparent)] text-[var(--foreground)] border-[color:color-mix(in_srgb,var(--accent-gold)_55%,transparent)]",
+        coral:
+          "bg-[color:color-mix(in_srgb,var(--accent-orange)_20%,transparent)] text-[var(--foreground)] border-[color:color-mix(in_srgb,var(--accent-orange)_45%,transparent)]",
       },
     },
     defaultVariants: {

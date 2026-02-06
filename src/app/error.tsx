@@ -17,11 +17,12 @@ export default function Error({
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[var(--background)] p-4">
-      <Card accentColor="#FF6B6B" className="max-w-md w-full">
+      <Card accentColor="#FF5722" className="max-w-md w-full">
         <CardContent className="p-8 text-center">
-          <p className="text-5xl mb-4">💥</p>
-          <h2 className="text-2xl font-black mb-2">Une erreur est survenue</h2>
-          <p className="text-sm text-[var(--foreground)]/60 font-bold mb-6">
+          <h2 className="font-[var(--font-display)] text-[2.3rem] leading-[0.95] mb-2">
+            Une erreur est survenue
+          </h2>
+          <p className="text-sm text-[var(--text-secondary)] mb-6">
             Quelque chose s&apos;est mal passé. Veuillez réessayer.
           </p>
           <Button onClick={reset}>Réessayer</Button>

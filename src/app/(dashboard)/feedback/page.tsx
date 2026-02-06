@@ -88,8 +88,8 @@ export default function FeedbackPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-black">💡 Retours utilisateurs</h1>
-        <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
+        <h1 className="display-hero max-w-[13ch]">Retours utilisateurs</h1>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">
           Signaler un problème ou proposer une amélioration
         </p>
       </div>
@@ -126,7 +126,7 @@ export default function FeedbackPage() {
                 {...register("title")}
               />
               {errors.title && (
-                <p className="text-sm font-bold text-brutal-red">
+                <p className="text-sm font-bold text-[var(--accent-orange)]">
                   {errors.title.message}
                 </p>
               )}
@@ -141,7 +141,7 @@ export default function FeedbackPage() {
                 {...register("description")}
               />
               {errors.description && (
-                <p className="text-sm font-bold text-brutal-red">
+                <p className="text-sm font-bold text-[var(--accent-orange)]">
                   {errors.description.message}
                 </p>
               )}

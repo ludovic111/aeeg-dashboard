@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Plus, ClipboardList, CheckSquare, PackageSearch, PartyPopper, Vote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function QuickActions() {
@@ -10,55 +9,47 @@ export function QuickActions() {
   const actions = [
     {
       label: "Nouvelle réunion",
-      icon: ClipboardList,
       href: "/meetings/new",
       variant: "default" as const,
     },
     {
       label: "Nouvelle tâche",
-      icon: Plus,
       href: "/tasks?new=true",
       variant: "yellow" as const,
     },
     {
       label: "Voir commandes",
-      icon: PackageSearch,
       href: "/orders",
       variant: "purple" as const,
     },
     {
       label: "Voir les tâches",
-      icon: CheckSquare,
       href: "/tasks",
       variant: "coral" as const,
     },
     {
       label: "Soirées",
-      icon: PartyPopper,
       href: "/parties",
       variant: "mint" as const,
     },
     {
       label: "Sondages",
-      icon: Vote,
       href: "/polls",
       variant: "outline" as const,
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
       {actions.map((action) => {
-        const Icon = action.icon;
         return (
           <Button
             key={action.label}
             variant={action.variant}
-            className="h-auto py-3 flex-col gap-2"
+            className="h-auto flex-col gap-2 py-3"
             onClick={() => router.push(action.href)}
           >
-            <Icon className="h-5 w-5" strokeWidth={3} />
-            <span className="text-xs">{action.label}</span>
+            <span className="caps-label text-center">{action.label}</span>
           </Button>
         );
       })}
