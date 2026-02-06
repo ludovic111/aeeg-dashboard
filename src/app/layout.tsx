@@ -24,13 +24,46 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AEEG Dashboard",
+  metadataBase: new URL("https://aeeg.vercel.app"),
+  title: {
+    default: "AEEG — Association d'élèves d'Émilie Gourd",
+    template: "%s — AEEG",
+  },
   description:
-    "Dashboard interne de l'Association d'élèves d'Émilie Gourd",
+    "Dashboard interne de l'Association d'élèves du Collège et École de Commerce Émilie-Gourd, Genève. Réunions, tâches, soirées, commandes et ressources partagées.",
+  keywords: [
+    "AEEG",
+    "Émilie Gourd",
+    "association élèves",
+    "Genève",
+    "collège",
+    "comité",
+    "dashboard",
+  ],
+  authors: [{ name: "AEEG" }],
+  openGraph: {
+    type: "website",
+    locale: "fr_CH",
+    siteName: "AEEG — Association d'élèves d'Émilie Gourd",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
   icons: {
-    icon: "/icon.svg",
-    shortcut: "/icon.svg",
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "32x32" },
+    ],
+    shortcut: "/favicon.ico",
     apple: "/icon.svg",
+  },
+  manifest: "/site.webmanifest",
+  other: {
+    "theme-color": "#0A0A0A",
   },
 };
 
@@ -50,6 +83,25 @@ export default function RootLayout({
       <body
         className={`${instrumentSerif.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "AEEG — Association d'élèves d'Émilie Gourd",
+              description:
+                "Association d'élèves du Collège et École de Commerce Émilie-Gourd, Genève",
+              url: "https://aeeg.vercel.app",
+              logo: "https://aeeg.vercel.app/icon.svg",
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Genève",
+                addressCountry: "CH",
+              },
+            }),
+          }}
+        />
         <Providers>
           {children}
           <Toaster />

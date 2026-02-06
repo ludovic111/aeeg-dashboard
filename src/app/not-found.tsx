@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Page introuvable",
+  description:
+    "La page que vous recherchez n'existe pas sur le dashboard AEEG.",
+};
 
 export default function NotFound() {
   return (

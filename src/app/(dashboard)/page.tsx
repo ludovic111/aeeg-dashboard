@@ -433,7 +433,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div>
+      <div className="animate-on-load">
         <h1 className="display-hero max-w-[12ch]">Tableau de bord</h1>
         <p className="mt-2 text-sm text-[var(--text-secondary)]">
           Vue d&apos;ensemble opérationnelle de l&apos;AEEG
@@ -459,7 +459,7 @@ export default function DashboardPage() {
         </>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="stagger-children grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {cards.map((card) => {
           const Icon = card.icon;
           return (

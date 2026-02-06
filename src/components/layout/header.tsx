@@ -28,7 +28,7 @@ export function Header({ onMenuClick }: HeaderProps) {
   );
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[var(--border-color)] bg-[var(--background)]/95 backdrop-blur supports-[backdrop-filter]:bg-[var(--background)]/85">
+    <header className="animate-nav-load sticky top-0 z-40 border-b border-[var(--border-color)] bg-[var(--background)]/95 backdrop-blur supports-[backdrop-filter]:bg-[var(--background)]/85">
       <div className="mx-auto flex w-full max-w-[1480px] items-center justify-between gap-3 px-4 py-3 sm:px-6 md:px-10 lg:px-14">
         <Link href="/" className="min-w-0">
           <p className="caps-label">Association d&apos;eleves d&apos;Emilie Gourd</p>

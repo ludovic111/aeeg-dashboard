@@ -12,7 +12,7 @@ const Separator = React.forwardRef<HTMLDivElement, SeparatorProps>(
       className={cn(
         "shrink-0 border-[var(--border-color)]",
         orientation === "horizontal"
-          ? "h-px w-full border-t"
+          ? "animate-rule h-px w-full border-t"
           : "h-full w-px border-l",
         className
       )}

@@ -1,0 +1,16 @@
+{
+  "name": "AEEG — Association d'élèves d'Émilie Gourd",
+  "short_name": "AEEG",
+  "description": "Dashboard interne de l'Association d'élèves d'Émilie Gourd",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0A",
+  "theme_color": "#0A0A0A",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ]
+}

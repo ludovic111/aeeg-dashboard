@@ -105,6 +105,13 @@
   /* ── Spacing ── */
   --section-padding: clamp(80px, 12vh, 200px);
 
+  /* ── Animation ── */
+  --animation-duration: 600ms;
+  --animation-easing: cubic-bezier(0.25, 0.1, 0.25, 1.0);
+  --animation-stagger: 100ms;
+  --hover-duration: 200ms;
+  --hover-easing: ease;
+
   /* ── Theme-aware semantic tokens (dark default) ── */
   --background: var(--bg-dark);
   --foreground: var(--text-primary);
@@ -188,7 +195,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
-  transition: opacity 0.2s ease;
+  transition: opacity var(--hover-duration) var(--hover-easing), color var(--hover-duration) var(--hover-easing);
 }
 
 a:hover {
@@ -350,6 +357,91 @@ a:hover {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* ═══ Scroll-triggered animation system ═══ */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity var(--animation-duration) var(--animation-easing),
+    transform var(--animation-duration) var(--animation-easing);
+}
+
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger delays for child elements */
+.stagger-children > .animate-on-scroll:nth-child(1) { transition-delay: 0ms; }
+.stagger-children > .animate-on-scroll:nth-child(2) { transition-delay: var(--animation-stagger); }
+.stagger-children > .animate-on-scroll:nth-child(3) { transition-delay: calc(var(--animation-stagger) * 2); }
+.stagger-children > .animate-on-scroll:nth-child(4) { transition-delay: calc(var(--animation-stagger) * 3); }
+.stagger-children > .animate-on-scroll:nth-child(5) { transition-delay: calc(var(--animation-stagger) * 4); }
+.stagger-children > .animate-on-scroll:nth-child(6) { transition-delay: calc(var(--animation-stagger) * 5); }
+.stagger-children > .animate-on-scroll:nth-child(7) { transition-delay: calc(var(--animation-stagger) * 6); }
+.stagger-children > .animate-on-scroll:nth-child(8) { transition-delay: calc(var(--animation-stagger) * 7); }
+.stagger-children > .animate-on-scroll:nth-child(9) { transition-delay: calc(var(--animation-stagger) * 8); }
+.stagger-children > .animate-on-scroll:nth-child(10) { transition-delay: calc(var(--animation-stagger) * 9); }
+
+/* Hero / above-fold: animate on page load */
+.animate-on-load {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: fadeUp var(--animation-duration) var(--animation-easing) 200ms both;
+}
+
+/* Nav fade-in on load */
+.animate-nav-load {
+  opacity: 0;
+  animation: fadeIn 300ms var(--animation-easing) 100ms both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Section divider animation */
+.animate-rule {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--animation-duration) var(--animation-easing);
+}
+
+.animate-rule.is-visible {
+  transform: scaleX(1);
+}
+
+/* Button / CTA hover scale */
+.hover-lift {
+  transition: transform var(--hover-duration) var(--hover-easing);
+}
+
+.hover-lift:hover {
+  transform: scale(1.03);
+}
+
+/* Reduced motion: disable everything except opacity fades */
+@media (prefers-reduced-motion: reduce) {
+  .animate-on-scroll,
+  .animate-on-load,
+  .animate-nav-load {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .animate-rule {
+    transform: scaleX(1) !important;
+    transition: none !important;
+  }
+
+  .hover-lift:hover {
+    transform: none !important;
   }
 }
 

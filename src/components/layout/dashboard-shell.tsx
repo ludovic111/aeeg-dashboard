@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
+import { ScrollAnimationProvider } from "@/components/scroll-animation-provider";
 import { Header } from "@/components/layout/header";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { SiteCredit } from "@/components/layout/site-credit";
@@ -41,6 +42,7 @@ function DashboardChrome({ onSignOut, children }: DashboardChromeProps) {
   const { profile } = useAuth();
 
   return (
+    <ScrollAnimationProvider>
     <div className="min-h-dvh bg-[var(--background)]">
       <Header onMenuClick={() => setMobileNavOpen(true)} />
       <MobileNav
@@ -59,5 +61,6 @@ function DashboardChrome({ onSignOut, children }: DashboardChromeProps) {
         </div>
       </main>
     </div>
+    </ScrollAnimationProvider>
   );
 }
