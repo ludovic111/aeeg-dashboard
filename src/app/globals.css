@@ -157,6 +157,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   min-height: 100dvh;
   overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior-y: contain;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
   background-image:
     radial-gradient(
       circle at 0% 0%,
@@ -172,6 +176,8 @@ body {
 
 html {
   overflow-x: hidden;
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
 }
 
 img,
@@ -186,6 +192,10 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 400;
   letter-spacing: -0.02em;
   text-wrap: balance;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent-yellow) 30%, transparent);
 }
 
 *:focus-visible {
@@ -445,10 +455,58 @@ a:hover {
   }
 }
 
+/* ═══ Mobile & iOS polish ═══ */
 @media (max-width: 640px) {
   input,
   select,
   textarea {
-    font-size: 16px;
+    font-size: 16px !important;
   }
+
+  /* Reduce animation complexity on mobile for 60fps */
+  .animate-on-scroll {
+    --animation-duration: 400ms;
+    transform: translateY(16px);
+  }
+
+  .stagger-children > .animate-on-scroll:nth-child(n+6) {
+    transition-delay: 0ms !important;
+  }
+}
+
+/* Tap-press feedback for interactive elements (iOS feel) */
+button:active:not(:disabled),
+a:active,
+[role="button"]:active {
+  transform: scale(0.97);
+  transition: transform 100ms ease-out;
+}
+
+.hover-lift:active:not(:disabled) {
+  transform: scale(0.97) !important;
+}
+
+/* Disable hover effects on touch devices */
+@media (hover: none) {
+  .hover-lift:hover {
+    transform: none;
+  }
+
+  a:hover {
+    opacity: 1;
+  }
+}
+
+/* Smooth scroll: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Momentum scrolling for custom scroll containers on iOS */
+.overflow-y-auto,
+.overflow-x-auto,
+.overflow-auto {
+  -webkit-overflow-scrolling: touch;
 }

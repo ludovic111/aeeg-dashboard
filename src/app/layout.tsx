@@ -58,6 +58,11 @@ export const metadata: Metadata = {
     apple: "/favicon.svg",
   },
   manifest: "/site.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "AEEG",
+  },
   other: {
     "theme-color": "#0A0A0A",
   },

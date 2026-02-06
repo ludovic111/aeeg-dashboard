@@ -34,13 +34,13 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-[calc(100%-1rem)] max-h-[90dvh] max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto rounded-[var(--radius-card)] border border-[var(--border-color)] bg-[var(--card-bg)] p-4 duration-200 shadow-[0_34px_90px_-40px_rgba(0,0,0,0.95)] sm:p-6 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+        "fixed left-[50%] top-[50%] z-50 grid w-[calc(100%-2rem)] max-h-[85dvh] max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto rounded-[var(--radius-card)] border border-[var(--border-color)] bg-[var(--card-bg)] p-5 duration-200 shadow-[0_34px_90px_-40px_rgba(0,0,0,0.95)] sm:p-6 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
         className
       )}
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full border border-[var(--border-color)] p-1 opacity-70 transition-colors hover:bg-[var(--foreground)] hover:text-[var(--background)] hover:opacity-100">
+      <DialogPrimitive.Close className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border-color)] opacity-70 transition-colors duration-200 hover:bg-[var(--foreground)] hover:text-[var(--background)] hover:opacity-100">
         <X className="h-4 w-4" strokeWidth={3} />
         <span className="sr-only">Fermer</span>
       </DialogPrimitive.Close>
