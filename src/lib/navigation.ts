@@ -29,7 +29,7 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
   { href: "/polls", label: "Sondages", icon: Vote },
   { href: "/files", label: "Fichiers", icon: FolderOpen },
   { href: "/tutorial", label: "Tutoriel", icon: PlayCircle },
-  { href: "/escape-from-lara", label: "Escape From Lara", icon: Joystick },
+  { href: "/jeux", label: "Jeux", icon: Joystick },
   { href: "/feedback", label: "Retours", icon: MessageSquareWarning },
   { href: "/profile", label: "Profil", icon: CircleUserRound },
   { href: "/members", label: "Membres", icon: Users },
