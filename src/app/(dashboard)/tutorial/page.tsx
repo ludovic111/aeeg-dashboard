@@ -23,6 +23,7 @@ export default function TutorialPage() {
                 className="h-full w-full"
                 src="https://www.youtube.com/embed/FPBPLXPGt4I"
                 title="Tutoriel AEEG"
+                loading="lazy"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerPolicy="strict-origin-when-cross-origin"
                 allowFullScreen

@@ -44,6 +44,7 @@ export function Sidebar({ profile, onSignOut }: SidebarProps) {
             <Link
               key={item.href}
               href={item.href}
+              prefetch={false}
               onMouseEnter={() => prefetchRoute(item.href)}
               onFocus={() => prefetchRoute(item.href)}
               aria-current={isActive ? "page" : undefined}

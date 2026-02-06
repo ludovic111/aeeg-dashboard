@@ -36,7 +36,6 @@ function Avatar({ className, size, src, name, ...props }: AvatarProps) {
           src={src}
           alt={name}
           fill
-          unoptimized
           sizes="56px"
           className="h-full w-full object-cover"
           onError={() => setImgError(true)}

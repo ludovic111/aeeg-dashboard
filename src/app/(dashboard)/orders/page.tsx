@@ -1,12 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { Download, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { useOrders } from "@/hooks/use-orders";
 import { OrdersTable } from "@/components/orders/orders-table";
-import { OrdersForm } from "@/components/orders/orders-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -19,6 +19,16 @@ import {
 import { formatCurrency } from "@/lib/utils";
 import type { CustomerOrderFormData } from "@/lib/validations";
 import type { CustomerOrder } from "@/types";
+
+const OrdersForm = dynamic(
+  () =>
+    import("@/components/orders/orders-form").then(
+      (module) => module.OrdersForm
+    ),
+  {
+    loading: () => <Skeleton className="h-[520px]" />,
+  }
+);
 
 export default function OrdersPage() {
   const { isCommitteeMember } = useAuth();
@@ -249,13 +259,15 @@ export default function OrdersPage() {
 
       <OrdersTable orders={orders} onEdit={handleOpenEdit} />
 
-      <OrdersForm
-        open={formOpen}
-        onOpenChange={handleFormOpenChange}
-        onSubmit={handleSaveOrder}
-        initialOrder={editingOrder}
-        loading={formLoading}
-      />
+      {formOpen && (
+        <OrdersForm
+          open={formOpen}
+          onOpenChange={handleFormOpenChange}
+          onSubmit={handleSaveOrder}
+          initialOrder={editingOrder}
+          loading={formLoading}
+        />
+      )}
     </div>
   );
 }

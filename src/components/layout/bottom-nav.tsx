@@ -30,6 +30,7 @@ export function BottomNav({ onMenuClick }: BottomNavProps) {
             <li key={item.href}>
               <Link
                 href={item.href}
+                prefetch={false}
                 onMouseEnter={() => prefetchRoute(item.href)}
                 onFocus={() => prefetchRoute(item.href)}
                 onTouchStart={() => prefetchRoute(item.href)}

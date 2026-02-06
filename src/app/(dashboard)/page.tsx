@@ -1,12 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AlertTriangle, Banknote, CalendarClock, ClipboardCheck, ListTodo, PackageSearch, Vote, Users } from "lucide-react";
+import dynamic from "next/dynamic";
+import {
+  AlertTriangle,
+  Banknote,
+  CalendarClock,
+  ClipboardCheck,
+  ListTodo,
+  PackageSearch,
+  Vote,
+  Users,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { QuickActions } from "@/components/dashboard/quick-actions";
-import { ActivityFeed } from "@/components/dashboard/activity-feed";
-import { AdminPanel } from "@/components/dashboard/admin-panel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -43,6 +50,47 @@ interface DashboardData {
     subtitle: string;
   }>;
 }
+
+const QuickActions = dynamic(
+  () =>
+    import("@/components/dashboard/quick-actions").then(
+      (module) => module.QuickActions
+    ),
+  {
+    loading: () => <Skeleton className="h-24" />,
+  }
+);
+
+const AdminPanel = dynamic(
+  () =>
+    import("@/components/dashboard/admin-panel").then(
+      (module) => module.AdminPanel
+    ),
+  {
+    loading: () => <Skeleton className="h-[340px]" />,
+  }
+);
+
+const ActivityFeed = dynamic(
+  () =>
+    import("@/components/dashboard/activity-feed").then(
+      (module) => module.ActivityFeed
+    ),
+  {
+    loading: () => (
+      <Card accentColor="#95E1D3">
+        <CardHeader>
+          <CardTitle className="text-base">📰 Activité récente</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <Skeleton className="h-16" />
+          <Skeleton className="h-16" />
+          <Skeleton className="h-16" />
+        </CardContent>
+      </Card>
+    ),
+  }
+);
 
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);

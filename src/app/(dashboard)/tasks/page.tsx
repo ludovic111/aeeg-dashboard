@@ -1,16 +1,24 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { useTasks, useTaskMutations } from "@/hooks/use-tasks";
 import { KanbanBoard } from "@/components/tasks/kanban-board";
-import { TaskDialog } from "@/components/tasks/task-dialog";
 import { TaskFilters } from "@/components/tasks/task-filters";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Profile, Task, TaskStatus } from "@/types";
 import type { TaskFormData } from "@/lib/validations";
+
+const TaskDialog = dynamic(
+  () =>
+    import("@/components/tasks/task-dialog").then((module) => module.TaskDialog),
+  {
+    loading: () => <Skeleton className="h-[520px]" />,
+  }
+);
 
 export default function TasksPage() {
   const { tasks, loading, refetch, setTasksOptimistic } = useTasks();
@@ -37,10 +45,19 @@ export default function TasksPage() {
   const [assigneeFilter, setAssigneeFilter] = useState("all");
 
   useEffect(() => {
+    let active = true;
+
     supabase
       .from("profiles")
-      .select("*")
-      .then(({ data }) => setMembers(data || []));
+      .select("id, full_name, email, avatar_url, role")
+      .then(({ data }: { data: Profile[] | null }) => {
+        if (!active) return;
+        setMembers(data || []);
+      });
+
+    return () => {
+      active = false;
+    };
   }, [supabase]);
 
   const filteredTasks = useMemo(() => {
@@ -161,16 +178,18 @@ export default function TasksPage() {
         onAddClick={handleAddClick}
       />
 
-      <TaskDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        task={selectedTask}
-        defaultStatus={defaultStatus}
-        members={members}
-        onSubmit={handleSubmit}
-        onDelete={handleDelete}
-        loading={mutating}
-      />
+      {dialogOpen && (
+        <TaskDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          task={selectedTask}
+          defaultStatus={defaultStatus}
+          members={members}
+          onSubmit={handleSubmit}
+          onDelete={handleDelete}
+          loading={mutating}
+        />
+      )}
     </div>
   );
 }

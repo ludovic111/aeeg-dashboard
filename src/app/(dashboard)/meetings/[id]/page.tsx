@@ -182,6 +182,7 @@ export default function MeetingDetailPage() {
                     <iframe
                       title="Ordre du jour"
                       src={agendaFileUrl}
+                      loading="lazy"
                       className="h-full w-full"
                     />
                   </div>
