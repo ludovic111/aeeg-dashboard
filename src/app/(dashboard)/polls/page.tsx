@@ -109,7 +109,7 @@ export default function PollsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-black">🗳️ Sondages</h1>
+        <h1 className="text-2xl sm:text-3xl font-black">🗳️ Sondages</h1>
         <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
           Créez des votes multi-choix et consultez le détail des votants
         </p>
@@ -168,7 +168,10 @@ export default function PollsPage() {
               </div>
 
               {options.map((option, index) => (
-                <div key={index} className="flex items-center gap-2">
+                <div
+                  key={index}
+                  className="flex flex-col sm:flex-row sm:items-center gap-2"
+                >
                   <Input
                     value={option}
                     onChange={(event) =>
@@ -192,6 +195,7 @@ export default function PollsPage() {
                       )
                     }
                     disabled={options.length <= 2}
+                    className="w-full sm:w-auto"
                   >
                     Supprimer
                   </Button>
@@ -234,7 +238,7 @@ export default function PollsPage() {
             return (
               <Card key={poll.id} accentColor="#FFE66D">
                 <CardHeader>
-                  <div className="flex items-start justify-between gap-3">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                     <CardTitle className="text-base">{poll.question}</CardTitle>
                     {canDeletePoll && (
                       <Button
@@ -243,6 +247,7 @@ export default function PollsPage() {
                         size="sm"
                         disabled={deletingPollId === poll.id}
                         onClick={() => handleDeletePoll(poll.id, poll.question)}
+                        className="w-full sm:w-auto"
                       >
                         <Trash2 className="h-4 w-4" strokeWidth={3} />
                         {deletingPollId === poll.id ? "Suppression..." : "Supprimer"}

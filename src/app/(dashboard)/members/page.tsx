@@ -61,15 +61,15 @@ export default function MembersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-black">👥 Annuaire des membres</h1>
+        <h1 className="text-2xl sm:text-3xl font-black">👥 Annuaire des membres</h1>
         <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
           {members.length} membres enregistrés
         </p>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[200px] max-w-sm">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3">
+        <div className="relative w-full sm:flex-1 sm:min-w-[200px] sm:max-w-sm">
           <Search
             className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--foreground)]/40"
             strokeWidth={3}
@@ -83,7 +83,7 @@ export default function MembersPage() {
         </div>
 
         <Select value={roleFilter} onValueChange={setRoleFilter}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Tous les rôles" />
           </SelectTrigger>
           <SelectContent>
@@ -97,7 +97,9 @@ export default function MembersPage() {
         </Select>
 
         {filtered.length !== members.length && (
-          <Badge variant="default">{filtered.length} résultat(s)</Badge>
+          <Badge variant="default" className="self-start">
+            {filtered.length} résultat(s)
+          </Badge>
         )}
       </div>
 

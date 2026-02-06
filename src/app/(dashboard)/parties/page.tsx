@@ -306,7 +306,7 @@ export default function PartiesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-black">🎉 Soirées</h1>
+        <h1 className="text-2xl sm:text-3xl font-black">🎉 Soirées</h1>
         <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
           Planifiez les soirées, assignez les tâches et pilotez la liste de courses
         </p>
@@ -403,7 +403,10 @@ export default function PartiesPage() {
               parties.map((party) => {
                 const canDeleteParty = isAdmin || party.created_by === profile?.id;
                 return (
-                  <div key={party.id} className="flex items-center gap-2">
+                  <div
+                    key={party.id}
+                    className="flex flex-col sm:flex-row sm:items-center gap-2"
+                  >
                     <Button
                       type="button"
                       variant={effectiveSelectedPartyId === party.id ? "default" : "outline"}
@@ -424,6 +427,7 @@ export default function PartiesPage() {
                         variant="destructive"
                         disabled={deletingPartyId === party.id}
                         onClick={() => handleDeleteParty(party.id, party.name)}
+                        className="w-full sm:w-auto"
                       >
                         <Trash2 className="h-4 w-4" strokeWidth={3} />
                         {deletingPartyId === party.id ? "Suppression..." : "Supprimer"}
@@ -540,7 +544,7 @@ export default function PartiesPage() {
                     selectedParty.members.map((member) => (
                       <div
                         key={member.id}
-                        className="flex items-center gap-2 rounded-lg border-2 border-[var(--border-color)] p-2"
+                        className="flex flex-col sm:flex-row sm:items-center gap-2 rounded-lg border-2 border-[var(--border-color)] p-2"
                       >
                         <Avatar
                           name={member.profile?.full_name || member.profile?.email || "Membre"}

@@ -88,7 +88,7 @@ export default function FeedbackPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-black">💡 Retours utilisateurs</h1>
+        <h1 className="text-2xl sm:text-3xl font-black">💡 Retours utilisateurs</h1>
         <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
           Signaler un problème ou proposer une amélioration
         </p>
@@ -154,7 +154,7 @@ export default function FeedbackPage() {
         </CardContent>
       </Card>
 
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <Button
           variant={statusFilter === "all" ? "default" : "outline"}
           size="sm"
@@ -195,8 +195,8 @@ export default function FeedbackPage() {
           {filteredItems.map((item) => (
             <Card key={item.id}>
               <CardContent className="pt-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                  <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <Badge variant={item.kind === "issue" ? "danger" : "info"}>
                         {item.kind === "issue" ? (
@@ -233,6 +233,7 @@ export default function FeedbackPage() {
                       size="sm"
                       variant="outline"
                       onClick={() => handleToggleStatus(item.id, item.status)}
+                      className="w-full sm:w-auto"
                     >
                       <CheckCircle2 className="h-4 w-4" strokeWidth={3} />
                       {item.status === "resolved" ? "Rouvrir" : "Résoudre"}

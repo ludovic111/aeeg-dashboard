@@ -191,7 +191,7 @@ export default function FilesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-black">📁 Fichiers</h1>
+        <h1 className="text-2xl sm:text-3xl font-black">📁 Fichiers</h1>
         <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
           Espace partagé pour créer des dossiers et déposer des documents
         </p>
@@ -229,7 +229,7 @@ export default function FilesPage() {
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="folder-name">Créer un dossier</Label>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                 <Input
                   id="folder-name"
                   value={newFolderName}
@@ -249,7 +249,7 @@ export default function FilesPage() {
 
             <div className="space-y-2">
               <Label htmlFor="file-upload">Ajouter un fichier</Label>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                 <Input
                   id="file-upload"
                   type="file"
@@ -261,6 +261,7 @@ export default function FilesPage() {
                   type="button"
                   onClick={handleUploadFile}
                   disabled={uploading || !uploadCandidate}
+                  className="shrink-0"
                 >
                   <Upload className="h-4 w-4" strokeWidth={3} />
                   {uploading ? "Envoi..." : "Ajouter"}
@@ -304,7 +305,10 @@ export default function FilesPage() {
                 </p>
               ) : (
                 visibleFolders.map((folder) => (
-                  <div key={folder.id} className="flex items-center gap-2">
+                  <div
+                    key={folder.id}
+                    className="flex flex-col sm:flex-row sm:items-center gap-2"
+                  >
                     <Button
                       type="button"
                       variant="outline"
@@ -321,6 +325,7 @@ export default function FilesPage() {
                         size="sm"
                         onClick={() => handleDeleteFolder(folder)}
                         disabled={deletingFolderId === folder.id}
+                        className="w-full sm:w-auto"
                       >
                         <Trash2 className="h-4 w-4" strokeWidth={3} />
                         {deletingFolderId === folder.id ? "Suppression..." : "Supprimer"}
@@ -345,7 +350,7 @@ export default function FilesPage() {
                 visibleFiles.map((file) => (
                   <div
                     key={file.id}
-                    className="flex items-center justify-between gap-2 p-2 rounded-lg border-2 border-[var(--border-color)]"
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-2 rounded-lg border-2 border-[var(--border-color)]"
                   >
                     <div className="min-w-0">
                       <p className="text-sm font-bold truncate flex items-center gap-2">
@@ -358,12 +363,13 @@ export default function FilesPage() {
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
                         onClick={() => handleOpenFile(file.storage_path)}
+                        className="flex-1 sm:flex-none"
                       >
                         <ExternalLink className="h-4 w-4" strokeWidth={3} />
                         Ouvrir
@@ -375,6 +381,7 @@ export default function FilesPage() {
                           size="sm"
                           onClick={() => handleDeleteFile(file)}
                           disabled={deletingFileId === file.id}
+                          className="flex-1 sm:flex-none"
                         >
                           <Trash2 className="h-4 w-4" strokeWidth={3} />
                           {deletingFileId === file.id ? "Suppression..." : "Supprimer"}

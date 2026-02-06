@@ -121,9 +121,9 @@ export default function TasksPage() {
     return (
       <div className="space-y-6">
         <Skeleton className="h-8 w-48" />
-        <div className="flex gap-4">
+        <div className="flex gap-4 overflow-x-auto">
           {[...Array(3)].map((_, i) => (
-            <Skeleton key={i} className="h-96 w-80" />
+            <Skeleton key={i} className="h-96 min-w-[280px] w-80" />
           ))}
         </div>
       </div>
@@ -133,7 +133,7 @@ export default function TasksPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-black">✅ Tableau des tâches</h1>
+        <h1 className="text-2xl sm:text-3xl font-black">✅ Tableau des tâches</h1>
         <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
           Gérer et organiser les tâches de l&apos;association
         </p>

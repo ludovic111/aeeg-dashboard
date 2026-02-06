@@ -190,7 +190,7 @@ export default function ProfilePage() {
   return (
     <div className="space-y-6 max-w-3xl">
       <div>
-        <h1 className="text-3xl font-black">👤 Mon profil</h1>
+        <h1 className="text-2xl sm:text-3xl font-black">👤 Mon profil</h1>
         <p className="text-sm font-bold text-[var(--foreground)]/60 mt-1">
           Modifier votre photo, nom, email et mot de passe
         </p>
@@ -201,13 +201,13 @@ export default function ProfilePage() {
           <CardTitle>Informations personnelles</CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <Avatar
               name={profile.full_name || profile.email}
               src={avatarPreview || profile.avatar_url}
               size="lg"
             />
-            <div className="space-y-2">
+            <div className="space-y-2 text-center sm:text-left">
               <input
                 ref={fileInputRef}
                 type="file"

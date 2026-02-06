@@ -75,45 +75,49 @@ export function ActionItemsList({
         {items.map((item) => (
           <div
             key={item.id}
-            className="flex items-center gap-3 p-3 rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)]"
+            className="rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)] p-3 space-y-3"
           >
-            <Checkbox
-              checked={item.status === "done"}
-              onCheckedChange={() => handleToggle(item)}
-            />
-            <span
-              className={`flex-1 text-sm font-bold ${
-                item.status === "done"
-                  ? "line-through text-[var(--foreground)]/40"
-                  : ""
-              }`}
-            >
-              {item.description}
-            </span>
-            {item.assignee && (
-              <Avatar
-                name={item.assignee.full_name}
-                src={item.assignee.avatar_url}
-                size="sm"
+            <div className="flex items-start gap-3">
+              <Checkbox
+                checked={item.status === "done"}
+                onCheckedChange={() => handleToggle(item)}
               />
-            )}
-            <Badge variant={item.status === "done" ? "success" : "warning"}>
-              {item.status === "done" ? "Fait" : "En attente"}
-            </Badge>
-            {canEdit && (
-              <button
-                onClick={() => handleDelete(item.id)}
-                className="p-1 rounded border-2 border-[var(--border-color)] hover:bg-brutal-red hover:text-white transition-colors"
+              <span
+                className={`flex-1 text-sm font-bold ${
+                  item.status === "done"
+                    ? "line-through text-[var(--foreground)]/40"
+                    : ""
+                }`}
               >
-                <Trash2 className="h-3.5 w-3.5" strokeWidth={3} />
-              </button>
-            )}
+                {item.description}
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              {item.assignee && (
+                <Avatar
+                  name={item.assignee.full_name}
+                  src={item.assignee.avatar_url}
+                  size="sm"
+                />
+              )}
+              <Badge variant={item.status === "done" ? "success" : "warning"}>
+                {item.status === "done" ? "Fait" : "En attente"}
+              </Badge>
+              {canEdit && (
+                <button
+                  onClick={() => handleDelete(item.id)}
+                  className="p-1 rounded border-2 border-[var(--border-color)] hover:bg-brutal-red hover:text-white transition-colors"
+                >
+                  <Trash2 className="h-3.5 w-3.5" strokeWidth={3} />
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>
 
       {canEdit && (
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <Input
             value={newDescription}
             onChange={(e) => setNewDescription(e.target.value)}

@@ -52,6 +52,19 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+img,
+video,
+canvas,
+iframe {
+  max-width: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -142,4 +155,12 @@ h1, h2, h3, h4, h5, h6 {
 .w-md-editor-toolbar {
   border-bottom: 2px solid var(--border-color) !important;
   background: var(--card-bg) !important;
+}
+
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
 }

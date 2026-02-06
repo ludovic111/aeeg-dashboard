@@ -27,7 +27,7 @@ export function KanbanColumn({
   onAddClick,
 }: KanbanColumnProps) {
   return (
-    <div className="flex flex-col min-w-[280px] w-full sm:w-80">
+    <div className="flex flex-col min-w-[85vw] sm:min-w-[280px] w-full sm:w-80 snap-start">
       {/* Column Header */}
       <div
         className="flex items-center justify-between p-3 rounded-t-lg border-2 border-[var(--border-color)] border-b-0"

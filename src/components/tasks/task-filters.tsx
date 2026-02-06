@@ -40,8 +40,8 @@ export function TaskFilters({
     assigneeFilter !== "all";
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
-      <div className="relative flex-1 min-w-[200px] max-w-sm">
+    <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+      <div className="relative w-full sm:flex-1 sm:min-w-[200px] sm:max-w-sm">
         <Search
           className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--foreground)]/40"
           strokeWidth={3}
@@ -55,7 +55,7 @@ export function TaskFilters({
       </div>
 
       <Select value={priorityFilter} onValueChange={onPriorityChange}>
-        <SelectTrigger className="w-[140px]">
+        <SelectTrigger className="w-full sm:w-[140px]">
           <SelectValue placeholder="Priorité" />
         </SelectTrigger>
         <SelectContent>
@@ -69,7 +69,7 @@ export function TaskFilters({
       </Select>
 
       <Select value={assigneeFilter} onValueChange={onAssigneeChange}>
-        <SelectTrigger className="w-[160px]">
+        <SelectTrigger className="w-full sm:w-[160px]">
           <SelectValue placeholder="Assigné à" />
         </SelectTrigger>
         <SelectContent>
@@ -84,7 +84,12 @@ export function TaskFilters({
       </Select>
 
       {hasFilters && (
-        <Button variant="ghost" size="sm" onClick={onReset}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onReset}
+          className="w-full sm:w-auto"
+        >
           <X className="h-4 w-4" strokeWidth={3} />
           Réinitialiser
         </Button>

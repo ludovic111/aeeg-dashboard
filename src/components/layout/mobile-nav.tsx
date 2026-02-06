@@ -48,7 +48,10 @@ export function MobileNav({
       />
 
       {/* Drawer */}
-      <div className="absolute left-0 top-0 bottom-0 w-72 bg-[var(--sidebar-bg)] border-r-4 border-[var(--border-color)] flex flex-col animate-in slide-in-from-left duration-200">
+      <div
+        className="absolute left-0 top-0 bottom-0 w-[88vw] max-w-72 bg-[var(--sidebar-bg)] border-r-4 border-[var(--border-color)] flex flex-col animate-in slide-in-from-left duration-200"
+        style={{ paddingBottom: "max(env(safe-area-inset-bottom), 0.5rem)" }}
+      >
         {/* Header */}
         <div className="p-4 border-b-2 border-[var(--border-color)] flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -64,7 +67,7 @@ export function MobileNav({
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto scroll-smooth">
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto scroll-smooth overscroll-contain">
           {APP_NAV_ITEMS.map((item) => {
             const isActive = isNavItemActive(pathname, item.href);
             const Icon = item.icon;

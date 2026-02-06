@@ -130,7 +130,7 @@ export function AdminPanel() {
               {pendingMembers.map((member) => (
                 <div
                   key={member.id}
-                  className="flex items-center gap-3 p-3 rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)]"
+                  className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)]"
                 >
                   <Avatar
                     name={member.full_name || member.email}
@@ -147,7 +147,7 @@ export function AdminPanel() {
                       Demande le {formatDate(member.created_at)}
                     </p>
                   </div>
-                  <div className="flex gap-2 shrink-0">
+                  <div className="grid grid-cols-2 sm:flex gap-2 w-full sm:w-auto shrink-0">
                     <Button
                       size="sm"
                       variant="default"
@@ -155,10 +155,10 @@ export function AdminPanel() {
                         handleApprove(member.id, member.full_name)
                       }
                       disabled={processingIds.has(member.id)}
-                      className="bg-brutal-teal hover:bg-brutal-mint"
+                      className="bg-brutal-teal hover:bg-brutal-mint w-full sm:w-auto"
                     >
                       <Check className="h-4 w-4" strokeWidth={3} />
-                      <span className="hidden sm:inline">Approuver</span>
+                      <span>Approuver</span>
                     </Button>
                     <Button
                       size="sm"
@@ -167,9 +167,10 @@ export function AdminPanel() {
                         handleReject(member.id, member.full_name)
                       }
                       disabled={processingIds.has(member.id)}
+                      className="w-full sm:w-auto"
                     >
                       <X className="h-4 w-4" strokeWidth={3} />
-                      <span className="hidden sm:inline">Rejeter</span>
+                      <span>Rejeter</span>
                     </Button>
                   </div>
                 </div>
@@ -199,7 +200,7 @@ export function AdminPanel() {
                 return (
                   <div
                     key={member.id}
-                    className="flex items-center gap-3 p-3 rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)]"
+                    className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)]"
                   >
                     <Avatar
                       name={member.full_name || member.email}
@@ -216,7 +217,7 @@ export function AdminPanel() {
                         {member.email}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
                       {isSelf ? (
                         <Badge variant="danger">Super Admin</Badge>
                       ) : (
@@ -232,7 +233,7 @@ export function AdminPanel() {
                             }
                             disabled={processingIds.has(member.id)}
                           >
-                            <SelectTrigger className="w-[170px] h-8 text-xs">
+                            <SelectTrigger className="w-full sm:w-[170px] h-8 text-xs">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>

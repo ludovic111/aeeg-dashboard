@@ -123,15 +123,15 @@ export default function MeetingDetailPage() {
 
   return (
     <div className="space-y-6 max-w-[1400px]">
-      <div className="flex items-center gap-4">
+      <div className="flex items-start sm:items-center gap-3 sm:gap-4">
         <Link href="/meetings">
           <Button variant="outline" size="icon">
             <ArrowLeft className="h-4 w-4" strokeWidth={3} />
           </Button>
         </Link>
         <div className="flex-1">
-          <h1 className="text-2xl font-black">{meeting.title}</h1>
-          <div className="flex items-center gap-3 mt-1">
+          <h1 className="text-xl sm:text-2xl font-black">{meeting.title}</h1>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1">
             <span className="text-sm font-mono text-[var(--foreground)]/60">
               <Clock className="h-3.5 w-3.5 inline mr-1" />
               {formatDateTime(meeting.date)}
@@ -178,7 +178,7 @@ export default function MeetingDetailPage() {
                 </>
               ) : (
                 <>
-                  <div className="h-[70vh] w-full border-2 border-[var(--border-color)] rounded-lg overflow-hidden bg-white">
+                  <div className="h-[55vh] sm:h-[70vh] w-full border-2 border-[var(--border-color)] rounded-lg overflow-hidden bg-white">
                     <iframe
                       title="Ordre du jour"
                       src={agendaFileUrl}
@@ -222,6 +222,7 @@ export default function MeetingDetailPage() {
               size="sm"
               onClick={handleGenerateSummary}
               disabled={!agendaFileUrl || !isDocxAgenda || summaryLoading}
+              className="w-full sm:w-auto"
             >
               <Sparkles className="h-4 w-4" strokeWidth={3} />
               {summaryLoading
