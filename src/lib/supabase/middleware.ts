@@ -5,6 +5,14 @@ export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
+  const pathname = request.nextUrl.pathname;
+  const isAuthPage =
+    pathname.startsWith("/login") || pathname.startsWith("/register");
+  const isTutorialGatePage =
+    pathname.startsWith("/welcome") || pathname.startsWith("/watch-tutorial");
+  const isAuthApiRoute = pathname.startsWith("/api/auth");
+  const hasTutorialGate =
+    request.cookies.get("tutorial_gate")?.value === "done";
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -33,15 +41,14 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Protected routes - redirect to login if not authenticated
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith("/login") &&
-    !request.nextUrl.pathname.startsWith("/register") &&
-    !request.nextUrl.pathname.startsWith("/api/auth")
-  ) {
+  // Unauthenticated users must pass the tutorial gate before auth pages.
+  if (!user && !isTutorialGatePage && !isAuthApiRoute) {
+    if (isAuthPage && hasTutorialGate) {
+      return supabaseResponse;
+    }
+
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
+    url.pathname = "/welcome";
     return NextResponse.redirect(url);
   }
 
@@ -58,19 +65,16 @@ export async function updateSession(request: NextRequest) {
     // Block pending users from dashboard — redirect to /pending
     if (
       (userRole === "pending" || userRole === "regular_member") &&
-      !request.nextUrl.pathname.startsWith("/pending") &&
-      !request.nextUrl.pathname.startsWith("/api/auth")
+      !pathname.startsWith("/pending") &&
+      !isAuthApiRoute
     ) {
       const url = request.nextUrl.clone();
       url.pathname = "/pending";
       return NextResponse.redirect(url);
     }
 
-    // Redirect authenticated users away from auth pages
-    if (
-      request.nextUrl.pathname.startsWith("/login") ||
-      request.nextUrl.pathname.startsWith("/register")
-    ) {
+    // Redirect authenticated users away from tutorial/auth pages
+    if (isAuthPage || isTutorialGatePage) {
       const url = request.nextUrl.clone();
       url.pathname =
         userRole === "pending" || userRole === "regular_member"
