@@ -184,6 +184,16 @@ export interface PartyGroceryItem {
   creator?: Pick<Profile, "id" | "full_name" | "avatar_url">;
 }
 
+export interface SpaceShooterScore {
+  id: string;
+  player_id: string;
+  best_score: number;
+  best_duration_ms: number;
+  created_at: string;
+  updated_at: string;
+  player?: Pick<Profile, "id" | "full_name" | "avatar_url"> | null;
+}
+
 export interface UserFeedback {
   id: string;
   kind: FeedbackKind;
