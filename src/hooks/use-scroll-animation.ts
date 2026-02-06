@@ -5,30 +5,61 @@ import { useEffect } from "react";
 /**
  * Observe elements with `.animate-on-scroll` or `.animate-rule` and add
  * `.is-visible` when they enter the viewport. Fires once per element.
+ * Uses a MutationObserver to pick up dynamically-rendered elements.
  */
 export function useScrollAnimation() {
   useEffect(() => {
-    // Skip if user prefers reduced motion
     if (typeof window === "undefined") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const observer = new IntersectionObserver(
+    const observed = new WeakSet<Element>();
+
+    const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
+            io.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.1 }
     );
 
-    const elements = document.querySelectorAll(
-      ".animate-on-scroll, .animate-rule"
-    );
-    elements.forEach((el) => observer.observe(el));
+    function track(el: Element) {
+      if (observed.has(el)) return;
+      observed.add(el);
+      io.observe(el);
+    }
 
-    return () => observer.disconnect();
+    // Initial pass
+    document
+      .querySelectorAll(".animate-on-scroll, .animate-rule")
+      .forEach(track);
+
+    // Watch for dynamically-added elements
+    const mo = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        for (const node of m.addedNodes) {
+          if (!(node instanceof HTMLElement)) continue;
+          if (
+            node.classList.contains("animate-on-scroll") ||
+            node.classList.contains("animate-rule")
+          ) {
+            track(node);
+          }
+          node
+            .querySelectorAll(".animate-on-scroll, .animate-rule")
+            .forEach(track);
+        }
+      }
+    });
+
+    mo.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      io.disconnect();
+      mo.disconnect();
+    };
   }, []);
 }

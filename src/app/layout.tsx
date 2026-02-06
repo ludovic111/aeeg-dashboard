@@ -54,12 +54,8 @@ export const metadata: Metadata = {
     follow: false,
   },
   icons: {
-    icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "32x32" },
-    ],
-    shortcut: "/favicon.ico",
-    apple: "/icon.svg",
+    icon: { url: "/favicon.svg", type: "image/svg+xml" },
+    apple: "/favicon.svg",
   },
   manifest: "/site.webmanifest",
   other: {

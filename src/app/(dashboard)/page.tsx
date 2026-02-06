@@ -463,7 +463,7 @@ export default function DashboardPage() {
         {cards.map((card) => {
           const Icon = card.icon;
           return (
-            <Card key={card.title} accentColor={card.color}>
+            <Card key={card.title} accentColor={card.color} className="animate-on-scroll">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
