@@ -19,6 +19,14 @@ const AVAILABLE_GAMES = [
     href: "/jeux/escape-from-lara",
     accentColor: "#4ECDC4",
   },
+  {
+    id: "vendredi-midi-simulator",
+    name: "Vendredi Midi Simulator",
+    description:
+      "Controlez Leo chez Miams: suivez des commandes aleatoires et achetez un maximum de plats.",
+    href: "/jeux/vendredi-midi-simulator",
+    accentColor: "#FF9F1C",
+  },
 ] as const;
 
 export default function JeuxPage() {
