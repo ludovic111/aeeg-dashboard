@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { ChangeEvent, PointerEvent } from "react";
+import type { PointerEvent } from "react";
 import { RotateCcw, Rocket, Trophy } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
@@ -94,8 +94,6 @@ function createStars(count: number): Star[] {
 export default function EscapeFromLaraPage() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const enemyImageRef = useRef<HTMLImageElement | null>(null);
-  const enemyImageObjectUrlRef = useRef<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const lastFrameTimestampRef = useRef<number>(0);
   const gameStateRef = useRef<InternalGameState>(buildInitialState());
@@ -138,13 +136,6 @@ export default function EscapeFromLaraPage() {
     };
 
     image.src = "/lara-spaceship.webp";
-
-    return () => {
-      if (enemyImageObjectUrlRef.current) {
-        URL.revokeObjectURL(enemyImageObjectUrlRef.current);
-        enemyImageObjectUrlRef.current = null;
-      }
-    };
   }, []);
 
   const drawGame = useCallback(() => {
@@ -448,38 +439,6 @@ export default function EscapeFromLaraPage() {
     }
   };
 
-  const handlePickLaraPhoto = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleLaraPhotoChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    if (enemyImageObjectUrlRef.current) {
-      URL.revokeObjectURL(enemyImageObjectUrlRef.current);
-      enemyImageObjectUrlRef.current = null;
-    }
-
-    const objectUrl = URL.createObjectURL(file);
-    enemyImageObjectUrlRef.current = objectUrl;
-
-    const image = new Image();
-    image.onload = () => {
-      enemyImageRef.current = image;
-      setEnemyPhotoReady(true);
-      toast.success("Photo de Lara appliquee au vaisseau.");
-    };
-    image.onerror = () => {
-      enemyImageRef.current = null;
-      setEnemyPhotoReady(false);
-      toast.error("Impossible de charger cette image.");
-    };
-    image.src = objectUrl;
-
-    event.target.value = "";
-  };
-
   const buildTextState = useCallback(() => {
     const state = gameStateRef.current;
     return JSON.stringify({
@@ -579,22 +538,10 @@ export default function EscapeFromLaraPage() {
           <CardHeader className="gap-3">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <CardTitle className="text-base">Mini-jeu spatial</CardTitle>
-              <div className="flex flex-wrap items-center gap-2">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleLaraPhotoChange}
-                />
-                <Button type="button" variant="outline" onClick={handlePickLaraPhoto}>
-                  Photo de Lara
-                </Button>
-                <Button type="button" onClick={startGame}>
-                  <RotateCcw className="h-4 w-4" strokeWidth={3} />
-                  {mode === "playing" ? "Recommencer" : "Jouer"}
-                </Button>
-              </div>
+              <Button type="button" onClick={startGame}>
+                <RotateCcw className="h-4 w-4" strokeWidth={3} />
+                {mode === "playing" ? "Recommencer" : "Jouer"}
+              </Button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm font-black">
               <div className="rounded-lg border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-2">
@@ -625,8 +572,8 @@ export default function EscapeFromLaraPage() {
             </p>
             {!enemyPhotoReady && (
               <p className="text-xs font-bold text-[var(--foreground)]/60">
-                Astuce: utilisez le bouton <span className="underline">Photo de Lara</span>{" "}
-                pour importer son image sur le vaisseau ennemi.
+                Image de Lara introuvable. Ajoutez{" "}
+                <span className="underline">/public/lara-spaceship.webp</span>.
               </p>
             )}
             {lastRunScore !== null && (
